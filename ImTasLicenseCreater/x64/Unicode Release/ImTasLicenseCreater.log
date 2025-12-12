@@ -1,0 +1,93 @@
+﻿  ImTasLicenseCreater.cpp
+  --------------------------------------------------------------------------------
+  Including Xtreme Toolkit Pro
+  Including Markup         (Use _XTP_EXCLUDE_MARKUP         to exclude from build)
+  Including TabManager     (Use _XTP_EXCLUDE_TABMANAGER     to exclude from build)
+  Including Controls       (Use _XTP_EXCLUDE_CONTROLS       to exclude from build)
+  Including Calendar       (Use _XTP_EXCLUDE_CALENDAR       to exclude from build)
+     - Calendar MAPI support excluded from build (Use _XTP_INCLUDE_CALENDAR_MAPI to include it)
+  Including Chart          (Use _XTP_EXCLUDE_CHART          to exclude from build)
+  Including CommandBars    (Use _XTP_EXCLUDE_COMMANDBARS    to exclude from build)
+  Including DockingPane    (Use _XTP_EXCLUDE_DOCKINGPANE    to exclude from build)
+  Including FlowGraph      (Use _XTP_EXCLUDE_FLOWGRAPH      to exclude from build)
+  Including GraphicLibrary (Use _XTP_EXCLUDE_GRAPHICLIBRARY to exclude from build)
+  Including PropertyGrid   (Use _XTP_EXCLUDE_PROPERTYGRID   to exclude from build)
+  Including ReportControl  (Use _XTP_EXCLUDE_REPORTCONTROL  to exclude from build)
+  Including Ribbon         (Use _XTP_EXCLUDE_RIBBON         to exclude from build)
+  Including ShortcutBar    (Use _XTP_EXCLUDE_SHORTCUTBAR    to exclude from build)
+  Including SkinFramework  (Use _XTP_EXCLUDE_SKINFRAMEWORK  to exclude from build)
+  Including SyntaxEdit     (Use _XTP_EXCLUDE_SYNTAXEDIT     to exclude from build)
+  Including TaskPanel      (Use _XTP_EXCLUDE_TASKPANEL      to exclude from build)
+  --------------------------------------------------------------------------------
+  Automatically linking with ToolkitPro1910vc140x64U.dll
+  ImTasLicenseCreaterDlg.cpp
+  --------------------------------------------------------------------------------
+  Including Xtreme Toolkit Pro
+  Including Markup         (Use _XTP_EXCLUDE_MARKUP         to exclude from build)
+  Including TabManager     (Use _XTP_EXCLUDE_TABMANAGER     to exclude from build)
+  Including Controls       (Use _XTP_EXCLUDE_CONTROLS       to exclude from build)
+  Including Calendar       (Use _XTP_EXCLUDE_CALENDAR       to exclude from build)
+     - Calendar MAPI support excluded from build (Use _XTP_INCLUDE_CALENDAR_MAPI to include it)
+  Including Chart          (Use _XTP_EXCLUDE_CHART          to exclude from build)
+  Including CommandBars    (Use _XTP_EXCLUDE_COMMANDBARS    to exclude from build)
+  Including DockingPane    (Use _XTP_EXCLUDE_DOCKINGPANE    to exclude from build)
+  Including FlowGraph      (Use _XTP_EXCLUDE_FLOWGRAPH      to exclude from build)
+  Including GraphicLibrary (Use _XTP_EXCLUDE_GRAPHICLIBRARY to exclude from build)
+  Including PropertyGrid   (Use _XTP_EXCLUDE_PROPERTYGRID   to exclude from build)
+  Including ReportControl  (Use _XTP_EXCLUDE_REPORTCONTROL  to exclude from build)
+  Including Ribbon         (Use _XTP_EXCLUDE_RIBBON         to exclude from build)
+  Including ShortcutBar    (Use _XTP_EXCLUDE_SHORTCUTBAR    to exclude from build)
+  Including SkinFramework  (Use _XTP_EXCLUDE_SKINFRAMEWORK  to exclude from build)
+  Including SyntaxEdit     (Use _XTP_EXCLUDE_SYNTAXEDIT     to exclude from build)
+  Including TaskPanel      (Use _XTP_EXCLUDE_TASKPANEL      to exclude from build)
+  --------------------------------------------------------------------------------
+  Automatically linking with ToolkitPro1910vc140x64U.dll
+  LicenseVersionInfo.cpp
+  --------------------------------------------------------------------------------
+  Including Xtreme Toolkit Pro
+  Including Markup         (Use _XTP_EXCLUDE_MARKUP         to exclude from build)
+  Including TabManager     (Use _XTP_EXCLUDE_TABMANAGER     to exclude from build)
+  Including Controls       (Use _XTP_EXCLUDE_CONTROLS       to exclude from build)
+  Including Calendar       (Use _XTP_EXCLUDE_CALENDAR       to exclude from build)
+     - Calendar MAPI support excluded from build (Use _XTP_INCLUDE_CALENDAR_MAPI to include it)
+  Including Chart          (Use _XTP_EXCLUDE_CHART          to exclude from build)
+  Including CommandBars    (Use _XTP_EXCLUDE_COMMANDBARS    to exclude from build)
+  Including DockingPane    (Use _XTP_EXCLUDE_DOCKINGPANE    to exclude from build)
+  Including FlowGraph      (Use _XTP_EXCLUDE_FLOWGRAPH      to exclude from build)
+  Including GraphicLibrary (Use _XTP_EXCLUDE_GRAPHICLIBRARY to exclude from build)
+  Including PropertyGrid   (Use _XTP_EXCLUDE_PROPERTYGRID   to exclude from build)
+  Including ReportControl  (Use _XTP_EXCLUDE_REPORTCONTROL  to exclude from build)
+  Including Ribbon         (Use _XTP_EXCLUDE_RIBBON         to exclude from build)
+  Including ShortcutBar    (Use _XTP_EXCLUDE_SHORTCUTBAR    to exclude from build)
+  Including SkinFramework  (Use _XTP_EXCLUDE_SKINFRAMEWORK  to exclude from build)
+  Including SyntaxEdit     (Use _XTP_EXCLUDE_SYNTAXEDIT     to exclude from build)
+  Including TaskPanel      (Use _XTP_EXCLUDE_TASKPANEL      to exclude from build)
+  --------------------------------------------------------------------------------
+  Automatically linking with ToolkitPro1910vc140x64U.dll
+  stdafx.cpp
+  --------------------------------------------------------------------------------
+  Including Xtreme Toolkit Pro
+  Including Markup         (Use _XTP_EXCLUDE_MARKUP         to exclude from build)
+  Including TabManager     (Use _XTP_EXCLUDE_TABMANAGER     to exclude from build)
+  Including Controls       (Use _XTP_EXCLUDE_CONTROLS       to exclude from build)
+  Including Calendar       (Use _XTP_EXCLUDE_CALENDAR       to exclude from build)
+     - Calendar MAPI support excluded from build (Use _XTP_INCLUDE_CALENDAR_MAPI to include it)
+  Including Chart          (Use _XTP_EXCLUDE_CHART          to exclude from build)
+  Including CommandBars    (Use _XTP_EXCLUDE_COMMANDBARS    to exclude from build)
+  Including DockingPane    (Use _XTP_EXCLUDE_DOCKINGPANE    to exclude from build)
+  Including FlowGraph      (Use _XTP_EXCLUDE_FLOWGRAPH      to exclude from build)
+  Including GraphicLibrary (Use _XTP_EXCLUDE_GRAPHICLIBRARY to exclude from build)
+  Including PropertyGrid   (Use _XTP_EXCLUDE_PROPERTYGRID   to exclude from build)
+  Including ReportControl  (Use _XTP_EXCLUDE_REPORTCONTROL  to exclude from build)
+  Including Ribbon         (Use _XTP_EXCLUDE_RIBBON         to exclude from build)
+  Including ShortcutBar    (Use _XTP_EXCLUDE_SHORTCUTBAR    to exclude from build)
+  Including SkinFramework  (Use _XTP_EXCLUDE_SKINFRAMEWORK  to exclude from build)
+  Including SyntaxEdit     (Use _XTP_EXCLUDE_SYNTAXEDIT     to exclude from build)
+  Including TaskPanel      (Use _XTP_EXCLUDE_TASKPANEL      to exclude from build)
+  --------------------------------------------------------------------------------
+  Automatically linking with ToolkitPro1910vc140x64U.dll
+  코드를 생성하고 있습니다.
+  All 423 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  ImTasLicenseCreater.vcxproj -> C:\Hanmac\Tova\Source\Product\x64\Unicode Release\ImTasLicenseCreater.exe
+  ImTasLicenseCreater.vcxproj -> C:\Hanmac\Tova\Source\Product\x64\Unicode Release\ImTasLicenseCreater.pdb (Full PDB)

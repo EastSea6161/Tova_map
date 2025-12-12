@@ -1,0 +1,530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="99_etc">
+      <UniqueIdentifier>{953fce53-605c-4520-9c86-543d2fcc00b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Logger">
+      <UniqueIdentifier>{c40f5efd-5e87-4370-a33c-6937c512f2a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Include">
+      <UniqueIdentifier>{92c4055a-79fe-4507-ba15-e98822016b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11_Exception">
+      <UniqueIdentifier>{3a52d282-2595-480e-9754-d2f419b95e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12_IO">
+      <UniqueIdentifier>{4a52e1cd-f2ed-4432-832d-6a41f19c5293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Logger\TxtFileLogger">
+      <UniqueIdentifier>{3baf08af-feda-4865-885e-7ddff78d279c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO">
+      <UniqueIdentifier>{aa9b4ee2-f1f9-42b1-810d-8f9836ede667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{5e00f1bd-f006-4316-8812-3a123c88eabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\Deprecated">
+      <UniqueIdentifier>{c626c3f1-0203-4ca1-bf7b-2ea3d37323eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_QBicCommonDefine">
+      <UniqueIdentifier>{43293374-c74a-4de8-b2a7-d0dedc3136c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable">
+      <UniqueIdentifier>{9d1f24f6-32ef-47e4-8f1e-0d3687a2f0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\00_Code">
+      <UniqueIdentifier>{1bd38afd-837a-44e7-a0ae-56f6f9fc1d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\10_Owner">
+      <UniqueIdentifier>{f99d521f-fac9-41e1-9fcc-d362e38964b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables">
+      <UniqueIdentifier>{e0c60031-5c15-4aa8-85ad-de3cb3aeeb12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table">
+      <UniqueIdentifier>{54b28cc8-3015-4839-a13a-86de056d457f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table\Columns">
+      <UniqueIdentifier>{d7c86e00-c16d-4470-baf3-b05390cf4fe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table\Columns\Column">
+      <UniqueIdentifier>{31931d15-28e0-4483-bb4c-237562814334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table_Observer">
+      <UniqueIdentifier>{b26a6945-876b-48ee-b37a-33f17c35b10a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table\IORecordSet">
+      <UniqueIdentifier>{a852e398-fbb5-40be-a73c-b380023acb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table\IORecordSet\IORow">
+      <UniqueIdentifier>{9ccaec13-35bd-4f3c-88a1-bb6621e30070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_IOTable\20_Tables\Table\IORecordSet\IORow\IOItem">
+      <UniqueIdentifier>{fb7db070-e32d-4af7-bd5f-78155d018d26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="14_File">
+      <UniqueIdentifier>{dafdb427-d8a2-40e3-aa57-08d656898dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\00_Connection">
+      <UniqueIdentifier>{96ce4d36-e499-4500-bb66-8ac9a54c5183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\01_ResultSet">
+      <UniqueIdentifier>{512c48a8-260e-4792-943a-958025f379fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\02_Prepared">
+      <UniqueIdentifier>{c508e714-ab7c-40a2-940d-4431af245602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\00_Connection\Interface">
+      <UniqueIdentifier>{67001fcc-023b-40f7-aa87-d06d8e6681b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\01_ResultSet\Interface">
+      <UniqueIdentifier>{000bc2dd-17f1-49c9-a3d9-c0aa4800e2b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="13_DAO\02_Prepared\Interface">
+      <UniqueIdentifier>{b8ae32c6-cfc7-44e1-8f7d-93e97ae3ebd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_etc\ComUtil">
+      <UniqueIdentifier>{61dd3875-4d1b-4f8c-a168-153831a06152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Binary">
+      <UniqueIdentifier>{89b28d62-70f6-41d8-b5e2-2e1df550101d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_etc\WindowOS">
+      <UniqueIdentifier>{98b3202e-2a59-480e-8ed3-e81ead67bb9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Logger\TxLogger">
+      <UniqueIdentifier>{4660bd08-d490-4f28-a594-1b49d070961b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Logger\Log4cxx_Deprecated">
+      <UniqueIdentifier>{ce25262c-e790-4aab-a151-da5e6e3d219e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QBicTxtFile">
+      <UniqueIdentifier>{7de046da-758c-41a7-a3ac-0bbaf716d0be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_etc\Ini">
+      <UniqueIdentifier>{a6a737d0-408b-413e-a2b7-9a3e1fb7aa47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_etc\QBicDoubleFormat">
+      <UniqueIdentifier>{5676a3bb-09fb-48da-b9b9-d1e5828e9d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_etc\필요없는것">
+      <UniqueIdentifier>{5c6b9591-152f-4ea2-aa6d-f6f76df21e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Crypt">
+      <UniqueIdentifier>{cf84ad7d-3352-42e3-b24d-77b4228d9831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_IPAddress">
+      <UniqueIdentifier>{ce0feab7-d97f-4631-ba4c-ec8fd54c7b2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_SystemCheck">
+      <UniqueIdentifier>{9457f06c-7892-4417-b299-7be7285f20e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색">
+      <UniqueIdentifier>{fde3e898-2c32-478a-bf71-1b42e088b79e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색\노드베이스">
+      <UniqueIdentifier>{7b1912f8-2534-446a-8ff3-5784cc50cfc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색\링크베이스">
+      <UniqueIdentifier>{5d055db8-440b-458c-96b5-99e86507b39c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicCommon.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicStringChecker.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicLogger.cpp">
+      <Filter>00_Logger\TxtFileLogger</Filter>
+    </ClCompile>
+    <ClCompile Include="SqliteConnector.cpp">
+      <Filter>13_DAO\Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="MunsellColor.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="DevideDataInterval.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLiteConnection.cpp">
+      <Filter>13_DAO\00_Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="TableOwner.cpp">
+      <Filter>20_IOTable\10_Owner</Filter>
+    </ClCompile>
+    <ClCompile Include="IOQueryBuilder.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClCompile>
+    <ClCompile Include="IOTable.cpp">
+      <Filter>20_IOTable\20_Tables\Table</Filter>
+    </ClCompile>
+    <ClCompile Include="IOTables.cpp">
+      <Filter>20_IOTable\20_Tables</Filter>
+    </ClCompile>
+    <ClCompile Include="IORecordset.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClCompile>
+    <ClCompile Include="IOStaticRecordset.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClCompile>
+    <ClCompile Include="IODynamicrecordset.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClCompile>
+    <ClCompile Include="IOItem.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow\IOItem</Filter>
+    </ClCompile>
+    <ClCompile Include="IORow.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow</Filter>
+    </ClCompile>
+    <ClCompile Include="IORowCollection.cpp">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow</Filter>
+    </ClCompile>
+    <ClCompile Include="IOColumns.cpp">
+      <Filter>20_IOTable\20_Tables\Table\Columns</Filter>
+    </ClCompile>
+    <ClCompile Include="IOColumn.cpp">
+      <Filter>20_IOTable\20_Tables\Table\Columns\Column</Filter>
+    </ClCompile>
+    <ClCompile Include="TableSubject.cpp">
+      <Filter>20_IOTable\20_Tables\Table_Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicDir.cpp">
+      <Filter>14_File</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicStringFormat.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGroup.cpp">
+      <Filter>20_IOTable\00_Code</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeManager.cpp">
+      <Filter>20_IOTable\00_Code</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLiteResultSet.cpp">
+      <Filter>13_DAO\01_ResultSet</Filter>
+    </ClCompile>
+    <ClCompile Include="AdoResultSet.cpp">
+      <Filter>13_DAO\01_ResultSet</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLitePreparedStatement.cpp">
+      <Filter>13_DAO\02_Prepared</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicComFunction.cpp">
+      <Filter>99_etc\ComUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="AdoConnection.cpp">
+      <Filter>13_DAO\00_Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="AdoPreparedStatement.cpp">
+      <Filter>13_DAO\02_Prepared</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicTime.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicBinary.cpp">
+      <Filter>Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicFile.cpp">
+      <Filter>14_File</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicWinOsVersion.cpp">
+      <Filter>99_etc\WindowOS</Filter>
+    </ClCompile>
+    <ClCompile Include="TxLogger.cpp">
+      <Filter>00_Logger\TxLogger</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicTxtWriter.cpp">
+      <Filter>QBicTxtFile</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicTxtReader.cpp">
+      <Filter>QBicTxtFile</Filter>
+    </ClCompile>
+    <ClCompile Include="StdioFileEx.cpp">
+      <Filter>12_IO</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicFileIni.cpp">
+      <Filter>99_etc\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicFlashIni.cpp">
+      <Filter>99_etc\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicDevideData.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicCommonTest.cpp">
+      <Filter>99_etc\필요없는것</Filter>
+    </ClCompile>
+    <ClCompile Include="CString2MBString.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseString.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicMd5.cpp">
+      <Filter>00_Crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicIPAddress.cpp">
+      <Filter>01_IPAddress</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicWindowSystem.cpp">
+      <Filter>02_SystemCheck</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorRangeGen.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkBaseShortPath.cpp">
+      <Filter>경로탐색\링크베이스</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeBaseShortPath.cpp">
+      <Filter>경로탐색\노드베이스</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QBicCommon.def">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="res\QBicCommon.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+    <None Include="경로탐색설명.htm">
+      <Filter>경로탐색</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeSqlite.h">
+      <Filter>00_Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeQBicCommon.h">
+      <Filter>00_Include</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicStringChecker.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="KException.h">
+      <Filter>11_Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="KExceptionMap.h">
+      <Filter>11_Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="KExceptionSqlite.h">
+      <Filter>11_Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="StdioFileEx.h">
+      <Filter>12_IO</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicLogger.h">
+      <Filter>00_Logger\TxtFileLogger</Filter>
+    </ClInclude>
+    <ClInclude Include="SqliteConnector.h">
+      <Filter>13_DAO\Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptionDefine.h">
+      <Filter>11_Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="MunsellColor.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="DevideDataInterval.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLiteConnection.h">
+      <Filter>13_DAO\00_Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicCommonDefine.h">
+      <Filter>00_QBicCommonDefine</Filter>
+    </ClInclude>
+    <ClInclude Include="TableOwner.h">
+      <Filter>20_IOTable\10_Owner</Filter>
+    </ClInclude>
+    <ClInclude Include="IOQueryBuilder.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClInclude>
+    <ClInclude Include="IOTable.h">
+      <Filter>20_IOTable\20_Tables\Table</Filter>
+    </ClInclude>
+    <ClInclude Include="IOTables.h">
+      <Filter>20_IOTable\20_Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="IORecordset.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClInclude>
+    <ClInclude Include="IOStaticRecordset.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClInclude>
+    <ClInclude Include="IODynamicrecordset.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet</Filter>
+    </ClInclude>
+    <ClInclude Include="IOItem.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow\IOItem</Filter>
+    </ClInclude>
+    <ClInclude Include="IORowCollection.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow</Filter>
+    </ClInclude>
+    <ClInclude Include="IORow.h">
+      <Filter>20_IOTable\20_Tables\Table\IORecordSet\IORow</Filter>
+    </ClInclude>
+    <ClInclude Include="IOColumns.h">
+      <Filter>20_IOTable\20_Tables\Table\Columns</Filter>
+    </ClInclude>
+    <ClInclude Include="IOColumn.h">
+      <Filter>20_IOTable\20_Tables\Table\Columns\Column</Filter>
+    </ClInclude>
+    <ClInclude Include="IOCommons.h">
+      <Filter>20_IOTable</Filter>
+    </ClInclude>
+    <ClInclude Include="TableSubject.h">
+      <Filter>20_IOTable\20_Tables\Table_Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="TableObserver.h">
+      <Filter>20_IOTable\20_Tables\Table_Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDir.h">
+      <Filter>14_File</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicStringFormat.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGroup.h">
+      <Filter>20_IOTable\00_Code</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeManager.h">
+      <Filter>20_IOTable\00_Code</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeAdo.h">
+      <Filter>00_Include</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLiteResultSet.h">
+      <Filter>13_DAO\01_ResultSet</Filter>
+    </ClInclude>
+    <ClInclude Include="AdoResultSet.h">
+      <Filter>13_DAO\01_ResultSet</Filter>
+    </ClInclude>
+    <ClInclude Include="DBaseConnection.h">
+      <Filter>13_DAO\00_Connection\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultSet.h">
+      <Filter>13_DAO\01_ResultSet\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="PreparedStatement.h">
+      <Filter>13_DAO\02_Prepared\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLitePreparedStatement.h">
+      <Filter>13_DAO\02_Prepared</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicComFunction.h">
+      <Filter>99_etc\ComUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="AdoConnection.h">
+      <Filter>13_DAO\00_Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="AdoPreparedStatement.h">
+      <Filter>13_DAO\02_Prepared</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicSpeed.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicTime.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicBinary.h">
+      <Filter>Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicFile.h">
+      <Filter>14_File</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicWinOsVersion.h">
+      <Filter>99_etc\WindowOS</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLogger.h">
+      <Filter>00_Logger\TxLogger</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicTxtWriter.h">
+      <Filter>QBicTxtFile</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicTxtReader.h">
+      <Filter>QBicTxtFile</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicTextEncoding.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicFlashIni.h">
+      <Filter>99_etc\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicFileIni.h">
+      <Filter>99_etc\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicFormat.h">
+      <Filter>99_etc\QBicDoubleFormat</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDevideData.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicCommonTest.h">
+      <Filter>99_etc\필요없는것</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseString.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="CString2MBString.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicMd5.h">
+      <Filter>00_Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicIPAddress.h">
+      <Filter>01_IPAddress</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicWindowSystem.h">
+      <Filter>02_SystemCheck</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorRangeGen.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortestPathInfo.h">
+      <Filter>경로탐색</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkBaseShortPath.h">
+      <Filter>경로탐색\링크베이스</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeBaseShortPath.h">
+      <Filter>경로탐색\노드베이스</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QBicCommon.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

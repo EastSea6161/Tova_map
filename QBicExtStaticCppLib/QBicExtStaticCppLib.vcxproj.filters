@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="muParserLib">
+      <UniqueIdentifier>{4666d9b8-f7c4-4ff0-957d-003b2105f015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinyXmlLib">
+      <UniqueIdentifier>{e0246090-9ae2-4f2f-b601-fa25362b6668}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="muParserLib\muParser.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserBase.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserBytecode.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserCallback.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserComplex.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserError.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserInt.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="muParserLib\muParserTokenReader.cpp">
+      <Filter>muParserLib</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXmlLib\tinystr.cpp">
+      <Filter>tinyXmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXmlLib\tinyxml.cpp">
+      <Filter>tinyXmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXmlLib\tinyxmlerror.cpp">
+      <Filter>tinyXmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXmlLib\tinyxmlparser.cpp">
+      <Filter>tinyXmlLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="muParserLib\muParser.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserBase.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserBytecode.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserCallback.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserComplex.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserDef.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserError.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserFixes.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserInt.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserStack.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserToken.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="muParserLib\muParserTokenReader.h">
+      <Filter>muParserLib</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyXmlLib\tinystr.h">
+      <Filter>tinyXmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyXmlLib\tinyxml.h">
+      <Filter>tinyXmlLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tinyXmlLib\ReadMe.txt">
+      <Filter>tinyXmlLib</Filter>
+    </None>
+  </ItemGroup>
+</Project>

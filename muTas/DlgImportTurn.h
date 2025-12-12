@@ -1,0 +1,176 @@
+#pragma once
+
+#include "CustomReportRecordCtrl.h"
+#include "ImportTableInfo.h"
+#include "ImportCommon.h"
+
+class QBicTxtWriter;
+class KTarget;
+
+// KDlgImportTurn 대화 상자입니다.
+class KDlgImportTurn : public KWhiteDlgEx
+{
+	DECLARE_DYNAMIC(KDlgImportTurn)
+
+public:
+	KDlgImportTurn(KTarget* a_pTarget, KIOTable* a_pTable, CWnd* pParent = NULL);   // 표준 생성자입니다.
+	virtual ~KDlgImportTurn();
+
+	// 대화 상자 데이터입니다.
+	enum { IDD = IDD_201_01_04_IMPORT_TABLE_TURN };
+
+	typedef std::vector< CString > CSVRow;
+
+	struct TColMatch
+	{
+		const KIOColumn* pIOColumn;  // 저장 필드 정보
+		int   nImportColIndex;       // 입력 파일의 필드 idx
+	};
+
+	struct TSeparator
+	{
+		int   nCode;
+		TCHAR tcSeparator;
+		CString strDispName;
+	};
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
+
+	DECLARE_MESSAGE_MAP()
+
+protected:
+	afx_msg void OnBnClickedCheckAuto( void );
+	afx_msg void OnReportRecordsDropped  (NMHDR *pNotifyStruct, LRESULT *pResult);
+	afx_msg void OnReportDropSampleColumn(NMHDR *pNotifyStruct, LRESULT *pResult);
+	afx_msg void OnBnClickedCheckDefault();
+	afx_msg void OnSelchangeComboBaseDataType();
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
+	afx_msg void OnEnChangeFilename();
+
+private:
+	ThreadResultInfo RThreadInfo;
+	static unsigned __stdcall ThreadRun(void* p); 
+	void Execute(ThreadPara* pPara);
+	void ExecuteImport(ThreadPara* pPara);
+
+private:
+	void         ResizeComponent();
+
+private:
+	virtual BOOL OnInitDialog();
+
+public:
+	CXTPOfficeBorder<KCustomReportRecordCtrl,false> m_ctrlReportColumn;
+	CXTPOfficeBorder<CXTPReportControl,false> m_ctrlReportSampleColumn;
+	CXTPOfficeBorder<CXTPReportControl,false> m_ctrlReportPreview;
+
+protected:
+	CComboBox m_cboBaseDataType;
+	CXTBrowseEdit m_editFile;
+	CComboBox     m_cboSeparator;
+	CComboBox     m_cboEncoding;
+
+private:
+	void         InitComboBaseDataType();
+	void         InitBaseDataTypeUI();
+	void         InitAutoGenerateUI( void );
+	int          GetBaseDataType();
+	KEMImportType GetSelectedImportType();
+
+	bool		 PriviewLoadCSV( void );
+	void         ParseCSVLineString( CString& strLine, TCHAR tcSeparator, CSVRow& row );
+
+private:
+	void		 InitializeSampleColumnReport();
+	void		 InitializeColumnField( void );
+	void         UpdateReportDataSampleColumn(CString a_strColName, int a_nIndex);
+	void		 UpdateColumnRecord( void );
+	void         UpdateColumnRecordByNode( void );
+	void		 InitializePreview( void );
+
+	void		 ControlDefaultCheck();
+	void		 AllNullCheck();
+
+private:
+	void		 ValidateImport( void );
+	KIOColumn*   GetDefIOColumn( CXTPReportRecord* a_pRecord );
+	int			 GetImportColumnIndex( CXTPReportRecord* a_pRecord );
+	bool         AlertTableChange();
+	void         AddStatusMessage( CString a_strMsg );
+
+private:
+	void         ReadCSVFile(ThreadPara* pPara);
+	void         CSV2BinaryTurn(std::vector<TColMatch> &a_vecColMatch, int a_nCurrentLine, bool& a_bEverErrLine, CSVRow &a_row, std::ofstream& ofs, QBicTxtWriter& ofErr);
+	void         CSV2BinaryTurnNode(std::vector<TColMatch> &a_vecColMatch, int a_nCurrentLine, bool& a_bEverErrLine, CSVRow &a_row, std::ofstream& ofs, QBicTxtWriter& ofErr);
+
+	void         WriteOutputStream(CString a_strImportValue, KEMIODataType a_emDataType, std::ofstream& ofs);
+
+	void         ErrorFileOpen();
+
+	void         ImportTurnData(ThreadPara* pPara);
+	CString      GeneratePrepareQuery( void );
+
+	void         GetStatisticsMsg(KEMImportType a_emImportType, ThreadPara* pPara, CString &a_strMsg);
+
+private:
+	void		 RelationTableNotify();
+
+private:
+	void         InitComboSeparator();
+	void         InitComboEncoding();
+
+private:
+	void         CheckDefaultSeperator(CString a_strFile);
+	int          CheckEncoding(CString a_strFile, bool a_bAlarmErr=false);
+	bool         CheckImportHeader(CString a_strFile);
+
+private:
+	int          GetSelectedEncoding();
+	TCHAR        GetSelectedSeparator();
+	int			 MatchingColumnIndex(CString strColumnCaption);
+
+protected :
+	KIOTable*	m_pTable;
+	CSVRow		m_ColumnRow;
+	CString     m_strTableName;
+	KTarget*    m_pTarget;
+
+	CString     m_strErrFile;
+	CString     m_strMiddleFile;
+
+	int         m_nStartNum;
+	BOOL        m_bAutoGenerateKey;
+
+	std::vector<CSVRow>		m_Rows;
+
+	std::map<Integer, TxPoint>	m_mapNodeRecord;
+	std::set<Integer>                   m_setLinkID;
+	std::map<KODKey, Integer>			m_mapLinkRecord;
+	std::map<Integer, KODKey>           m_mapLinkBasedRecord;
+	std::set<Integer>		m_setPrimaryID;
+	std::set<Integer>       m_setUpdateTransitLineID; 
+
+	std::set<CString>       m_setKeyFieldName;
+	KEMCSVEncoding          m_emCSVEncoding;
+
+	std::map<int, TSeparator>   m_mapSeparator;
+
+	const CString VIRTUAL_FIELD_FROMNODE;
+	const CString VIRTUAL_FIELD_TONODE;      
+
+private:
+	afx_msg void OnCbnSelchangeCombo4(); // 구분자 선택
+	afx_msg void OnCbnSelchangeCombo5(); // 인코딩 선택
+	afx_msg void OnBnClickedCheck1();    // 헤더컬럼 여부 선택
+
+	bool CheckLinkBasedLinkData(Integer nxFLinkID, Integer nxAtNodeID, Integer nxTLinkID, CString &a_strErrMsg);
+	bool CheckNodetoLinkData(Integer a_nxFNodeID, Integer a_nxAtNodeID, Integer a_nxTNodeID, 
+		OUT CString &a_strErrMsg, Integer &a_nxFLinkID, Integer &a_nxTLinkID);
+	bool CheckLinkData(Integer a_nxLinkID);
+	bool CheckPrimaryKey(Integer a_nxPrimaryKey);
+	bool CheckNodeData(Integer a_nxNodeID);
+	void UpdateColumnView();
+	BOOL IsAutoGenerateKey();
+};

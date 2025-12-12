@@ -1,0 +1,24 @@
+/*
+##########################################################################################
+
+1. 파일의 종류
+   QBicShp(공간정보), QBicShx(인덱스정보)
+
+2. QBicShx 구조 
+   2.1 Header(100Byte)
+       Shape Type(4Byte) + Layer Extent(4 * 8Byte) 
+       Reserve : 64Byte
+   2.2 Body 
+       Flag(4Byte 0:삭제된 정보) + ID(8Byte) + Position(8Byte) + Entity Extent(4 * 8Byte) == 52Byte
+   2.3 End
+       1Byte(파일읽기 수행시 마지막을 체크하기 위해)
+
+3. QBicShp 구조
+   3.1 Header(0Byte)
+   3.2 Body 
+       Flag(4Byte 0:삭제된 정보) + ID(8Byte) + GeometrySize(4Byte) +  
+       Geometry (Shape Type(4Byte) + Data)
+   3.3 End
+       1Byte(파일읽기 수행시 마지막을 체크하기 위해)
+###########################################################################################
+*/

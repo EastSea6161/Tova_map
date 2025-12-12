@@ -1,0 +1,1542 @@
+// TocLinkProperties.cpp : 구현 파일입니다.
+//
+
+#include "stdafx.h"
+#include "afxdialogex.h"
+#include "TocLinkProperties.h"
+
+#include "Target.h"
+#include "MapView.h"
+
+#include "LayerXmlRenderer.h"
+#include "TocConfigLabelDlg.h"
+#include "BulkDBaseLink.h"
+
+#include "DBaseConnector.h"
+#include "ImTasDBase.h"
+
+// KTocLinkProperties 대화 상자입니다.
+
+IMPLEMENT_DYNAMIC(KTocLinkProperties, KDialogEx)
+
+KTocLinkProperties::KTocLinkProperties(CWnd* pParent /*=NULL*/)
+	: KDialogEx(KTocLinkProperties::IDD, pParent), m_pTable(nullptr)
+{
+	m_oQbicDefaultMarkerFont.CreatePointFont(120, _T("QBicF"));
+	m_MarkerIntex = 77;
+
+	m_bUseEditBox = false;
+}
+
+KTocLinkProperties::~KTocLinkProperties()
+{
+    if (m_pTable != nullptr)
+        m_pTable->Unregister(this);
+
+	m_oQbicDefaultMarkerFont.DeleteObject();
+}
+
+void KTocLinkProperties::DoDataExchange(CDataExchange* pDX)
+{
+	KDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON_MARKER_COLOR, m_btnSymbolColorPicker);
+
+	DDX_Control(pDX, IDC_COMBO_TEMPLATE, m_cboTemplate);
+	DDX_Control(pDX, IDC_REPORT, m_ctrlReport);
+}
+
+
+BEGIN_MESSAGE_MAP(KTocLinkProperties, KDialogEx)
+	ON_WM_CTLCOLOR()
+	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_CHECK1, &KTocLinkProperties::OnBnClickedCheck1)
+	ON_BN_CLICKED(IDC_CHECK2, &KTocLinkProperties::OnBnClickedCheck2)
+	ON_BN_CLICKED(IDC_BUTTON_OFFSET_SCALE, &KTocLinkProperties::OnBnClickedButtonOffsetScale)
+	ON_BN_CLICKED(IDC_BUTTON_ARROW_SCALE, &KTocLinkProperties::OnBnClickedButtonArrowScale)
+	ON_BN_CLICKED(IDC_RADIO1, &KTocLinkProperties::OnBnClickedRadio1)
+	ON_BN_CLICKED(IDC_RADIO2, &KTocLinkProperties::OnBnClickedRadio2)
+	ON_BN_CLICKED(IDC_BUTTON_MIN_SCALE, &KTocLinkProperties::OnBnClickedButtonMinScale)
+	ON_BN_CLICKED(IDC_BUTTON_MAX_SCALE, &KTocLinkProperties::OnBnClickedButtonMaxScale)
+	ON_BN_CLICKED(IDC_BUTTON_RESET,  &KTocLinkProperties::OnBnClickedReset)
+	ON_BN_CLICKED(IDC_BUTTON_APPLY,  &KTocLinkProperties::OnBnClickedButtonApply)	
+
+	ON_BN_CLICKED(IDC_CHECK_LABEL, &KTocLinkProperties::OnBnClickedCheckLabel)
+	ON_BN_CLICKED(IDC_BUTTON_LINK_LABEL, &KTocLinkProperties::OnBnClickedButtonLabel)
+	ON_BN_CLICKED(IDC_BUTTON_LINK_LABEL_SCALE, &KTocLinkProperties::OnBnClickedButtonLabelScale)
+	ON_BN_CLICKED(IDC_CHECK_LABEL_SCALE, &KTocLinkProperties::OnBnClickedCheckLabelScale)
+
+	ON_CBN_SELCHANGE(IDC_COMBO_TEMPLATE, &KTocLinkProperties::OnBnSelChangeTemplate)
+
+	ON_NOTIFY(NM_CLICK,                    IDC_REPORT,   &KTocLinkProperties::OnReportItemClick)
+    ON_BN_CLICKED(IDC_CHECK_TEMPLATE, &KTocLinkProperties::OnBnClickedCheckTemplate)
+    
+    ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO3, IDC_RADIO4, &KTocLinkProperties::OnBnClickedRadioType)
+
+    ON_EN_CHANGE(IDC_EDIT_SIZE, &KTocLinkProperties::OnEnChangeEditSize)   
+    ON_CPN_XTP_SELENDOK(IDC_BUTTON_MARKER_COLOR, OnBnClickedButtonMarkerColor)
+
+	ON_NOTIFY(XTP_NM_REPORT_HEADER_RCLICK, IDC_REPORT,   &KTocLinkProperties::OnReportColumnRButtonClick)
+	ON_COMMAND(ID_SELECT_ALL,    &KTocLinkProperties::OnSelectAll)
+	ON_COMMAND(ID_SELECT_CANCEL, &KTocLinkProperties::OnDeSelectAll)
+	ON_EN_SETFOCUS(IDC_EDIT_SIZE, &KTocLinkProperties::OnEnSetfocusEditSize)
+	ON_EN_KILLFOCUS(IDC_EDIT_SIZE, &KTocLinkProperties::OnEnKillfocusEditSize)
+END_MESSAGE_MAP()
+
+
+// KTocLinkProperties 메시지 처리기입니다.
+BOOL KTocLinkProperties::OnInitDialog()
+{
+	KDialogEx::OnInitDialog();
+	KDialogEx::UseKeyEscEnter(false, false);
+
+	HICON hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_DLG_ICO) );
+	SetIcon( hIcon, TRUE );
+	SetIcon( hIcon, FALSE );
+
+    try
+    {
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			AddImChampTooltip(IDC_BUTTON_MARKER_COLOR, _T("링크 색상 설정"));
+			AddImChampTooltip(IDC_EDIT_SIZE, _T("링크 두께 설정"));
+			AddImChampTooltip(IDC_CHECK_TEMPLATE, _T("링크 타입별 심볼 설정\n-타입별 색상 및 두께 변경"));
+			AddImChampTooltip(IDC_REPORT, _T("타입별 적용 선택 후 \n타입별 색상 및 두께 변경"));
+			AddImChampTooltip(IDC_CHECK1, _T("링크를 양선으로 지도에 표현"));
+			AddImChampTooltip(IDC_EDIT_OFFSET_SCALE, _T("링크 양선 표현 스케일 설정"));
+			AddImChampTooltip(IDC_BUTTON_OFFSET_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_CHECK2, _T("링크 진행 방향으로 화살표 표현"));
+			AddImChampTooltip(IDC_BUTTON_ARROW_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_RADIO1, _T("항상 지도에 표현"));
+			AddImChampTooltip(IDC_RADIO2, _T("특정 스케일로 확대 되었을 경우만 지도에 표현"));
+			AddImChampTooltip(IDC_EDIT2, _T("노드 Map Display On/Off 스케일 값:\n -특정 스케일로 확대 되었을 경우만 \n지도에 표현"));
+			AddImChampTooltip(IDC_BUTTON_MIN_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+
+			AddImChampTooltip(IDC_CHECK_LABEL, _T("라벨 On/Off\n -라벨 컬럼 선택"));
+			AddImChampTooltip(IDC_BUTTON_LINK_LABEL, _T("라벨 컬럼 선택"));
+			AddImChampTooltip(IDC_CHECK_LABEL_SCALE, _T("선택-라벨 On/Off 스케일 정의\n해제-항상 라벨을 표현"));
+			AddImChampTooltip(IDC_BUTTON_LINK_LABEL_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_BUTTON_RESET, _T("마지막 설정한 정보를 가져오기"));
+			AddImChampTooltip(IDC_BUTTON_APPLY, _T("지도 그리기"));
+		}
+		else {
+			AddImChampTooltip(IDC_BUTTON_MARKER_COLOR, _T("Link color setting"));
+			AddImChampTooltip(IDC_EDIT_SIZE, _T("Link width setting"));
+			AddImChampTooltip(IDC_CHECK_TEMPLATE, _T("링크 타입별 심볼 설정\n-타입별 색상 및 두께 변경"));
+			AddImChampTooltip(IDC_REPORT, _T("Edit Link color and width by Type"));
+			AddImChampTooltip(IDC_CHECK1, _T("Display two-way Link"));
+			AddImChampTooltip(IDC_EDIT_OFFSET_SCALE, _T("링크 양선 표현 스케일 설정"));
+			AddImChampTooltip(IDC_BUTTON_OFFSET_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_CHECK2, _T("Display arrow on Link"));
+			AddImChampTooltip(IDC_BUTTON_ARROW_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_RADIO1, _T("항상 지도에 표현"));
+			AddImChampTooltip(IDC_RADIO2, _T("특정 스케일로 확대 되었을 경우만 지도에 표현"));
+			AddImChampTooltip(IDC_EDIT2, _T("노드 Map Display On/Off 스케일 값:\n -특정 스케일로 확대 되었을 경우만 \n지도에 표현"));
+			AddImChampTooltip(IDC_BUTTON_MIN_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+
+			AddImChampTooltip(IDC_CHECK_LABEL, _T("Label On/Off\n -Select column for Label"));
+			AddImChampTooltip(IDC_BUTTON_LINK_LABEL, _T("Select column for Label"));
+			AddImChampTooltip(IDC_CHECK_LABEL_SCALE, _T("선택-라벨 On/Off 스케일 정의\n해제-항상 라벨을 표현"));
+			AddImChampTooltip(IDC_BUTTON_LINK_LABEL_SCALE, _T("현재 지도의 스케일 값 가져오기"));
+			AddImChampTooltip(IDC_BUTTON_RESET, _T("마지막 설정한 정보를 가져오기"));
+			//AddImChampTooltip(IDC_BUTTON_APPLY, _T("지도 그리기"));
+		}
+        
+
+        LoadInitTemplate();
+
+        KReportCtrlSetting::Default(m_ctrlReport, TRUE, FALSE, FALSE);
+        KReportCtrlSetting::SelectionEnableFalse(m_ctrlReport);	
+        InitRptHeader();
+        SetBackgroundColor(RGB(255,255,255));
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }   
+
+	return TRUE; 
+}
+
+HBRUSH KTocLinkProperties::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = KDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  여기서 DC의 특성을 변경합니다.
+	pDC->SetBkMode(TRANSPARENT);
+	hbr = (HBRUSH)GetStockObject(WHITE_BRUSH);
+
+	return hbr;
+}
+
+void KTocLinkProperties::OnSize(UINT nType, int cx, int cy)
+{
+	KDialogEx::OnSize(nType, cx, cy);
+}
+
+void KTocLinkProperties::SetTargetMap( KTarget* a_pTarget, KMapView* a_pMapView )
+{
+    try
+    {
+        m_pTarget       = a_pTarget;
+        m_pMapView      = a_pMapView;
+
+        try
+        {
+            if (m_pTable != nullptr)
+                m_pTable->Unregister(this);
+        }
+        catch (KExceptionPtr ex)
+        {
+            TxExceptionPrint(ex);
+        }
+        catch (...)
+        {
+            TxLogDebugException();
+        }
+
+        m_pTable = m_pTarget->Tables()->FindTable(TABLE_LINK);
+        m_pTable->Register(this);
+
+        Reset();
+        LoadRptCtrlData();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::NotifyProcess( LPCTSTR a_strSubjectName, Integer a_nxObjectID )
+{
+    try
+    {
+        Reset();
+        LoadRptCtrlData();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+        TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedCheck1()
+{
+    try
+    {
+        CButton* pButton = (CButton*)GetDlgItem(IDC_CHECK1);
+        int nCheck = pButton->GetCheck();
+
+        CEdit* pEdit = (CEdit*)GetDlgItem(IDC_EDIT_OFFSET_SCALE);
+        if (BST_CHECKED == nCheck)
+        {
+            pEdit->EnableWindow(TRUE);
+            OnBnClickedButtonOffsetScale();
+        }
+        else
+        {
+            pEdit->EnableWindow(FALSE);
+            SetDlgItemText(IDC_EDIT_OFFSET_SCALE, _T("0.0"));
+
+            pButton = (CButton*)GetDlgItem(IDC_CHECK2);
+            pButton->SetCheck(FALSE);
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedButtonOffsetScale()
+{
+    try
+    {
+        CString strScale;
+        double  dMapScale = m_pMapView->GetRequestMapScale();
+        strScale.Format(_T("%.0f"), dMapScale + 0.5);
+        SetDlgItemText(IDC_EDIT_OFFSET_SCALE, strScale);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::OnBnClickedCheck2()
+{
+    try
+    {
+        CButton* pButton = (CButton*)GetDlgItem(IDC_CHECK2);
+        int nCheck = pButton->GetCheck();
+
+        CEdit* pEdit = (CEdit*)GetDlgItem(IDC_EDIT_ARROW_SCALE);
+        if (BST_CHECKED == nCheck)
+        {
+            pEdit->EnableWindow(TRUE);
+            OnBnClickedButtonArrowScale();
+
+            pButton = (CButton*)GetDlgItem(IDC_CHECK1);
+            pButton->SetCheck(TRUE);
+        }
+        else
+        {
+            pEdit->EnableWindow(FALSE);
+            SetDlgItemText(IDC_EDIT_ARROW_SCALE, _T("0.0"));
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedButtonArrowScale()
+{
+    try
+    {
+        CString strScale;
+        double  dMapScale = m_pMapView->GetRequestMapScale();
+        strScale.Format(_T("%.0f"), dMapScale + 0.5);
+        SetDlgItemText(IDC_EDIT_ARROW_SCALE, strScale);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedRadio1()
+{
+    try
+    {
+    	ActionShowLayerAllScaleSelect();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::ActionShowLayerAllScaleSelect()
+{
+    try
+    {
+        CButton* pButton = NULL;
+
+        pButton = (CButton*)GetDlgItem(IDC_RADIO1);
+        pButton->SetCheck(TRUE);
+        pButton = (CButton*)GetDlgItem(IDC_RADIO2);
+        pButton->SetCheck(FALSE);
+
+        pButton = (CButton*)GetDlgItem(IDC_EDIT2);
+        pButton->EnableWindow(FALSE);
+
+        pButton = (CButton*)GetDlgItem(IDC_EDIT3);
+        pButton->EnableWindow(FALSE);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedRadio2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	try
+	{
+		ActionShowLayerZoomScaleSelect();
+	}
+	catch (KExceptionPtr ex)
+	{
+	    TxExceptionPrint(ex);
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+	}    
+}
+
+void KTocLinkProperties::ActionShowLayerZoomScaleSelect()
+{
+    try
+    {
+        CButton* pButton = NULL;
+
+        pButton = (CButton*)GetDlgItem(IDC_RADIO1);
+        pButton->SetCheck(FALSE);
+        pButton = (CButton*)GetDlgItem(IDC_RADIO2);
+        pButton->SetCheck(TRUE);
+
+        pButton = (CButton*)GetDlgItem(IDC_EDIT2);
+        pButton->EnableWindow(TRUE);
+
+        pButton = (CButton*)GetDlgItem(IDC_EDIT3);
+        pButton->EnableWindow(TRUE);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::OnBnClickedButtonMinScale()
+{
+    try
+    {
+        CString strScale;
+        double  dMapScale = m_pMapView->GetRequestMapScale();
+        strScale.Format(_T("%.0f"), dMapScale + 0.5);
+        SetDlgItemText(IDC_EDIT2, strScale);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::OnBnClickedButtonMaxScale()
+{
+    try
+    {
+        CString strScale;
+        double  dMapScale = m_pMapView->GetRequestMapScale();
+        strScale.Format(_T("%.0f"), dMapScale);
+        SetDlgItemText(IDC_EDIT3, strScale);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::OnBnClickedReset()
+{
+	Reset();
+}
+
+void KTocLinkProperties::Reset()
+{	
+    try
+    {
+        KLinkLayerDispInfo oInfo; {
+            KLayerXmlRenderer oLayerXmlRenderer(m_pTarget);
+            oLayerXmlRenderer.LoadLinkProperty(oInfo);
+        }
+
+        m_btnSymbolColorPicker.SetColor( oInfo.TLineColor );
+        m_btnSymbolColorPicker.SetWindowText( _T("") );
+        m_btnSymbolColorPicker.ShowText( TRUE );
+        m_btnSymbolColorPicker.ModifyCPStyle( 0, CPS_XT_NOFILL | CPS_XT_EXTENDED | CPS_XT_MORECOLORS | CPS_XT_SHOW3DSELECTION | CPS_XT_SHOWHEXVALUE );
+
+        CString strTemp(_T(""));
+        strTemp.Format(_T("%.1f"), oInfo.TLineWidth);
+        SetDlgItemText(IDC_EDIT_SIZE, strTemp);
+
+        if (oInfo.TUseDrawType != 0) {
+            CheckRadioButton(IDC_RADIO3, IDC_RADIO4, IDC_RADIO4);
+        } 
+        else {
+            CheckRadioButton(IDC_RADIO3, IDC_RADIO4, IDC_RADIO3);
+        }
+
+        CButton* pButton = (CButton*)GetDlgItem(IDC_CHECK1);
+        CEdit*   pEdit   = (CEdit*)GetDlgItem(IDC_EDIT_OFFSET_SCALE);
+
+        double dOffsetScale = oInfo.TOffsetScale;
+        strTemp.Format(_T("%.1f"), dOffsetScale);
+        if (dOffsetScale <= 0.0) {		
+            pButton->SetCheck(BST_UNCHECKED);
+            pEdit->EnableWindow(FALSE);		
+            SetDlgItemText(IDC_EDIT_OFFSET_SCALE, _T("0.0"));
+        } else {
+            pButton->SetCheck(BST_CHECKED);
+            pEdit->EnableWindow(TRUE);			
+            SetDlgItemText(IDC_EDIT_OFFSET_SCALE, strTemp);
+        }
+
+        pButton = (CButton*)GetDlgItem(IDC_CHECK2);
+        pEdit   = (CEdit*)GetDlgItem(IDC_EDIT_ARROW_SCALE);
+
+        double dArrowScale = oInfo.TArrowScale;
+        strTemp.Format(_T("%.1f"), dArrowScale);
+        if (dArrowScale <= 0.0) {		
+            pButton->SetCheck(BST_UNCHECKED);
+            pEdit->EnableWindow(FALSE);		
+            SetDlgItemText(IDC_EDIT_ARROW_SCALE, _T("0.0"));
+        } else {
+            pButton->SetCheck(BST_CHECKED);
+            pEdit->EnableWindow(TRUE);			
+            SetDlgItemText(IDC_EDIT_ARROW_SCALE, strTemp);
+        }
+
+        double dMinScale = oInfo.TMinScale;
+        double dMaxScale = oInfo.TMaxScale;
+
+        strTemp.Format(_T("%.0f"), dMaxScale);
+        SetDlgItemText(IDC_EDIT2, strTemp);
+
+        strTemp.Format(_T("%.0f"), dMaxScale);
+        SetDlgItemText(IDC_EDIT3, strTemp);
+
+        if (dMinScale == 0.0 && dMaxScale == 0.0) {
+            ActionShowLayerAllScaleSelect();
+        } else {
+            ActionShowLayerZoomScaleSelect();
+        }
+
+        //nLabelShow, strLabelFields, nLabelScaleOn, dLabelOnScale
+        pButton = (CButton*)GetDlgItem(IDC_CHECK_LABEL);
+        if (oInfo.TLabelShow == 1) {
+            pButton->SetCheck(BST_CHECKED);
+        } else {
+            pButton->SetCheck(BST_UNCHECKED);
+        }
+
+        m_strLabelFields = oInfo.TLabelField;
+
+        pButton = (CButton*)GetDlgItem(IDC_CHECK_LABEL_SCALE);
+        if (oInfo.TUseLabelScale == 1) {
+            pButton->SetCheck(BST_CHECKED);
+        } else {
+            pButton->SetCheck(BST_UNCHECKED);
+        }
+
+        strTemp.Format(_T("%.0f"), oInfo.TLabelScale);
+        SetDlgItemText(IDC_EDIT_LABEL_SCALE, strTemp);
+        
+        LabelFieldNameDisplay(m_strLabelFields); 
+        LabelCheckEvent();        
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }   
+}
+
+void KTocLinkProperties::OnBnClickedButtonApply()
+{
+    std::vector<TLinkTypeDefine> vecTemplateType;
+    int nCurSel = m_cboTemplate.GetCurSel();
+
+    if (nCurSel < 0)
+        return;
+
+    int nIDTemplate = m_cboTemplate.GetItemData(nCurSel);
+    if (nIDTemplate < 0)
+        return;
+
+    try
+    {   
+        CXTPReportRecords* pRecords = m_ctrlReport.GetRecords();
+
+        int nCntRecord = pRecords->GetCount();
+
+        CXTPReportRecord*     pRecord = nullptr;
+        CXTPReportRecordItem* pItem   = nullptr;
+
+        for(int i = 0; i < nCntRecord; ++i)
+        {
+            pRecord = pRecords->GetAt(i);
+
+            TLinkTypeDefine oLinkTypeDefine = {};
+
+            oLinkTypeDefine.nID = nIDTemplate;
+
+            pItem = pRecord->GetItem(0);
+            int nTypeLink = pItem->GetItemData();
+            oLinkTypeDefine.nLinkType = nTypeLink;
+
+            if (pItem->IsChecked() == TRUE)
+            {
+                oLinkTypeDefine.bDraw = true;
+            }
+            else
+            {
+                oLinkTypeDefine.bDraw = false;
+            }
+
+            pItem = pRecord->GetItem(1);
+            oLinkTypeDefine.clrLink = pItem->GetTextColor();
+
+            CXTPReportRecordItemNumber* pNumber = (CXTPReportRecordItemNumber*)pRecord->GetItem(2);
+            oLinkTypeDefine.dSize = pNumber->GetValue();
+
+            vecTemplateType.push_back( oLinkTypeDefine );
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+        AfxMessageBox(ex->GetErrorMessage());
+        return;
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+        AfxMessageBox(_T("Exception : Report Control Error(OnBnClickedButtonApply)"));
+        return;
+    }	
+
+	KDBaseConPtr spDBaseConnection = KDBase::GetProjectDBConnection(); //KDBase::GetApplicationDBConnection();
+
+	try
+	{
+        BOOL bChecked(FALSE);
+        if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+            bChecked = TRUE;
+        }
+
+        if (bChecked == TRUE) {
+            KProjectDBase::SetDefaultLinkParent(spDBaseConnection, nIDTemplate);
+            KProjectDBase::UpdateTemplateLinkChildInfo(spDBaseConnection, vecTemplateType); 
+        }               
+	}
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+        AfxMessageBox(ex->GetErrorMessage());
+        return;
+    }
+	catch (...)
+	{
+		TxLogDebugException();
+        AfxMessageBox(_T("Exception : KProjectDBase Update Error"));
+        return;
+	}
+
+    try
+    {
+    	Apply();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::Apply()
+{
+    int nCurSel = m_cboTemplate.GetCurSel();
+    if (nCurSel < 0)
+        return;
+
+    int nIDTemplate = m_cboTemplate.GetItemData(nCurSel);
+    if (nIDTemplate < 0)
+        return;
+
+	CString  strTemp;
+	COLORREF markerColor = m_btnSymbolColorPicker.GetColor();	
+
+	GetDlgItemText(IDC_EDIT_SIZE, strTemp);
+	if (!QBicStringChecker::IsNumeric(strTemp))
+	{
+		AfxMessageBox(_T("숫자를 입력해 주세요."));
+		GetDlgItem(IDC_EDIT_SIZE)->SetFocus();
+		return;
+	}
+
+	double   dSize = _ttof(strTemp);
+	if (dSize <= 0)
+	{
+		AfxMessageBox(_T("0보다 큰 숫자를 입력해 주세요."));
+		GetDlgItem(IDC_EDIT_SIZE)->SetFocus();
+		return;
+	}
+
+	double   dOffsetScale(0.0), dArrowScale(0.0);
+	CButton* pButton = (CButton*)GetDlgItem(IDC_CHECK1);
+	CEdit*   pEdit   = (CEdit*)GetDlgItem(IDC_EDIT_OFFSET_SCALE);
+
+	if (pButton->GetCheck() == BST_CHECKED) {
+		/*GetDlgItemText(IDC_EDIT_OFFSET_SCALE, strTemp);
+		if (!QBicStringChecker::IsNumeric(strTemp))
+		{
+			AfxMessageBox(_T("숫자를 입력해 주세요."));
+			GetDlgItem(IDC_EDIT_OFFSET_SCALE)->SetFocus();
+			return;
+		}
+		dOffsetScale = _ttof(strTemp);*/
+        dOffsetScale = 2000000000;
+	}
+
+	pButton = (CButton*)GetDlgItem(IDC_CHECK2);
+	pEdit   = (CEdit*)GetDlgItem(IDC_EDIT_ARROW_SCALE);
+
+	if (pButton->GetCheck() == BST_CHECKED)
+	{
+        /*
+		GetDlgItemText(IDC_EDIT_ARROW_SCALE, strTemp);
+		if (!QBicStringChecker::IsNumeric(strTemp))
+		{
+			AfxMessageBox(_T("숫자를 입력해 주세요."));
+			GetDlgItem(IDC_EDIT_ARROW_SCALE)->SetFocus();
+			return;
+		}
+		dArrowScale = _ttof(strTemp);
+
+		if (dOffsetScale < dArrowScale)
+		{
+			dArrowScale = dOffsetScale;
+		}
+        */
+        dArrowScale = dOffsetScale;
+	}
+
+	double   dMinScaleValue(0.0), dMaxScaleValue(0.0);
+
+	/*int nCheckedRadioBtn = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2);
+	if (nCheckedRadioBtn == IDC_RADIO2)
+	{
+		GetDlgItemText(IDC_EDIT2, strTemp);
+		if (!QBicStringChecker::IsNumeric(strTemp))
+		{
+			AfxMessageBox(_T("숫자를 입력해 주세요."));
+			GetDlgItem(IDC_EDIT2)->SetFocus();
+			return;
+		}
+        
+		dMaxScaleValue = _ttof(strTemp);
+		if (dMaxScaleValue < 0) {
+			AfxMessageBox(_T("0보다 크거나 같은 숫자를 입력해 주세요."));
+			GetDlgItem(IDC_EDIT3)->SetFocus();
+			return;
+		}
+
+		if (dMinScaleValue == 0.0 && dMaxScaleValue == 0.0)	{
+			pButton = (CButton*)GetDlgItem(IDC_RADIO1);
+			pButton->SetCheck(TRUE);
+
+			pButton = (CButton*)GetDlgItem(IDC_RADIO2);
+			pButton->SetCheck(FALSE);
+		}
+	}
+    */
+
+	int      nLabelShow;
+	int      nLabelScaleOn;
+	double   dLabelOnScale;
+
+	BOOL bCheckedLabel = IsDlgButtonChecked(IDC_CHECK_LABEL);    
+	if (bCheckedLabel == TRUE) {
+		nLabelShow = 1;
+	} else {
+		nLabelShow = 0;
+	}
+
+	BOOL bCheckedLabelScaleOn = IsDlgButtonChecked(IDC_CHECK_LABEL_SCALE);    
+	if (bCheckedLabelScaleOn == TRUE) {
+		nLabelScaleOn = 1;
+	} else {
+		nLabelScaleOn = 0;
+	}
+
+	GetDlgItemText(IDC_EDIT_LABEL_SCALE, strTemp);
+	if (!QBicStringChecker::IsNumeric(strTemp)) {
+		if (bCheckedLabel && bCheckedLabelScaleOn) {
+			AfxMessageBox(_T("숫자를 입력해 주세요."));
+			GetDlgItem(IDC_EDIT_LABEL_SCALE)->SetFocus();
+			return;
+		} else {
+			strTemp = _T("0.0");
+		}
+	}
+
+	dLabelOnScale = _ttof(strTemp);
+	if (dLabelOnScale < 0) {
+		AfxMessageBox(_T("0보다 큰 숫자를 입력해 주세요."));
+		GetDlgItem(IDC_EDIT_LABEL_SCALE)->SetFocus();
+		return;
+	}
+    	    
+    int nUseTemplate(0);
+    BOOL bChecked(FALSE);
+    if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+        bChecked = TRUE;
+    }
+
+    if (bChecked == TRUE) {
+        nUseTemplate = 1;
+    }
+
+    int nLayerOn(1); {
+        ITxLayerPtr spLayer = m_pMapView->MapGetLayer(KLayerID::Link());
+        if (spLayer->LayerOn() == false)
+            nLayerOn = 0;
+    }
+
+	KLayerXmlRenderer oLayerXmlRenderer(m_pTarget);
+    KLinkLayerDispInfo oInfo; {
+        oInfo.TLayerOn       = nLayerOn;
+        oInfo.TLineColor     = markerColor;
+        oInfo.TLineWidth     = dSize;
+        oInfo.TMinScale      = 0;
+        oInfo.TMaxScale      = dMaxScaleValue;
+        oInfo.TOffsetScale   = dOffsetScale;
+        oInfo.TArrowScale    = dArrowScale;
+        oInfo.TLabelShow     = nLabelShow;
+        oInfo.TLabelField    = m_strLabelFields;
+        oInfo.TUseLabelScale = nLabelScaleOn;
+        oInfo.TLabelScale    = dLabelOnScale;
+        oInfo.TUseDrawType   = nUseTemplate;
+        oInfo.TDrawTypeID    = nIDTemplate;
+    }
+	oLayerXmlRenderer.SaveLinkProperty(oInfo);
+    	
+    m_pMapView->ReloadRender(true, 2);
+	Reset();
+}
+
+void KTocLinkProperties::OnBnClickedCheckLabel()
+{
+	LabelCheckEvent();
+}
+
+void KTocLinkProperties::LabelCheckEvent()
+{
+    try
+    {
+        CButton* pButton = (CButton*)GetDlgItem(IDC_BUTTON_LINK_LABEL);
+
+        BOOL bChecked = IsDlgButtonChecked(IDC_CHECK_LABEL);    
+        if (bChecked == TRUE)
+        {
+            pButton->EnableWindow(TRUE);
+            GetDlgItem(IDC_CHECK_LABEL_SCALE)->EnableWindow(TRUE);
+            if (IsDlgButtonChecked(IDC_CHECK_LABEL_SCALE))
+            {
+                GetDlgItem(IDC_EDIT_LABEL_SCALE)->EnableWindow(TRUE);
+                GetDlgItem(IDC_BUTTON_LINK_LABEL_SCALE)->EnableWindow(TRUE);
+
+                if (m_strLabelFields.GetLength() == 0)
+                    LoadDefaultLabel();
+            }
+            else
+            {
+                GetDlgItem(IDC_EDIT_LABEL_SCALE)->EnableWindow(FALSE);
+                GetDlgItem(IDC_BUTTON_LINK_LABEL_SCALE)->EnableWindow(FALSE);
+            }		
+        }
+        else
+        {
+            pButton->EnableWindow(FALSE);
+
+            GetDlgItem(IDC_CHECK_LABEL_SCALE)->EnableWindow(FALSE);
+            GetDlgItem(IDC_EDIT_LABEL_SCALE)->EnableWindow(FALSE);
+            GetDlgItem(IDC_BUTTON_LINK_LABEL_SCALE)->EnableWindow(FALSE);
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+void KTocLinkProperties::LoadDefaultLabel()
+{
+    CString strDefaultColumnName(_T(""));
+
+    KIOColumns* pIOColumns = m_pTarget->Tables()->FindTable(TABLE_LINK)->Columns();	
+    int nColumnCount = pIOColumns->ColumnCount();
+    for(int i= 0; i< nColumnCount; i++)
+    {
+        KIOColumn* pColumn        = pIOColumns->GetColumn(i);
+        CString    strDisplayName = pColumn->Caption();
+        CString    strColumnName  = pColumn->Name();
+
+        strDefaultColumnName = pColumn->Name();
+        if (_tcsicmp(strDefaultColumnName, COLUMN_LINK_ID) == 0)
+        {
+            break;    
+        }
+    }
+
+    m_strLabelFields = strDefaultColumnName;
+    LabelFieldNameDisplay(strDefaultColumnName);
+}
+
+void KTocLinkProperties::OnBnClickedButtonLabel()
+{
+	KTocConfigLabelDlg dlg(this);
+	dlg.SetTarget(m_pTarget, LINK, m_strLabelFields);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_strLabelFields = dlg.GetSelectColumns();
+		LabelFieldNameDisplay(m_strLabelFields);
+	}
+}
+
+void KTocLinkProperties::LabelFieldNameDisplay( CString a_strColumnNames )
+{
+    try
+    {
+        CString strTok;
+        std::set<CString> setSelectedColumnName;
+
+        int nTokenPos = 0; 
+        while (AfxExtractSubString(strTok, a_strColumnNames, nTokenPos++, ','))
+        {
+            setSelectedColumnName.insert(strTok.MakeLower());
+        }
+
+        if (m_pTarget == NULL)
+        {
+            TxLogDebugException();
+            return;
+        }
+
+        std::set<CString>::iterator iter;
+        std::set<CString>::iterator end = setSelectedColumnName.end();
+
+        std::vector<CString> vecSelectedColumnName;
+        const KIOColumns* pIOColumns = m_pTarget->Tables()->FindTable(TABLE_LINK)->Columns();	
+        int nColumnCount = pIOColumns->ColumnCount();
+        for(int i= 0; i< nColumnCount; i++)
+        {
+            KIOColumn* pColumn        = pIOColumns->GetColumn(i);
+            CString    strDisplayName = pColumn->Caption();
+            CString    strColumnName  = pColumn->Name();
+            iter = setSelectedColumnName.find(strColumnName.MakeLower());
+            if (iter != end)
+                vecSelectedColumnName.push_back(strDisplayName);
+        }
+
+        CString strDisplayColumnNames;
+        size_t nxCount = vecSelectedColumnName.size();
+        for (size_t i=0; i<nxCount; i++)
+        {
+            if (i == nxCount-1)
+            {
+                strDisplayColumnNames = strDisplayColumnNames + vecSelectedColumnName[i];
+            }
+            else
+            {
+                strDisplayColumnNames = strDisplayColumnNames + vecSelectedColumnName[i] + _T("-");
+            }		
+        }
+
+        SetDlgItemText(IDC_EDIT_LABEL, strDisplayColumnNames);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::OnBnClickedCheckLabelScale()
+{
+	LabelCheckEvent();
+}
+
+void KTocLinkProperties::OnBnClickedButtonLabelScale()
+{
+    try
+    {
+        CString strScale;
+        double  dMapScale = m_pMapView->GetRequestMapScale();
+        strScale.Format(_T("%.0f"), dMapScale + 0.5);
+        SetDlgItemText(IDC_EDIT_LABEL_SCALE, strScale);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+
+void KTocLinkProperties::LoadInitTemplate( void )
+{
+	m_cboTemplate.ResetContent();
+
+	KDBaseConPtr spDBaseConnection = KDBase::GetProjectDBConnection(); //KDBase::GetApplicationDBConnection();
+
+	try
+	{
+		if (spDBaseConnection == NULL)
+			ThrowException(_T("db error connect failed"));
+
+		std::vector<TLinkTemplate> vecLinkTemplate;
+		KProjectDBase::LinkTemplateInfo(spDBaseConnection, vecLinkTemplate);
+
+		int nCntTemplate = vecLinkTemplate.size();
+
+		if (nCntTemplate == 0)
+			ThrowException(_T("템플릿 데이터가 존재하지 않습니다."));
+
+		int nCurSel(0);
+
+		for (int i=0; i <nCntTemplate; i++)
+		{
+			TLinkTemplate oLinkTemplate = vecLinkTemplate[i];
+
+			int nIndex = m_cboTemplate.InsertString(-1, oLinkTemplate.TName);
+			             m_cboTemplate.SetItemData(nIndex, (DWORD_PTR)oLinkTemplate.TID);
+            if (oLinkTemplate.TFlag == 1) {
+                nCurSel = i;
+            }
+		}
+
+		m_cboTemplate.SetCurSel(nCurSel);
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+	}
+}
+
+void KTocLinkProperties::OnBnSelChangeTemplate( void )
+{
+	LoadRptCtrlData();
+}
+
+void KTocLinkProperties::LoadRptCtrlData( void )
+{
+	UpdateRptData();
+}
+
+void KTocLinkProperties::InitRptHeader( void )
+{
+    try
+    {
+        CXTPReportColumn* pColumn = nullptr;
+
+        int nIdxColumn(0);
+
+        pColumn = m_ctrlReport.AddColumn(new CXTPReportColumn(nIdxColumn++, _T("Type"), 40, TRUE));
+        pColumn->SetHeaderAlignment(DT_CENTER);
+        //pColumn->SetEditable(FALSE);
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("타입"));
+		}
+
+        pColumn = m_ctrlReport.AddColumn(new CXTPReportColumn(nIdxColumn++, _T("Color"), 30, FALSE));
+        pColumn->SetHeaderAlignment(DT_CENTER);
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("색상"));
+		}
+
+        pColumn = m_ctrlReport.AddColumn(new CXTPReportColumn(nIdxColumn++, _T("Width"), 30, FALSE));
+        //pColumn->GetEditOptions()->AddSpinButton(TRUE);
+        pColumn->SetHeaderAlignment(DT_CENTER);
+        pColumn->SetSortable(FALSE);
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("두께"));
+		}
+
+        m_ctrlReport.Populate();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }	
+}
+
+void KTocLinkProperties::UpdateRptData( void )
+{  
+    BOOL bChecked(FALSE);
+    if (GetCheckedRadioButton( IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+        bChecked = TRUE;
+    }
+
+    m_cboTemplate.EnableWindow(bChecked);
+
+    int nCurSel     = m_cboTemplate.GetCurSel();
+    if (nCurSel < 0)
+        return;
+
+	int nIDTemplate = m_cboTemplate.GetItemData(nCurSel);
+    if (nIDTemplate < 0)
+        return;
+
+	KDBaseConPtr spDBaseConnection = KDBase::GetProjectDBConnection(); //KDBase::GetApplicationDBConnection();
+
+	std::map<int, TLinkTypeDefine> mapTemplateType;
+	TLinkTypeDefine oLinkTypeDefault = {};
+
+	try
+	{
+		if (spDBaseConnection == NULL)
+			ThrowException(_T("db error connect failed"));
+
+		KProjectDBase::LinkTemplateChildInfo  (spDBaseConnection, nIDTemplate, mapTemplateType);
+		KProjectDBase::LinkTemplateDefaultInfo(spDBaseConnection, oLinkTypeDefault);
+	}
+	catch(KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+	
+    try
+    {
+        CString strTemp(_T("1.0"));
+        GetDlgItemText(IDC_EDIT_SIZE, strTemp);
+        if (!QBicStringChecker::IsNumeric(strTemp))
+        {
+            strTemp = _T("1.0");
+        }
+
+        double   dSize = _ttof(strTemp);
+
+        KCodeManager* pCodeMgr       = m_pTarget->CodeManager();
+        KCodeGroup*   pCodeUserGroup = pCodeMgr->FindCodeGroup(USER_LINKCODE_GROUP_KEY);
+
+		std::map<int, CString> mapCode;
+		pCodeUserGroup->GetCodes(mapCode);
+
+        m_ctrlReport.ResetContent(FALSE);
+
+        CXTPReportRecord*     pRecord = nullptr;
+        CXTPReportRecordItem* pItem   = nullptr;
+
+        CString strValue;
+		std::map<int, CString>::iterator iter, endIter = mapCode.end();
+
+		for (iter = mapCode.begin(); iter != endIter; ++iter)
+		{
+			pRecord = m_ctrlReport.AddRecord(new CXTPReportRecord());
+
+			int nTypeLink = iter->first;
+			
+            double   dWidth(0.0);
+			COLORREF linkColor;
+            bool     bDraw(true);
+
+			AutoType findIter = mapTemplateType.find(nTypeLink);
+			AutoType endIter  = mapTemplateType.end();
+
+			if (findIter != endIter)
+			{
+				TLinkTypeDefine oLinkTypeDefine = findIter->second;
+
+				dWidth    = oLinkTypeDefine.dSize;
+				linkColor = oLinkTypeDefine.clrLink;
+                if (oLinkTypeDefine.bDraw == false)
+                {
+                    bDraw = false;
+                }
+			}
+			else
+			{
+				dWidth    = oLinkTypeDefault.dSize;
+				linkColor = oLinkTypeDefault.clrLink;
+			}
+
+			//0-Type
+			pItem = pRecord->AddItem(new CXTPReportRecordItemText(pCodeUserGroup->SingleCodeValue(nTypeLink, 1)));
+			pItem->SetItemData(nTypeLink);
+            pItem->HasCheckbox(TRUE);
+            
+            if (bDraw)
+            {
+                pItem->SetChecked(TRUE);
+            }
+            else
+            {
+                pItem->SetChecked(FALSE);
+            }
+            
+            if (bChecked == TRUE)
+            {
+                pItem->SetEditable(TRUE);
+            }
+            else
+            {
+                pItem->SetEditable(FALSE);
+            }
+
+			//1-Symbol
+			pItem = pRecord->AddItem(new CXTPReportRecordItemText);
+			CString strSymbol;			
+			pItem->SetAlignment(DT_CENTER);
+			pItem->SetEditable(FALSE);
+			pItem->SetFont(&m_oQbicDefaultMarkerFont);			
+
+			if (bChecked == TRUE) {
+				pItem->SetTextColor( linkColor );
+			}
+			else {
+				pItem->SetTextColor(m_btnSymbolColorPicker.GetColor());
+			}
+			strSymbol.AppendChar( m_MarkerIntex );
+			pItem->SetCaption( strSymbol );
+			pItem->SetItemData( m_MarkerIntex );
+
+			//2-Width
+            if (bChecked == TRUE)
+            {
+                pItem = pRecord->AddItem(new CXTPReportRecordItemNumber( dWidth, _T("%.1f")));
+                pItem->SetEditable(TRUE);
+            }
+            else
+            {
+                pItem = pRecord->AddItem(new CXTPReportRecordItemNumber( dSize, _T("%.1f")));
+                pItem->SetEditable(FALSE);
+            }
+			
+			pItem->SetAlignment(DT_CENTER);			
+		}
+
+        m_ctrlReport.Populate();
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }
+}
+
+
+void KTocLinkProperties::UpdateRptDataPart(int a_nRedrawMode)
+{
+	try
+	{
+		CString strSize(_T("1.0"));
+		GetDlgItemText(IDC_EDIT_SIZE, strSize);
+		if (!QBicStringChecker::IsNumeric(strSize))
+		{
+			strSize = _T("1.0");
+		}
+		double   dSize = _ttof(strSize);
+
+		CXTPReportRecords*          pRecords  = m_ctrlReport.GetRecords();
+		CXTPReportRecord*           pRecord   = nullptr;
+		CXTPReportRecordItemText*   pItemText = nullptr;
+		CXTPReportRecordItemNumber* pItemNum  = nullptr;
+
+		int nRecordCnt = pRecords->GetCount();
+		for (int i= 0; i< nRecordCnt; i++)
+		{
+			pRecord    = pRecords->GetAt(i);
+
+			if (2 == a_nRedrawMode)
+			{
+				pItemText  = (CXTPReportRecordItemText*)pRecord->GetItem(1);
+				pItemText->SetTextColor(m_btnSymbolColorPicker.GetColor());
+			}
+			else if (3 == a_nRedrawMode)
+			{
+				pItemNum   = (CXTPReportRecordItemNumber*)pRecord->GetItem(2);
+				pItemNum->SetValue(dSize);
+			}
+		}
+
+		m_ctrlReport.RedrawControl();
+	}
+	catch (...)
+	{
+		TxLogDebugException();	
+	}
+}
+
+
+void KTocLinkProperties::OnReportItemClick( NMHDR* pNotifyStruct, LRESULT* pResult )
+{
+    try
+    {
+        BOOL bChecked(FALSE);
+        if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+            bChecked = TRUE;
+        }
+
+        if (bChecked == FALSE)
+            return;
+
+        XTP_NM_REPORTRECORDITEM* pItemNotify = (XTP_NM_REPORTRECORDITEM*) pNotifyStruct;
+
+        if (!pItemNotify->pRow || !pItemNotify->pColumn)
+            return;
+
+        int nIndex = pItemNotify->pColumn->GetItemIndex();
+
+        if ( 1 == nIndex )
+        {		
+            CXTColorDialog dlg(pItemNotify->pItem->GetTextColor(), pItemNotify->pItem->GetTextColor()) ;
+            if ( IDOK == dlg.DoModal() )
+            {
+                pItemNotify->pItem->SetTextColor(dlg.GetColor());       
+                m_ctrlReport.RedrawControl();
+            }
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }    
+}
+
+
+void KTocLinkProperties::OnReportColumnRButtonClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+    BOOL bChecked(FALSE);
+    if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+        bChecked = TRUE;
+    }
+
+	if (bChecked == FALSE)
+        return;
+
+	XTP_NM_REPORTRECORDITEM* pItem = (XTP_NM_REPORTRECORDITEM*)pNMHDR;
+	CMenu menu;
+	menu.LoadMenu( IDR_POPUP_SELECT_CHECK);
+	CMenu* pPopup = menu.GetSubMenu(0);
+
+	CXTPReportColumn* pClickedJeader = pItem->pColumn;
+	int nIndex = pClickedJeader->GetItemIndex();
+
+	if( 0 == nIndex)
+	{
+		CXTPMDIFrameWnd* pFrame = (CXTPMDIFrameWnd*)AfxGetMainWnd();
+		CXTPCommandBars* pCommandBars = pFrame->GetCommandBars();
+		pCommandBars->TrackPopupMenuEx(pPopup, TPM_RIGHTBUTTON, pItem->pt.x, pItem->pt.y, this);
+	}
+
+	*pResult = 0;
+}
+
+
+void KTocLinkProperties::OnSelectAll()
+{
+	ReportSelectControl(TRUE);
+}
+
+
+void KTocLinkProperties::OnDeSelectAll()
+{
+	ReportSelectControl(FALSE);
+}
+
+
+void KTocLinkProperties::ReportSelectControl(BOOL a_bSelect)
+{
+	try
+	{
+		CXTPReportRecords*    pRecords = m_ctrlReport.GetRecords();
+		CXTPReportRecord*     pRecord(nullptr);
+		CXTPReportRecordItem* pItem(nullptr);
+
+		int nRecordCnt = pRecords->GetCount();
+
+		for (int i= 0; i< nRecordCnt; i++)
+		{
+			pRecord = pRecords->GetAt(i);
+			pItem   = pRecord->GetItem(0);
+			pItem->SetChecked(a_bSelect);
+		}
+
+		m_ctrlReport.RedrawControl();
+	}
+	catch (...)
+	{
+		TxLogDebugException();	
+	}
+}
+
+
+void KTocLinkProperties::OnBnClickedCheckTemplate()
+{    
+}
+
+
+void KTocLinkProperties::OnBnClickedRadioType( UINT nID )
+{
+    int nCheck = GetCheckedRadioButton( IDC_RADIO3, IDC_RADIO4);
+    if (nCheck == IDC_RADIO3) {
+        m_cboTemplate.EnableWindow(FALSE);
+    }
+    else {
+        m_cboTemplate.EnableWindow(TRUE);
+    }
+
+    UpdateRptData();
+}
+
+void KTocLinkProperties::OnBnClickedButtonMarkerColor()
+{
+    try
+    {
+        BOOL bChecked(FALSE);
+        if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+            bChecked = TRUE;
+        }
+
+        if (bChecked != TRUE)
+            UpdateRptData();
+		else
+			UpdateRptDataPart(2);
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }    
+}
+
+
+void KTocLinkProperties::OnEnChangeEditSize()
+{
+    try
+    {
+        BOOL bChecked(FALSE);
+        if (GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4) == IDC_RADIO4) {
+            bChecked = TRUE;
+        }
+
+        if (bChecked != TRUE) {
+            UpdateRptData();
+		}
+		else {
+			if (m_bUseEditBox) {
+				UpdateRptDataPart(3);
+			}
+		}
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+    	TxLogDebugException();
+    }    
+}
+
+CString KTocLinkProperties::GetCheckedTypeToWhere()
+{
+    CString strOut(_T(""));
+
+    try
+    {
+        CXTPReportRecords* pRecords = m_ctrlReport.GetRecords();
+        int nCount = pRecords->GetCount();
+
+        for (int i=0; i<nCount; i++)
+        {
+            CXTPReportRecord*     pRecord = pRecords->GetAt(i);
+            CXTPReportRecordItem* pItem   = pRecord->GetItem(0);
+
+            if (pItem->IsChecked() == TRUE)
+            {
+                int nType = (int)pItem->GetItemData();
+                if (strOut.GetLength() > 0)
+                {
+                    strOut.AppendFormat(_T(", '%d'"), nType);
+                }
+                else
+                {
+                    strOut.AppendFormat(_T("'%d'"), nType);
+                }
+            }
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxExceptionPrint(ex);
+    }
+    catch (...)
+    {
+        TxLogDebugException();
+    }
+
+    return strOut;
+}
+
+
+void KTocLinkProperties::OnEnSetfocusEditSize()
+{
+	m_bUseEditBox = true;
+}
+
+
+void KTocLinkProperties::OnEnKillfocusEditSize()
+{
+	m_bUseEditBox = false;
+}

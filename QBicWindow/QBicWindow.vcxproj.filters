@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="99_etc">
+      <UniqueIdentifier>{953fce53-605c-4520-9c86-543d2fcc00b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_MessageBox">
+      <UniqueIdentifier>{74cd93a4-a453-44fd-9407-d308cb2e677e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10_Progress">
+      <UniqueIdentifier>{00583d14-bf5d-4c00-95e5-73a8ad44d189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10_Progress\01_DoEvents">
+      <UniqueIdentifier>{bbd7c266-9ade-488a-a0e4-bb5e9fff4f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10_Progress\20_Donkey">
+      <UniqueIdentifier>{3a5c9ce4-68f9-4e6b-89cb-b39408054767}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10_Progress\30_SimpleProgress">
+      <UniqueIdentifier>{0bbc3589-1d70-4211-a8e6-686ba112a25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00_Include">
+      <UniqueIdentifier>{3370cf1b-9886-464f-a767-11fa248dedf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="20_Dialog">
+      <UniqueIdentifier>{80cde12d-6f82-4431-92c8-367ca7178acd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="30_ColorButton">
+      <UniqueIdentifier>{21a363d0-0ee3-4f5e-891c-4a2c3327bf12}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicWindow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicMessageBox.cpp">
+      <Filter>00_MessageBox</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicDoEvents.cpp">
+      <Filter>10_Progress\01_DoEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicDonkeyProgress.cpp">
+      <Filter>10_Progress\20_Donkey</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicPictureEx.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicSimpleProgress.cpp">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicListSimpleProgress.cpp">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicDialogEx.cpp">
+      <Filter>20_Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicReportCtrlSetting.cpp">
+      <Filter>99_etc</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicColorStatic.cpp">
+      <Filter>30_ColorButton</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicFolderDialog.cpp">
+      <Filter>20_Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPara.cpp">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicColorButton.cpp">
+      <Filter>30_ColorButton</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicWindowTester.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QBicWindow.def">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="res\QBicWindow.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeQBicWindow.h">
+      <Filter>00_Include</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicMessageBox.h">
+      <Filter>00_MessageBox</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDoEvents.h">
+      <Filter>10_Progress\01_DoEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDonkeyProgress.h">
+      <Filter>10_Progress\20_Donkey</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicPictureEx.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicSimpleProgress.h">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicListSimpleProgress.h">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicProgressParameter.h">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDialogEx.h">
+      <Filter>20_Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicReportCtrlSetting.h">
+      <Filter>99_etc</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicColorStatic.h">
+      <Filter>30_ColorButton</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicFolderDialog.h">
+      <Filter>20_Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPara.h">
+      <Filter>10_Progress\30_SimpleProgress</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicColorButton.h">
+      <Filter>30_ColorButton</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicWindowTester.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QBicWindow.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

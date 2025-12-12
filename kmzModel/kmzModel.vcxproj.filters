@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="0th_Generation">
+      <UniqueIdentifier>{dfaf4d5d-c568-41b6-a2f8-22d2271f6b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{2db62588-705e-4820-b739-1b706f011d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Parser">
+      <UniqueIdentifier>{6223f706-c412-4245-9ca6-f3e8f0e5f9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2th_Distribution_Model">
+      <UniqueIdentifier>{60588cd7-354b-4d82-b86f-08b487cdeaf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{ff805c98-0278-46a4-ae57-5c1c0a812834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Zone">
+      <UniqueIdentifier>{1e61b549-acd4-4a14-a037-d7c5b5104002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\OD">
+      <UniqueIdentifier>{95d22438-e945-430c-9ea6-adf86a95d3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3th_ModeChoice">
+      <UniqueIdentifier>{100eb53c-0f4b-4195-af0e-cde940823937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment">
+      <UniqueIdentifier>{f02c7d5b-5d95-407d-b49c-7b7c224b420e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2th_Distribution_Model\10_Fratar">
+      <UniqueIdentifier>{ee140d17-72eb-4314-b607-c12820bca117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2th_Distribution_Model\10_Fratar\Old">
+      <UniqueIdentifier>{43ee8605-805e-49ed-8f82-bd2e843078cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2th_Distribution_Model\20_Gravity">
+      <UniqueIdentifier>{053e37f1-1e5d-469a-8878-0d74efd331a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Deprecated">
+      <UniqueIdentifier>{8b881a65-1189-4554-9ca7-ac5364df14d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\10_MinHeap">
+      <UniqueIdentifier>{4cd27280-0c66-4288-8c61-a1e204c71eba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\20_Result">
+      <UniqueIdentifier>{09d2eaec-3c3d-4b27-8129-6789c43ae1f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\05_Input">
+      <UniqueIdentifier>{8b229b80-2635-449d-a390-2aa15ba38313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\20_Result\Node">
+      <UniqueIdentifier>{6eba5e83-2add-420c-8467-ab6abcf048bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\20_Result\Link">
+      <UniqueIdentifier>{d535ba7c-3be2-4db9-9c56-99c175faba5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4th_Assignment\15_Function">
+      <UniqueIdentifier>{ab3dfdc3-8c07-4005-af04-243dc27f0b15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\공용Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="KConstModel.h">
+      <Filter>리소스 파일\공용Header</Filter>
+    </ClInclude>
+    <ClInclude Include="KEnumInModel.h">
+      <Filter>리소스 파일\공용Header</Filter>
+    </ClInclude>
+    <ClInclude Include="KModelDefine.h">
+      <Filter>리소스 파일\공용Header</Filter>
+    </ClInclude>
+    <ClInclude Include="KModelInclude.h">
+      <Filter>리소스 파일\공용Header</Filter>
+    </ClInclude>
+    <ClInclude Include="KGeneration.h">
+      <Filter>0th_Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="KParser.h">
+      <Filter>Common\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="KDistributionData.h">
+      <Filter>2th_Distribution_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="KModelUtilityZone.h">
+      <Filter>Utility\Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="KModelUtilityOD.h">
+      <Filter>Utility\OD</Filter>
+    </ClInclude>
+    <ClInclude Include="KDTreeNode.h">
+      <Filter>3th_ModeChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="KModeChoice.h">
+      <Filter>3th_ModeChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="KParseVariableInfo.h">
+      <Filter>Common\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="KxModeChoice.h">
+      <Filter>3th_ModeChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="KxFModeChoice.h">
+      <Filter>3th_ModeChoice</Filter>
+    </ClInclude>
+    <ClInclude Include="KDistribution_Fratar.h">
+      <Filter>2th_Distribution_Model\10_Fratar\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="KDoubleRecord.h">
+      <Filter>Common\Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="KDoubleRecordArray.h">
+      <Filter>Common\Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="KMultiID.h">
+      <Filter>Common\Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="KMultiIDDoubleRecord.h">
+      <Filter>Common\Deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="DistributionGravity.h">
+      <Filter>2th_Distribution_Model\20_Gravity</Filter>
+    </ClInclude>
+    <ClInclude Include="KxDistributionFratar.h">
+      <Filter>2th_Distribution_Model\10_Fratar\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="DistributionFratar.h">
+      <Filter>2th_Distribution_Model\10_Fratar</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="KGeneration.cpp">
+      <Filter>0th_Generation</Filter>
+    </ClCompile>
+    <ClCompile Include="KParser.cpp">
+      <Filter>Common\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="KModelUtilityZone.cpp">
+      <Filter>Utility\Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="KModelUtilityOD.cpp">
+      <Filter>Utility\OD</Filter>
+    </ClCompile>
+    <ClCompile Include="KDTreeNode.cpp">
+      <Filter>3th_ModeChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="KModeChoice.cpp">
+      <Filter>3th_ModeChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="KParseVariableInfo.cpp">
+      <Filter>Common\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="KDistributionData.cpp">
+      <Filter>2th_Distribution_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="KxModeChoice.cpp">
+      <Filter>3th_ModeChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="KxFModeChoice.cpp">
+      <Filter>3th_ModeChoice</Filter>
+    </ClCompile>
+    <ClCompile Include="KDistribution_Fratar.cpp">
+      <Filter>2th_Distribution_Model\10_Fratar\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="KDoubleRecord.cpp">
+      <Filter>Common\Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="KDoubleRecordArray.cpp">
+      <Filter>Common\Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="KMultiIDDoubleRecord.cpp">
+      <Filter>Common\Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="DistributionGravity.cpp">
+      <Filter>2th_Distribution_Model\20_Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="KxDistributionFratar.cpp">
+      <Filter>2th_Distribution_Model\10_Fratar\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="DistributionFratar.cpp">
+      <Filter>2th_Distribution_Model\10_Fratar</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

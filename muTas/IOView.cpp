@@ -1,0 +1,571 @@
+// IOView.cpp : 구현 파일입니다.
+//
+
+#include "stdafx.h"
+#include "KmzApp.h"
+#include "IOView.h"
+#include "ChildFrm.h"
+#include "IOFrameWnd.h"
+#include "IOTableController.h"
+//^^ #include "IOTable.h"
+#include "IOTableView.h"
+#include "IOTransitTableView.h"
+#include "IOTurnTableView.h"
+#include "IOIntersectionTableView.h"
+#include "IOTerminalScheduleTableView.h"
+#include "MapView.h"
+
+void KIOView::KIOTabControl::OnNavigateButtonClick(CXTPTabManagerNavigateButton* pButton)
+{
+	CXTPTabManager::OnNavigateButtonClick(pButton->GetID());
+	CXTPTabManagerItem* pItem = pButton->GetItem() ? pButton->GetItem() : m_pSelected;
+	if (pItem && (pButton->GetID() == xtpTabNavigateButtonClose) && pItem->IsClosable())
+	{
+		KIOTableView* pView = (KIOTableView*)(KIOTableView::FromHandle(pItem->GetHandle()));
+		DeleteItem(pItem->GetIndex());
+		pView->SendMessage(WM_CLOSE);
+	}
+}
+
+
+
+// KIOView
+IMPLEMENT_DYNCREATE(KIOView, CView)
+
+KIOView::KIOView()
+{
+}
+
+KIOView::~KIOView()
+{
+}
+
+BEGIN_MESSAGE_MAP(KIOView, CView)
+	ON_WM_CREATE()
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TABLEVIEW_TABCONTROL, KIOView::OnSelectedChanged)
+	ON_WM_SIZE()
+	ON_WM_CLOSE()
+	ON_WM_DESTROY()
+END_MESSAGE_MAP()
+
+
+// KIOView 그리기입니다.
+
+void KIOView::OnDraw(CDC* pDC)
+{
+	CDocument* pDoc = GetDocument();
+	// TODO: 여기에 그리기 코드를 추가합니다.
+
+}
+
+
+// KIOView 진단입니다.
+
+#ifdef _DEBUG
+void KIOView::AssertValid() const
+{
+	CView::AssertValid();
+}
+
+#ifndef _WIN32_WCE
+void KIOView::Dump(CDumpContext& dc) const
+{
+	CView::Dump(dc);
+}
+#endif
+#endif //_DEBUG
+
+
+
+KIOTableView* KIOView::CreateNewTableView(KIOTable* pTable)
+{
+	CString strTableName = pTable->Name();
+	KIOTableView* pNewTableView = NULL;
+	if(strTableName.CompareNoCase(_T("transit")) == 0)
+	{
+		pNewTableView = CreateTransitTableView(pTable);
+	}
+	else if (strTableName.CompareNoCase(_T("turn")) == 0 )
+	{
+		pNewTableView = CreateTurnTableView(pTable);
+	}
+    else if (strTableName.CompareNoCase(TABLE_INTERSECTION) == 0 )
+    {
+        pNewTableView = CreateIntersectionTableView(pTable);
+    }
+	else if (strTableName.CompareNoCase(TABLE_TERMINAL_SCHEDULE) == 0)
+	{
+		pNewTableView = CreateTerminalScheduleTableView(pTable);
+	}
+	else
+	{
+		pNewTableView = CreateIOTableView(pTable);
+	}
+	
+	/// check map view is visible
+	CXTPMDIFrameWnd* pFrame = (CXTPMDIFrameWnd*)AfxGetMainWnd();
+	CChildFrame* pChildFrame = (CChildFrame*)pFrame->GetActiveFrame();
+	KMapView* pMapView = pChildFrame->GetMapView();
+	if(NULL != pMapView)
+	{
+		pMapView->NotifyIOTableViewCreated(pTable->Name());
+	}
+
+	return pNewTableView;
+}
+
+
+KIOTableView* KIOView::FindTableView(LPCTSTR strTableName)
+{
+	int nTabCount = m_wndTabCtrl.GetItemCount();
+
+	for(int i = 0; i < nTabCount; ++i)
+	{
+		CXTPTabManagerItem* pItem = m_wndTabCtrl.GetItem(i);
+		KIOTable* pIOTable = (KIOTable*)(pItem->GetData());
+
+//		if(pTable->Name() == strTableName)
+		if(_tcsicmp(pIOTable->Name(), strTableName) == 0)
+		{
+			return dynamic_cast<KIOTableView*>(KIOTableView::FromHandle(pItem->GetHandle()));
+		}
+	}
+	return NULL;
+}
+
+
+int KIOView::GetTableViewIndex(LPCTSTR strTableName)
+{
+	int nTabCount = m_wndTabCtrl.GetItemCount();
+
+	for(int i = 0; i < nTabCount; ++i)
+	{
+		CXTPTabManagerItem* pItem = m_wndTabCtrl.GetItem(i);
+		KIOTable* pIOTable = (KIOTable*)(pItem->GetData());
+
+		//if(pTable->Name() == strTableName)
+		if(_tcsicmp(pIOTable->Name(), strTableName) == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+void KIOView::SetActiveTableView(LPCTSTR strTAbleName)
+{
+	int nTabIndex = GetTableViewIndex(strTAbleName);
+	if(0 <= nTabIndex)
+	{
+		SetActiveTableView(nTabIndex);
+	}
+}
+
+
+void KIOView::SetActiveTableView(int nIndex)
+{
+	m_wndTabCtrl.SetCurSel(nIndex);
+}
+
+
+void KIOView::CloseTableView(LPCTSTR strTableName)
+{
+	int nTabIndex = GetTableViewIndex(strTableName);
+	
+	if(0 <= nTabIndex)
+	{
+		CXTPTabManagerItem* pItem = m_wndTabCtrl.GetItem(nTabIndex);
+		KIOTableView* pView = 
+			dynamic_cast<KIOTableView*>(KIOTableView::FromHandle(pItem->GetHandle()));
+		m_wndTabCtrl.DeleteItem(nTabIndex);
+		pView->CloseWindow();
+	}
+}
+
+
+KIOTableView* KIOView::GetActiveTableView(void)
+{
+	CXTPTabManagerItem* pItem = m_wndTabCtrl.GetSelectedItem();
+	if(NULL != pItem)
+	{
+		return dynamic_cast<KIOTableView*>(KIOTableView::FromHandle(pItem->GetHandle()));
+	}
+	return NULL;
+}
+
+
+int KIOView::GetTableViewCount(void)
+{
+	return m_wndTabCtrl.GetItemCount();
+}
+
+
+KIOTableView* KIOView::GetTableView(int nIndex)
+{
+	if(0 > nIndex)
+	{
+		return NULL;
+	}
+
+	if(m_wndTabCtrl.GetItemCount() <= nIndex)
+	{
+		return NULL;
+	}
+
+	CXTPTabManagerItem* pItem = m_wndTabCtrl.GetItem(nIndex);
+	if(NULL != pItem)
+	{
+		return dynamic_cast<KIOTableView*>(KIOTableView::FromHandle(pItem->GetHandle()));
+	}
+
+	return NULL;
+}
+
+
+KIOTableView* KIOView::CreateIOTableView(KIOTable* pTable)
+{
+	CRuntimeClass* pRuntimeClass = RUNTIME_CLASS(KIOTableView);
+
+	CCreateContext cc;
+	cc.m_pCurrentDoc = GetDocument();
+	cc.m_pNewViewClass = pRuntimeClass;
+	cc.m_pNewDocTemplate = NULL;
+
+	// table view 생성
+	CWnd* pWnd;
+
+	try
+	{
+		pWnd = (CWnd*)(pRuntimeClass->CreateObject());
+		if(NULL == pWnd)
+		{
+			AfxThrowMemoryException();
+		}
+	}
+	catch(...)
+	{
+		return NULL;
+	}
+
+
+	// 생성된 table view를 tab control에 추가
+	DWORD dwStyle = AFX_WS_DEFAULT_VIEW;
+	//dwStyle &= ~WS_BORDER;
+    //dwStyle &= WS_EX_DLGMODALFRAME;
+    
+	int nTabOrder = m_wndTabCtrl.GetItemCount();
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	if(!pWnd->Create(NULL, NULL, dwStyle, rect, 
+		&m_wndTabCtrl, (AFX_IDW_PANE_FIRST + nTabOrder), &cc))
+	{
+		TRACE0("Failed to create table view");
+		return NULL;
+	}
+
+	CXTPTabManagerItem* pItem = m_wndTabCtrl.InsertItem(nTabOrder, pTable->Caption(), pWnd->GetSafeHwnd());
+	pItem->SetData((DWORD_PTR)pTable);
+	pItem->Select();
+
+	KIOTableView* pView = (KIOTableView*)pWnd;
+
+	pView->SetOwner(this);
+	pView->SetTable(pTable);
+
+	return pView;
+
+}
+
+
+KIOTableView* KIOView::CreateTransitTableView(KIOTable* pTable)
+{
+	CRuntimeClass* pRuntimeClass = RUNTIME_CLASS(KIOTransitTableView);
+
+	CCreateContext cc;
+	cc.m_pCurrentDoc = GetDocument();
+	cc.m_pNewViewClass = pRuntimeClass;
+	cc.m_pNewDocTemplate = NULL;
+
+	// table view 생성
+	CWnd* pWnd;
+
+	try
+	{
+		pWnd = (CWnd*)(pRuntimeClass->CreateObject());
+		if(NULL == pWnd)
+		{
+			AfxThrowMemoryException();
+		}
+	}
+	catch(...)
+	{
+		return NULL;
+	}
+
+
+	// 생성된 table view를 tab control에 추가
+	DWORD dwStyle = AFX_WS_DEFAULT_VIEW;
+	//dwStyle &= ~WS_BORDER;
+
+	int nTabOrder = m_wndTabCtrl.GetItemCount();
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	if(!pWnd->Create(NULL, NULL, dwStyle, rect, 
+		&m_wndTabCtrl, (AFX_IDW_PANE_FIRST + nTabOrder), &cc))
+	{
+		TRACE0("Failed to create table view");
+		return NULL;
+	}
+
+	CXTPTabManagerItem* pItem = m_wndTabCtrl.InsertItem(nTabOrder, pTable->Caption(), pWnd->GetSafeHwnd());
+	pItem->SetData((DWORD_PTR)pTable);
+	pItem->Select();
+
+	KIOTransitTableView* pView = (KIOTransitTableView*)pWnd;
+	pView->SetOwner(this);
+	pView->SetTable(pTable);
+
+	return pView;
+}
+
+KIOTableView* KIOView::CreateTurnTableView( KIOTable* pTable )
+{
+    CRuntimeClass* pRuntimeClass = RUNTIME_CLASS(KIOTurnTableView);
+
+    CCreateContext cc;
+    cc.m_pCurrentDoc     = GetDocument();
+    cc.m_pNewViewClass   = pRuntimeClass;
+    cc.m_pNewDocTemplate = NULL;
+
+    // table view 생성
+    CWnd* pWnd;
+    try
+    {
+        pWnd = (CWnd*)(pRuntimeClass->CreateObject());
+        if(NULL == pWnd)
+        {
+            AfxThrowMemoryException();
+        }
+    }
+    catch(...)
+    {
+        return NULL;
+    }
+    
+    // 생성된 table view를 tab control에 추가
+    DWORD dwStyle = AFX_WS_DEFAULT_VIEW;
+    //dwStyle &= ~WS_BORDER;
+
+    int nTabOrder = m_wndTabCtrl.GetItemCount();
+
+    CRect rect;
+    GetClientRect(&rect);
+
+    if(!pWnd->Create(NULL, NULL, dwStyle, rect, 
+        &m_wndTabCtrl, (AFX_IDW_PANE_FIRST + nTabOrder), &cc))
+    {
+        TRACE0("Failed to create table view");
+        return NULL;
+    }
+
+    CXTPTabManagerItem* pItem = m_wndTabCtrl.InsertItem(nTabOrder, pTable->Caption(), pWnd->GetSafeHwnd());
+    pItem->SetData((DWORD_PTR)pTable);
+    pItem->Select();
+
+    KIOTurnTableView* pView = (KIOTurnTableView*)pWnd;
+    pView->SetOwner(this);
+    pView->SetTable(pTable);
+
+    return pView;
+}
+
+KIOTableView* KIOView::CreateIntersectionTableView( KIOTable* pTable )
+{
+    CRuntimeClass* pRuntimeClass = RUNTIME_CLASS(KIOIntersectionTableView);
+
+    CCreateContext cc;
+    cc.m_pCurrentDoc     = GetDocument();
+    cc.m_pNewViewClass   = pRuntimeClass;
+    cc.m_pNewDocTemplate = NULL;
+
+    // table view 생성
+    CWnd* pWnd;
+    try
+    {
+        pWnd = (CWnd*)(pRuntimeClass->CreateObject());
+        if(NULL == pWnd)
+        {
+            AfxThrowMemoryException();
+        }
+    }
+    catch(...)
+    {
+        return NULL;
+    }
+
+    // 생성된 table view를 tab control에 추가
+    DWORD dwStyle = AFX_WS_DEFAULT_VIEW;
+    //dwStyle &= ~WS_BORDER;
+
+    int nTabOrder = m_wndTabCtrl.GetItemCount();
+
+    CRect rect;
+    GetClientRect(&rect);
+
+    if(!pWnd->Create(NULL, NULL, dwStyle, rect, 
+        &m_wndTabCtrl, (AFX_IDW_PANE_FIRST + nTabOrder), &cc))
+    {
+        TRACE0("Failed to create table view");
+        return NULL;
+    }
+
+    CXTPTabManagerItem* pItem = m_wndTabCtrl.InsertItem(nTabOrder, pTable->Caption(), pWnd->GetSafeHwnd());
+    pItem->SetData((DWORD_PTR)pTable);
+    pItem->Select();
+
+    KIOTurnTableView* pView = (KIOTurnTableView*)pWnd;
+    pView->SetOwner(this);
+    pView->SetTable(pTable);
+
+    return pView;
+}
+
+KIOTableView* KIOView::CreateTerminalScheduleTableView( KIOTable* pTable )
+{
+	CRuntimeClass* pRuntimeClass = RUNTIME_CLASS(KIOTerminalScheduleTableView);
+
+	CCreateContext cc;
+	cc.m_pCurrentDoc     = GetDocument();
+	cc.m_pNewViewClass   = pRuntimeClass;
+	cc.m_pNewDocTemplate = nullptr;
+
+	// table view 생성
+	CWnd* pWnd;
+	try
+	{
+		pWnd = (CWnd*)(pRuntimeClass->CreateObject());
+		if(NULL == pWnd)
+		{
+			AfxThrowMemoryException();
+		}
+	}
+	catch(...)
+	{
+		return NULL;
+	}
+
+	// 생성된 table view를 tab control에 추가
+	DWORD dwStyle = AFX_WS_DEFAULT_VIEW;
+	//dwStyle &= ~WS_BORDER;
+
+	int nTabOrder = m_wndTabCtrl.GetItemCount();
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	if(!pWnd->Create(NULL, NULL, dwStyle, rect, 
+		&m_wndTabCtrl, (AFX_IDW_PANE_FIRST + nTabOrder), &cc))
+	{
+		TRACE0("Failed to create table view");
+		return NULL;
+	}
+
+	CXTPTabManagerItem* pItem = m_wndTabCtrl.InsertItem(nTabOrder, pTable->Caption(), pWnd->GetSafeHwnd());
+	pItem->SetData((DWORD_PTR)pTable);
+	pItem->Select();
+
+	KIOTurnTableView* pView = (KIOTurnTableView*)pWnd;
+	pView->SetOwner(this);
+	pView->SetTable(pTable);
+
+	return pView;
+}
+
+// KIOView 메시지 처리기입니다.
+int KIOView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	m_wndTabCtrl.Create(WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 
+		                CRect(0, 0, 0, 0), this, IDC_TABLEVIEW_TABCONTROL);
+	m_wndTabCtrl.GetPaintManager()->SetAppearance(xtpTabAppearanceStateButtons);
+	m_wndTabCtrl.GetPaintManager()->m_bHotTracking = TRUE;
+	m_wndTabCtrl.GetPaintManager()->m_bShowIcons   = TRUE;
+	m_wndTabCtrl.GetPaintManager()->DisableLunaColors(FALSE);
+	m_wndTabCtrl.SetPosition        (xtpTabPositionTop);
+	m_wndTabCtrl.ShowCloseItemButton(xtpTabNavigateButtonAutomatic);
+	return 0;
+}
+
+void KIOView::OnSelectedChanged(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	int nItemCount = m_wndTabCtrl.GetItemCount();
+	if(0 == nItemCount)
+	{
+		CMDIFrameWnd* pMainFrame = dynamic_cast<CMDIFrameWnd*>(AfxGetMainWnd());
+		CChildFrame* pChildFrame = dynamic_cast<CChildFrame*>(pMainFrame->GetActiveFrame());
+		pChildFrame->ShowIOView(false);
+	}
+	else
+	{
+		CXTPTabManagerItem* pItem = m_wndTabCtrl.GetSelectedItem();
+		CXTPFrameWnd* pFrameWnd = (CXTPFrameWnd*)GetParentFrame();
+		pFrameWnd->SetActiveView((CView*)(CView::FromHandle(pItem->GetHandle())));
+	}
+}
+
+void KIOView::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+
+	if( m_wndTabCtrl.GetSafeHwnd() )
+	{
+		CRect rect;
+		GetClientRect( &rect );
+		m_wndTabCtrl.SetWindowPos( NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOACTIVATE | SWP_NOZORDER );
+	}
+}
+
+void KIOView::OnClose()
+{
+	TRACE("*****KIOView::OnClose\n");
+	CView::OnClose();
+}
+
+void KIOView::OnDestroy()
+{
+	TRACE("*****KIOView::OnDestroy\n");
+	CView::OnDestroy();
+}
+
+void KIOView::ActivatedFrameWndNotifyProcess()
+{
+	int nCount = m_wndTabCtrl.GetItemCount();
+	for (int i=0; i<nCount; i++)
+	{
+		KIOTableView* pIOTableView = GetTableView(i);
+		if (pIOTableView != NULL)
+		{
+			pIOTableView->ActivatedFrameWndNotifyProcess();
+		}
+	}
+}
+
+void KIOView::DeActivatedFrameWndNotifyProcess()
+{
+	int nCount = m_wndTabCtrl.GetItemCount();
+	for (int i=0; i<nCount; i++)
+	{
+		KIOTableView* pIOTableView = GetTableView(i);
+		if (pIOTableView != NULL)
+		{
+			pIOTableView->DeActivatedFrameWndNotifyProcess();
+		}
+	}
+}

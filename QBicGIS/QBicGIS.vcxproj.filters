@@ -1,0 +1,641 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicGIS.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileReader.cpp">
+      <Filter>ShapeFile</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeInfo.cpp">
+      <Filter>ShapeFile</Filter>
+    </ClCompile>
+    <ClCompile Include="TxEnvelope.cpp">
+      <Filter>ITxGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="TxPoint.cpp">
+      <Filter>ITxGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="TxMath.cpp">
+      <Filter>Util\TxMath</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapDrawProcess.cpp">
+      <Filter>ThunderMap\ThunderMapMain\DrawProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCommandZoomOut.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCommandZoomIn.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCommandPan.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="IThunderMapCommand.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMap.cpp">
+      <Filter>ThunderMap\ThunderMapMain\ThunderMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSpatialIndex.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxSpatialIndex</Filter>
+    </ClCompile>
+    <ClCompile Include="TxConvertUtil.cpp">
+      <Filter>Util\Conversion</Filter>
+    </ClCompile>
+    <ClCompile Include="TxPolyline.cpp">
+      <Filter>ITxGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="TxPolygon.cpp">
+      <Filter>ITxGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="clipper.cpp">
+      <Filter>Clipper</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileWriter.cpp">
+      <Filter>ShapeFile</Filter>
+    </ClCompile>
+    <ClCompile Include="TxVector.cpp">
+      <Filter>Util\TxMath</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCommandMPan.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCommandWheel.cpp">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapCtrl.cpp">
+      <Filter>ThunderMapCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="TxFeature.cpp">
+      <Filter>ThunderMap\ITxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TxGridTileIndex.cpp">
+      <Filter>GridTileIndex</Filter>
+    </ClCompile>
+    <ClCompile Include="TxCoordinateConvert.cpp">
+      <Filter>Util\좌표변환</Filter>
+    </ClCompile>
+    <ClCompile Include="TxFeatureLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ITxFeatureLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxImageTmsLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxGdiplusBitmap.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSQLMapServer.cpp">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTmsServer.cpp">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxFeatureFileUserLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxFeatureDisp.cpp">
+      <Filter>ThunderMap\ITxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TxFeatureUserLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MapImageDownLoader.cpp">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClCompile>
+    <ClCompile Include="IThunderMapView.cpp">
+      <Filter>ThunderMapView</Filter>
+    </ClCompile>
+    <ClCompile Include="TxMapLayerManager.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTables.cpp">
+      <Filter>Util\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="ITxLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTooltipWnd.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Tooltip</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTooltipView.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Tooltip</Filter>
+    </ClCompile>
+    <ClCompile Include="TxConst.cpp">
+      <Filter>Util\TxMath</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTempMapServer.cpp">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSymbolPoint.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSymbolDirectionLine.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSymbolLine.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSymbolPolygon.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Polygon</Filter>
+    </ClCompile>
+    <ClCompile Include="ThunderMapDisp.cpp">
+      <Filter>ThunderMap\ThunderDispCoordinate</Filter>
+    </ClCompile>
+    <ClCompile Include="TxImageLayer.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer\미사용</Filter>
+    </ClCompile>
+    <ClCompile Include="TxMakeCurve.cpp">
+      <Filter>Util\GeoUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSpatialOper.cpp">
+      <Filter>Util\GeoUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="TxSymbolPointImage.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClCompile>
+    <ClCompile Include="TxCachedBitmap.cpp">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TxLineDecoSymbolArrow.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxLineDecoSymbol.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxLineDecoSymbolCircle.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxLineDecoSymbolCircleCross.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxPointDecoSymbol.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\PointDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxPointDecoSymbolCircle.cpp">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\PointDecoSymbol</Filter>
+    </ClCompile>
+    <ClCompile Include="TxTmsNaver.cpp">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileInfo.h">
+      <Filter>ShapeFile</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileReader.h">
+      <Filter>ShapeFile</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxGeometry.h">
+      <Filter>ITxGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="TxEnvelope.h">
+      <Filter>ITxGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPoint.h">
+      <Filter>ITxGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="TxMath.h">
+      <Filter>Util\TxMath</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeBoost.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeCommon.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeDefine.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeDirect2d.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeException.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeSTL.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="TxMapEnumType.h">
+      <Filter>ThunderMap\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxObject.h">
+      <Filter>ThunderMap\ITxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TxFeature.h">
+      <Filter>ThunderMap\ITxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapDrawProcess.h">
+      <Filter>ThunderMap\ThunderMapMain\DrawProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCommandZoomOut.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCommandZoomIn.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCommandPan.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="IThunderMapCommand.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="IThunderMap.h">
+      <Filter>ThunderMap\ThunderMapMain\ThunderMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMap.h">
+      <Filter>ThunderMap\ThunderMapMain\ThunderMap</Filter>
+    </ClInclude>
+    <ClInclude Include="IThunderMouseEvent.h">
+      <Filter>ThunderMap\ThunderMapMain\ThunderMouseEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSpatialIndex.h">
+      <Filter>ThunderMap\ThunderMapMain\TxSpatialIndex</Filter>
+    </ClInclude>
+    <ClInclude Include="GDIStart.h">
+      <Filter>ThunderMap\ThunderMapMain\ThunderMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPolyline.h">
+      <Filter>ITxGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="TxProcessInfo.h">
+      <Filter>Util\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPixelKey.h">
+      <Filter>ThunderMap\ThunderMapMain\DrawProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPolygon.h">
+      <Filter>ITxGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="clipper.hpp">
+      <Filter>Clipper</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileWriter.h">
+      <Filter>ShapeFile</Filter>
+    </ClInclude>
+    <ClInclude Include="TxVector.h">
+      <Filter>Util\TxMath</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSimplication.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeMessageID.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCommandMPan.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCommandWheel.h">
+      <Filter>ThunderMap\ThunderMapMain\MapDrawCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapCtrl.h">
+      <Filter>ThunderMapCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="TxMapMessage.h">
+      <Filter>ThunderMapCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="ThunderMapDisp.h">
+      <Filter>ThunderMap\ThunderDispCoordinate</Filter>
+    </ClInclude>
+    <ClInclude Include="TxGridTileIndex.h">
+      <Filter>GridTileIndex</Filter>
+    </ClInclude>
+    <ClInclude Include="TxCoordinateConvert.h">
+      <Filter>Util\좌표변환</Filter>
+    </ClInclude>
+    <ClInclude Include="TxImageLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxFeatureLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLayerInfo.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\LayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxFeatureLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxImageLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxGdiplusBitmap.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxImageTmsLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxGisServer.h">
+      <Filter>ThunderMap\DataAgent</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxImageServer.h">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSQLMapServer.h">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxMapServer.h">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTmsServer.h">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxGUID.h">
+      <Filter>Util\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="TxFeatureFileUserLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxFeatureDisp.h">
+      <Filter>ThunderMap\ITxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TxFeatureUserLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MapImageDownLoader.h">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClInclude>
+    <ClInclude Include="IThunderMapView.h">
+      <Filter>ThunderMapView</Filter>
+    </ClInclude>
+    <ClInclude Include="TxMapLayerManager.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTables.h">
+      <Filter>Util\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTooltipWnd.h">
+      <Filter>ThunderMap\ThunderMapMain\Tooltip</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTooltipView.h">
+      <Filter>ThunderMap\ThunderMapMain\Tooltip</Filter>
+    </ClInclude>
+    <ClInclude Include="TxConst.h">
+      <Filter>Util\TxMath</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTempMapServer.h">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxFeatureUserLayer.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxLabelSymbol.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Label_Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLabel.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Label_Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPointQuad.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPoint.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPointCircle.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolLine.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolDirectionLine.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPolygon.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Polygon</Filter>
+    </ClInclude>
+    <ClInclude Include="ITxSymbol.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxHatchInfo.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPointRect.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="TxConvertUtil.h">
+      <Filter>Util\Conversion</Filter>
+    </ClInclude>
+    <ClInclude Include="TxKeyGenerator.h">
+      <Filter>Util\KeyGenerator\안쓰는 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TxMakeCurve.h">
+      <Filter>Util\GeoUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSpatialOper.h">
+      <Filter>Util\GeoUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="TxM2Key.h">
+      <Filter>Util\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="TxSymbolPointImage.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point</Filter>
+    </ClInclude>
+    <ClInclude Include="TxCachedBitmap.h">
+      <Filter>ThunderMap\ThunderMapMain\TxLayer\IImageLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLineDecoSymbolArrow.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLineDecoSymbol.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLineDecoSymbolCircle.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxLineDecoSymbolCircleCross.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPointDecoSymbol.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\PointDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxPointDecoSymbolCircle.h">
+      <Filter>ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\PointDecoSymbol</Filter>
+    </ClInclude>
+    <ClInclude Include="TxTmsNaver.h">
+      <Filter>ThunderMap\DataAgent\ImageServer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\QBicGIS.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="QBicGIS.def">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="QBicFileFormat.txt">
+      <Filter>ThunderMap\ThunderDispCoordinate\FeatureServer</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{a4373f8e-cd62-438b-ac3f-2487109f13e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{52b07ac4-ba54-4a77-b31f-d82749c7fec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{a2dcd052-c646-4749-a963-23df5491f3b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShapeFile">
+      <UniqueIdentifier>{2779e215-97e3-4e09-a4b4-199e324393c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{369fae09-03a4-4b02-b265-5278d18b5414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap">
+      <UniqueIdentifier>{972918e0-9c55-4ab3-8364-64b05f1dde0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\DataAgent">
+      <UniqueIdentifier>{5841252f-da3f-4e21-b044-222518a9c26e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\Enum">
+      <UniqueIdentifier>{03a56308-e453-4a3a-afbe-e778335cf195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ITxObject">
+      <UniqueIdentifier>{32fd79d9-b2e5-4fdd-9836-42a702c62fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderDispCoordinate">
+      <UniqueIdentifier>{066e9880-30ee-491c-b320-1b07c683a8dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain">
+      <UniqueIdentifier>{10ef8e8e-89a8-4213-b5e9-3447a0d2cf4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\MapDrawCommand">
+      <UniqueIdentifier>{76abeb5e-943e-4393-98ac-17f52282003e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\ThunderMap">
+      <UniqueIdentifier>{2967f638-45cb-4bf9-90c3-4222407dad4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\ThunderMouseEvent">
+      <UniqueIdentifier>{9519811d-884f-420b-90af-5b8d9cd449d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer">
+      <UniqueIdentifier>{61865fed-d964-4d83-9c08-8385baa9dac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxSpatialIndex">
+      <UniqueIdentifier>{c651b8d8-aa27-4f63-a6ff-d71ff2e3635c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol">
+      <UniqueIdentifier>{c752a77d-54e3-4268-8d43-474b801be54b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ITxGeometry">
+      <UniqueIdentifier>{8f36eaeb-fa89-4ee5-a8ac-e4d2b85d8bc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Clipper">
+      <UniqueIdentifier>{b7046359-2f46-4e4e-8860-d6c21750738c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\DrawProcess">
+      <UniqueIdentifier>{49e1e030-b0ea-4bac-8731-6ea8da7bc6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMapCtrl">
+      <UniqueIdentifier>{44564c3f-9d89-416e-8bca-a81659c7db4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GridTileIndex">
+      <UniqueIdentifier>{3211f4d6-7d1d-4a0e-adf8-7a816de93750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer\LayerInfo">
+      <UniqueIdentifier>{3bb69539-d7c9-477f-a2a8-4d42362cc870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer">
+      <UniqueIdentifier>{1e239700-61fc-47af-8ea2-9bde58c4d48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer\IImageLayer">
+      <UniqueIdentifier>{c44d21d4-e2d6-4f2e-8b05-775d56fcab60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\DataAgent\ImageServer">
+      <UniqueIdentifier>{63290826-f651-48d4-ac0b-68e646726b01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer\IFeatureLayer\UserLayer">
+      <UniqueIdentifier>{97762eb6-b57e-42f8-be5f-4703eb4f9b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMapView">
+      <UniqueIdentifier>{d80b077b-3c0b-4fe3-8a4a-f00080457fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Tooltip">
+      <UniqueIdentifier>{fc65b61c-9d76-4df3-a40b-4cc192fb051b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderDispCoordinate\FeatureServer">
+      <UniqueIdentifier>{9890b05b-ee8a-4e17-9936-6591c5c49a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\TxLayer\IImageLayer\미사용">
+      <UniqueIdentifier>{6dc1992a-f1e4-4bdf-a235-4403a3e07531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Label_Symbol">
+      <UniqueIdentifier>{d4af2ba5-59dd-414c-8ed3-d62cdeda5a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol">
+      <UniqueIdentifier>{f6c93903-8c50-4516-a2e6-f4e437d5be23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Line">
+      <UniqueIdentifier>{2b120db3-8b93-4de5-ae0b-42acc2af7c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Point">
+      <UniqueIdentifier>{d21c8029-9a41-4671-b517-5b9f8b123f14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\Polygon">
+      <UniqueIdentifier>{fe24cddf-8d2b-4005-90fa-cfbd0dbf9648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5fddc4d9-873c-4188-bf7c-bbb6a454dfa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Conversion">
+      <UniqueIdentifier>{cdc4f9c2-b031-4f47-a80b-dc2ba1537b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\TxMath">
+      <UniqueIdentifier>{426e87e9-4209-4b11-a63b-1b19b78ace57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\KeyGenerator">
+      <UniqueIdentifier>{fae584a9-7727-4e6f-8b3d-fb1a260d5ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\KeyGenerator\안쓰는 파일">
+      <UniqueIdentifier>{d83ad70b-a020-49ec-967f-be7963ef060f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\좌표변환">
+      <UniqueIdentifier>{8aa03480-a36f-46f9-be69-4c227ada42b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Field">
+      <UniqueIdentifier>{ffdea376-4b0f-45d7-8e53-3a57aa61c44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\etc">
+      <UniqueIdentifier>{cde9d801-32fe-45ec-8a84-0aa3f4c1e49a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\GeoUtil">
+      <UniqueIdentifier>{977aca92-781f-4664-975a-81bd3f29cc25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol">
+      <UniqueIdentifier>{2d20d327-0b50-47a7-9ff2-c5fc8ef28b31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\PointDecoSymbol">
+      <UniqueIdentifier>{78ca78a0-be29-4370-94df-bf9efe641bc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThunderMap\ThunderMapMain\Symbol\Geometry_Symbol\DecoSymbol\LineDecoSymbol">
+      <UniqueIdentifier>{6e435d4e-075b-4800-b282-673aa76a6350}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QBicGIS.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

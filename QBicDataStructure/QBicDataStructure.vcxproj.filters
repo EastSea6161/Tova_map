@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="공용Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{2db62588-705e-4820-b739-1b706f011d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="사용금지">
+      <UniqueIdentifier>{6f3c9fe8-ed4d-4a80-bec5-3ecff3504af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="사용금지\Vector_deprecated">
+      <UniqueIdentifier>{a931399b-4687-48be-99a0-a423faec2ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="사용금지\Math_deprecated">
+      <UniqueIdentifier>{888b7c80-116d-4ff6-ac36-d0e231aadae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="사용금지\Geometry_deprecated">
+      <UniqueIdentifier>{2fbdf357-cec2-40ab-88d7-98ed89185ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BushPath">
+      <UniqueIdentifier>{1822548a-f77b-453b-86b7-b82fdd3ecb2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색_deprecated">
+      <UniqueIdentifier>{a340c4d4-890c-476c-9ed6-5c8e0a427571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색_deprecated\05_Input">
+      <UniqueIdentifier>{17c1f8d4-48b3-4f3e-9a36-ecfa0a5c0dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색_deprecated\10_MinHeap">
+      <UniqueIdentifier>{3cc66df4-8c9d-4ed3-9288-e9122b1f6515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색_deprecated\15_Function">
+      <UniqueIdentifier>{e20682eb-c15b-4be7-b3b8-e031a0197ac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="경로탐색_deprecated\20_Result">
+      <UniqueIdentifier>{7a295964-24c6-4a2b-a53f-5ea40930e8f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="KSDoubleRecordArray.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KODKey.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KSDoubleRecord.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KODKeyDoubleRecords.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KIDKeyDoubleRecords.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KIntegerRecord.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KODKeyIntegerRecords.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KLinkKey.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KValueList.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicDataStructureDefine.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeQBicDataStructure.h">
+      <Filter>공용Header</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicGeometry.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicVector.h">
+      <Filter>사용금지\Vector_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicMath.h">
+      <Filter>사용금지\Math_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicPoint.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicPolyline.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicEnvelope.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicPolygon.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicConst.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="IQBicGeometry.h">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClInclude>
+    <ClInclude Include="QBic2DMatrix.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="KLink.h">
+      <Filter>경로탐색_deprecated\05_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KLinkCollection.h">
+      <Filter>경로탐색_deprecated\05_Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KIDKeyIntegerValueList.h">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHeapLink.h">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="KShortestPath.h">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortestPathLinkBaseByTurnInfo.h">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortestPathByTurnInfo.h">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClInclude>
+    <ClInclude Include="KMinHeap.h">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="KCostLink.h">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClInclude>
+    <ClInclude Include="KCostLinkCollection.h">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClInclude>
+    <ClInclude Include="KNodeArrivedMinLink.h">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClInclude>
+    <ClInclude Include="QBicBush.h">
+      <Filter>BushPath</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="KODKey.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KSDoubleRecordArray.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KSDoubleRecord.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KODKeyDoubleRecords.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KIDKeyDoubleRecords.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KIntegerRecord.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KODKeyIntegerRecords.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KLinkKey.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicGeometry.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicVector.cpp">
+      <Filter>사용금지\Vector_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicMath.cpp">
+      <Filter>사용금지\Math_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicPolyline.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicEnvelope.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicPolygon.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicConst.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBicPoint.cpp">
+      <Filter>사용금지\Geometry_deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="QBic2DMatrix.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="KLink.cpp">
+      <Filter>경로탐색_deprecated\05_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KLinkCollection.cpp">
+      <Filter>경로탐색_deprecated\05_Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KIDKeyIntegerValueList.cpp">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="MinHeapLink.cpp">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="KShortestPath.cpp">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="ShortestPathByTurnInfo.cpp">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="ShortestPathLinkBaseByTurnInfo.cpp">
+      <Filter>경로탐색_deprecated\15_Function</Filter>
+    </ClCompile>
+    <ClCompile Include="KMinHeap.cpp">
+      <Filter>경로탐색_deprecated\10_MinHeap</Filter>
+    </ClCompile>
+    <ClCompile Include="KCostLink.cpp">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClCompile>
+    <ClCompile Include="KCostLinkCollection.cpp">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClCompile>
+    <ClCompile Include="KNodeArrivedMinLink.cpp">
+      <Filter>경로탐색_deprecated\20_Result</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

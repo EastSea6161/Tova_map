@@ -1,0 +1,330 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\QBicWindow.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
+    "#include ""l.KOR\\afxres.rc""      // 표준 구성 요소입니다.\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,2
+ PRODUCTVERSION 1,0,0,2
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "Qbicware"
+            VALUE "FileDescription", "Extended MFC Control library"
+            VALUE "FileVersion", "1.0.0.2"
+            VALUE "InternalName", "QBicWindow.dll"
+            VALUE "LegalCopyright", "(c) Qbicware.  All rights reserved."
+            VALUE "OriginalFilename", "QBicWindow.dll"
+            VALUE "ProductName", "QBicWindow"
+            VALUE "ProductVersion", "1.0.0.2"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 949
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_TESTER DIALOG 0, 0, 320, 200
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "대화 상자"
+FONT 9, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,209,179,50,14
+    PUSHBUTTON      "취소",IDCANCEL,263,179,50,14
+END
+
+IDD_QW_0510_ProgressDlg DIALOGEX 0, 0, 267, 82
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Dialog (IDD_0510_ProgressDlg)"
+FONT 9, "나눔고딕", 400, 0, 0x0
+BEGIN
+    LTEXT           "Please wait..processing data....",IDC_STCSTATUS,43,10,192,38
+    CONTROL         "",IDC_STATIC_HOR,"Static",SS_ETCHEDHORZ,7,57,253,1
+    CONTROL         "",IDC_STCANIMATE,"Static",SS_BLACKFRAME,7,8,30,26
+    LTEXT           "   시작시간 :",IDC_STATIC_START_CAPTION,7,63,35,8
+    LTEXT           "----",IDC_STATIC_START_TIME,46,63,37,8
+    RTEXT           "진행시간 :",IDC_STATIC_PROGRESS_CAPTION,90,63,71,8
+    LTEXT           "----",IDC_STATIC_PROGRESS_TIME,165,63,42,8
+    PUSHBUTTON      "Stop",IDC_STOP,210,61,50,14
+END
+
+IDD_QW_0510_ProgressListDlg DIALOGEX 0, 0, 497, 310
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 9, "돋움체", 400, 0, 0x81
+BEGIN
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,7,273,483,1
+    CONTROL         "",IDC_STCANIMATE,"Static",SS_BLACKFRAME,9,282,17,18
+    LTEXT           "   시작시간 :",IDC_STATIC_START_CAPTION,37,289,56,8
+    LTEXT           "----",IDC_STATIC_START_TIME,97,289,46,8
+    RTEXT           "진행시간 :",IDC_STATIC_PROGRESS_CAPTION,164,289,71,8
+    LTEXT           "----",IDC_STATIC_PROGRESS_TIME,241,289,42,8
+    PUSHBUTTON      "Stop",IDC_STOP,384,284,52,16
+    LISTBOX         IDC_QW_LIST,7,7,483,263,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Close",IDCANCEL,437,284,52,16
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 316, 182
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,205,161,50,14
+    PUSHBUTTON      "취소",IDCANCEL,259,161,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_TESTER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+
+    IDD_QW_0510_ProgressDlg, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+
+    IDD_QW_0510_ProgressListDlg, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 490
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 303
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 175
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_QW_0510_ProgressDlg AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_QW_0510_ProgressListDlg AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // 한국어(대한민국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 영어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_QW_0510_ProgressDlg DIALOGEX 0, 0, 268, 76
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Dialog (IDD_0510_ProgressDlg)"
+FONT 9, "Segoe UI Symbol", 400, 0, 0x0
+BEGIN
+    LTEXT           "Please wait..processing data....",IDC_STCSTATUS,43,10,192,38
+    CONTROL         "",IDC_STATIC_HOR,"Static",SS_ETCHEDHORZ,7,51,254,1
+    CONTROL         "",IDC_STCANIMATE,"Static",SS_BLACKFRAME,7,8,30,26
+    LTEXT           "Start time :",IDC_STATIC_START_CAPTION,10,57,36,8
+    LTEXT           "----",IDC_STATIC_START_TIME,51,57,36,8
+    LTEXT           "Total processing time :",IDC_STATIC_PROGRESS_CAPTION,90,57,72,8
+    LTEXT           "----",IDC_STATIC_PROGRESS_TIME,167,57,39,8
+    PUSHBUTTON      "Stop",IDC_STOP,211,55,50,14
+END
+
+IDD_QW_0510_ProgressListDlg DIALOGEX 0, 0, 430, 260
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 9, "Consolas", 400, 0, 0x0
+BEGIN
+    CONTROL         "",-1,"Static",SS_ETCHEDHORZ,7,231,416,1
+    CONTROL         "",IDC_STCANIMATE,"Static",SS_BLACKFRAME,9,235,20,18
+    LTEXT           "Start time :",IDC_STATIC_START_CAPTION,37,242,48,8
+    LTEXT           "----",IDC_STATIC_START_TIME,89,242,46,8
+    LTEXT           "Total processing time :",IDC_STATIC_PROGRESS_CAPTION,148,242,92,8
+    LTEXT           "----",IDC_STATIC_PROGRESS_TIME,245,242,42,8
+    PUSHBUTTON      "Stop",IDC_STOP,317,237,52,16
+    LISTBOX         IDC_QW_LIST,7,7,416,222,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Close",IDCANCEL,370,237,52,16
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_QW_0510_ProgressDlg, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 69
+    END
+
+    IDD_QW_0510_ProgressListDlg, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 253
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_QW_0510_ProgressDlg AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_QW_0510_ProgressListDlg AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // 영어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\QBicWindow.rc2"  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.
+#include "l.KOR\afxres.rc"      // 표준 구성 요소입니다.
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

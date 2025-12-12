@@ -1,0 +1,2187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Unicode Debug|Win32">
+      <Configuration>Unicode Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Debug|x64">
+      <Configuration>Unicode Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Release|Win32">
+      <Configuration>Unicode Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Release|x64">
+      <Configuration>Unicode Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EA760B88-9F31-46AB-8652-59F09CC11775}</ProjectGuid>
+    <RootNamespace>kmz</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+    <SccProjectName>
+    </SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>false</CLRSupport>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>false</CLRSupport>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" />
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibxlLib)\lib\$(PlatformName);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibxlLib)\lib\$(PlatformName);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibxlLib)\lib\$(PlatformName);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibxlLib)\lib\$(PlatformName);$(LibraryPath)</LibraryPath>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">true</LinkIncremental>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">TOVA</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">TOVA</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">TOVA</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">TOVA</TargetName>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">
+    <IncludePath>$(XtremeToolkitProLib)\Package\Source;$(BoostLib)\include;$(LibxlLib)\include;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(XtremeToolkitProLib)\Package\Source;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
+    <IncludePath>$(XtremeToolkitProLib)\Package\Source;$(BoostLib)\include;$(LibxlLib)\include;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(XtremeToolkitProLib)\Package\Source;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <IncludePath>$(XtremeToolkitProLib)\Package\Source;$(BoostLib)\include;$(LibxlLib)\include;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(XtremeToolkitProLib)\Package\Source;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <IncludePath>$(XtremeToolkitProLib)\Package\Source;$(BoostLib)\include;$(LibxlLib)\include;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(XtremeToolkitProLib)\lib\$(PlatformToolset)\$(PlatformName);$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(XtremeToolkitProLib)\Package\Source;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>false</ValidateAllParameters>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0412</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
+      <AdditionalDependencies>libxl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy ".\Template" "..\..\Build\$(Configuration)($(PlatformName))\Template\" /e /y
+xcopy "$(ResourcePath)\images" "..\..\Build\$(Configuration)($(PlatformName))\images\" /e /y
+xcopy "$(ResourcePath)\Database\TOVA.db" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\XtremeToolKitStyles\*.cjstyles" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\CopyLibraries\*.*" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+
+xcopy "$(LibxlLib)\lib\$(PlatformName)\libxl.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y
+xcopy "$(XtremeToolkitProLib)\Lib\$(PlatformToolset)\$(PlatformName)\ToolkitPro1910vc$(PlatformToolsetVersion)UD.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm512 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WIN64;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <Profile>true</Profile>
+      <AdditionalDependencies>libxl.lib;Imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy ".\Template" "..\..\Build\$(Configuration)($(PlatformName))\Template\" /e /y
+xcopy "$(ResourcePath)\images" "..\..\Build\$(Configuration)($(PlatformName))\images\" /e /y
+xcopy "$(ResourcePath)\Database\TOVA.db" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\XtremeToolKitStyles\*.cjstyles" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\CopyLibraries\*.*" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+
+xcopy "$(LibxlLib)\lib\$(PlatformName)\libxl.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y
+xcopy "$(XtremeToolkitProLib)\Lib\$(PlatformToolset)\$(PlatformName)\ToolkitPro1910vc$(PlatformToolsetVersion)x64UD.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>false</ValidateAllParameters>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <OpenMPSupport>true</OpenMPSupport>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateMapFile>false</GenerateMapFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>libxl.lib;</AdditionalDependencies>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy ".\Template" "..\..\Build\$(Configuration)($(PlatformName))\Template\" /e /y
+xcopy "$(ResourcePath)\images" "..\..\Build\$(Configuration)($(PlatformName))\images\" /e /y
+xcopy "$(ResourcePath)\Database\TOVA.db" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\XtremeToolKitStyles\*.cjstyles" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\CopyLibraries\*.*" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+
+xcopy "$(LibxlLib)\lib\$(PlatformName)\libxl.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y
+xcopy "$(XtremeToolkitProLib)\Lib\$(PlatformToolset)\$(PlatformName)\ToolkitPro1910vc$(PlatformToolsetVersion)U.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <AdditionalOptions>/Zm512 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_WIN64;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <OpenMPSupport>true</OpenMPSupport>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateMapFile>false</GenerateMapFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>libxl.lib;</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy ".\Template" "..\..\Build\$(Configuration)($(PlatformName))\Template\" /e /y
+xcopy "$(ResourcePath)\images" "..\..\Build\$(Configuration)($(PlatformName))\images\" /e /y
+xcopy "$(ResourcePath)\Database\TOVA.db" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\XtremeToolKitStyles\*.cjstyles" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+xcopy "$(ResourcePath)\CopyLibraries\*.*" "..\..\Build\$(Configuration)($(PlatformName))\" /e /y
+
+xcopy "$(LibxlLib)\lib\$(PlatformName)\libxl.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y
+xcopy "$(XtremeToolkitProLib)\Lib\$(PlatformToolset)\$(PlatformName)\ToolkitPro1910vc$(PlatformToolsetVersion)x64U.dll" "..\..\Build\$(Configuration)($(PlatformName))\*.dll" /e /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AccessTripODToVehODDlg.cpp" />
+    <ClCompile Include="DBaseMultiAssignSOBA.cpp" />
+    <ClCompile Include="DefInterUrbanModeChoiceParaTypes.cpp" />
+    <ClCompile Include="ExcelExportConfigDlg.cpp" />
+    <ClCompile Include="FODDiv.cpp" />
+    <ClCompile Include="KSelectedPathCompareRegionDlg.cpp" />
+    <ClCompile Include="DBaseVersion_P1001.cpp" />
+    <ClCompile Include="KDefInterUrbanModeChoiceVariableSettingDlg.cpp" />
+    <ClCompile Include="KMapBackgroundColorDlg.cpp" />
+    <ClCompile Include="KSelectedPathCompareUrbanDlg.cpp" />
+    <ClCompile Include="MultiAssignModelSOBADlg.cpp" />
+    <ClCompile Include="SOBASelectScenarioDlg.cpp" />
+    <ClCompile Include="TripODToVehODDlg.cpp" />
+    <ClCompile Include="UtilExcelHandler.cpp" />
+    <ClCompile Include="ZoningMultiScenarioSelectDlg.cpp" />
+    <ClCompile Include="ABOMultiFnManagerDlg.cpp" />
+    <ClCompile Include="ABPRFnDlg.cpp" />
+    <ClCompile Include="ABPRFnManagerDlg.cpp" />
+    <ClCompile Include="AccessNodeEditorDlg.cpp" />
+    <ClCompile Include="AccessTermianlEditerDlg.cpp" />
+    <ClCompile Include="AccessTerminalGeneratorDlg.cpp" />
+    <ClCompile Include="AddModeNameDlg.cpp" />
+    <ClCompile Include="AImportDBDlg.cpp" />
+    <ClCompile Include="AInputInfo.cpp" />
+    <ClCompile Include="AOBMultiVDFDlg.cpp" />
+    <ClCompile Include="AODDemandShareDlg.cpp" />
+    <ClCompile Include="ApplyDistributionModelDataDlg.cpp" />
+    <ClCompile Include="ApplyGenerationModelDataDlg.cpp" />
+    <ClCompile Include="ApplyModeChoiceModelDataDlg.cpp" />
+    <ClCompile Include="AProgressDlg.cpp" />
+    <ClCompile Include="ARunningOptionInfo.cpp" />
+    <ClCompile Include="ARunOptionDlg.cpp" />
+    <ClCompile Include="AssignmentModelDlg.cpp" />
+    <ClCompile Include="DBaseMultiAssign.cpp" />
+    <ClCompile Include="DBaseVersion_P023.cpp" />
+    <ClCompile Include="DlgExportTable.cpp" />
+    <ClCompile Include="DlgExportTable2.cpp" />
+    <ClCompile Include="DlgExportTurnTable.cpp" />
+    <ClCompile Include="DlgImportAccessStopNode.cpp" />
+    <ClCompile Include="DlgImportLink.cpp" />
+    <ClCompile Include="DlgImportMode.cpp" />
+    <ClCompile Include="DlgImportNode.cpp" />
+    <ClCompile Include="DlgImportParaOD.cpp" />
+    <ClCompile Include="DlgImportPod.cpp" />
+    <ClCompile Include="DlgImportSedPop.cpp" />
+    <ClCompile Include="DlgImportSedVector.cpp" />
+    <ClCompile Include="DlgImportTerminalSchedule.cpp" />
+    <ClCompile Include="DlgImportTransit.cpp" />
+    <ClCompile Include="DlgImportTransitLine.cpp" />
+    <ClCompile Include="DlgImportTransitLine2.cpp" />
+    <ClCompile Include="DlgImportTransitLineNode.cpp" />
+    <ClCompile Include="DlgImportTurn.cpp" />
+    <ClCompile Include="DlgImportZone.cpp" />
+    <ClCompile Include="DlgShapeDemarcation.cpp" />
+    <ClCompile Include="DlgShapeLink.cpp" />
+    <ClCompile Include="DlgShapeNode.cpp" />
+    <ClCompile Include="DlgTransitStyle.cpp" />
+    <ClCompile Include="ImportCommon.cpp" />
+    <ClCompile Include="ImTasMenuPathDefine.cpp" />
+    <ClCompile Include="KDlgLinkZoneTypeEdit.cpp" />
+    <ClCompile Include="KDlgNetworkEditorMain.cpp" />
+    <ClCompile Include="KDlgNetworkStartID.cpp" />
+    <ClCompile Include="KDlgNodeZoneTypeEdit.cpp" />
+    <ClCompile Include="KDlgTurnTypeEdit.cpp" />
+    <ClCompile Include="KThemeDrawUserPoint.cpp" />
+    <ClCompile Include="KThemeDrawTransitShortestPath.cpp" />
+    <ClCompile Include="KThemeTransitPathInfo.cpp" />
+    <ClCompile Include="MakeTurnDispShp.cpp" />
+    <ClCompile Include="MultiAssignInfo.cpp" />
+    <ClCompile Include="MultiAssignModelDlg.cpp" />
+    <ClCompile Include="AssignOutputInformationDlg.cpp" />
+    <ClCompile Include="AStoppingCriteriaDlg.cpp" />
+    <ClCompile Include="AStoppingCriteriaMMDlg.cpp" />
+    <ClCompile Include="AStoppingOriginBaseUeDlg.cpp" />
+    <ClCompile Include="AvailableCommodity.cpp" />
+    <ClCompile Include="AWarmStartDlg.cpp" />
+    <ClCompile Include="BoundaryIntersectTransit.cpp" />
+    <ClCompile Include="BulkDBaseDemarcation.cpp" />
+    <ClCompile Include="BulkDBaseIntersection.cpp" />
+    <ClCompile Include="BulkDBaseLink.cpp" />
+    <ClCompile Include="BulkDBaseNode.cpp" />
+    <ClCompile Include="BulkDBaseOD.cpp" />
+    <ClCompile Include="BulkDBaseScreenCordon.cpp" />
+    <ClCompile Include="BulkDBaseTargetRegion.cpp" />
+    <ClCompile Include="BulkDBaseTransit.cpp" />
+    <ClCompile Include="BulkDBaseTurn.cpp" />
+    <ClCompile Include="CalculatePathFindInfoDlg.cpp" />
+    <ClCompile Include="CalculateRatioRegionDlg.cpp" />
+    <ClCompile Include="CalculateZoneDistance.cpp" />
+    <ClCompile Include="CalculateParameterDlg.cpp" />
+    <ClCompile Include="ChildFrmMenu.cpp" />
+    <ClCompile Include="CO2EmissionEquation1Dlg.cpp" />
+    <ClCompile Include="CO2EmissionEquationDlg.cpp" />
+    <ClCompile Include="CO2EmissionInterpolationDlg.cpp" />
+    <ClCompile Include="CO2EmissionsEquationFnDlg.cpp" />
+    <ClCompile Include="CO2EmissionsEquationModeMangerDlg.cpp" />
+    <ClCompile Include="CopyProject.cpp" />
+    <ClCompile Include="CopyUserFieldVectorDlg.cpp" />
+    <ClCompile Include="CustomReportRecordCtrl.cpp" />
+    <ClCompile Include="DBaseAssignImport.cpp" />
+    <ClCompile Include="DBaseCO2EmissionEquation.cpp" />
+    <ClCompile Include="DBaseCO2EmissionInterpolation.cpp" />
+    <ClCompile Include="DBaseDefaultCo2EmissionsEquation.cpp" />
+    <ClCompile Include="DBaseDefaultCo2EmissionsInterpolation.cpp" />
+    <ClCompile Include="DBaseDefaultDistribution.cpp" />
+    <ClCompile Include="DBaseDefaultInterRunOption.cpp" />
+    <ClCompile Include="DBaseDefaultLogistic.cpp" />
+    <ClCompile Include="DBaseDefaultParaAccessTerminalSetting.cpp" />
+    <ClCompile Include="DBaseDefaultParaInterPathGenerator.cpp" />
+    <ClCompile Include="DBaseDefaultParaInterUrbanModeChoice.cpp" />
+    <ClCompile Include="DBaseDefaultParaRegionalModeChoice.cpp" />
+    <ClCompile Include="DBaseDefineTransitCost.cpp" />
+    <ClCompile Include="DBaseAssignment.cpp" />
+    <ClCompile Include="DBaseCalibration.cpp" />
+    <ClCompile Include="DBaseChart.cpp" />
+    <ClCompile Include="DBaseCheckData.cpp" />
+    <ClCompile Include="DBaseDefaultParaAccessSetting.cpp" />
+    <ClCompile Include="DBaseDefaultParaHighwayAssign.cpp" />
+    <ClCompile Include="DBaseDefaultParaMultimodalModeChoice.cpp" />
+    <ClCompile Include="DBaseDefaultParaPathGenerateConstraint.cpp" />
+    <ClCompile Include="DBaseDefaultParaMultimodalPathGeneration.cpp" />
+    <ClCompile Include="DBaseDefaultParaTransitRouteChoice.cpp" />
+    <ClCompile Include="DBaseDefPolicyContainer.cpp" />
+    <ClCompile Include="DBaseDevPlan.cpp" />
+    <ClCompile Include="DBaseFGenerationModel.cpp" />
+    <ClCompile Include="DBaseFieldCalculator.cpp" />
+    <ClCompile Include="DBaseGeneration.cpp" />
+    <ClCompile Include="DBaseGenerationParaModel.cpp" />
+    <ClCompile Include="DBaseImpExpShapeFile.cpp" />
+    <ClCompile Include="DBaseImportTable.cpp" />
+    <ClCompile Include="DBaseInterModal.cpp" />
+    <ClCompile Include="DBaseIOTerminalScheduleTableView.cpp" />
+    <ClCompile Include="DBaseMap.cpp" />
+    <ClCompile Include="DBaseMatrixView.cpp" />
+    <ClCompile Include="DBasePathVolume.cpp" />
+    <ClCompile Include="DBaseProject.cpp" />
+    <ClCompile Include="DBaseQuickSearch.cpp" />
+    <ClCompile Include="DBaseResultView.cpp" />
+    <ClCompile Include="DBaseRuler.cpp" />
+    <ClCompile Include="DBaseSubNetwork.cpp" />
+    <ClCompile Include="DBaseSystem.cpp" />
+    <ClCompile Include="DBaseTableMgr.cpp" />
+    <ClCompile Include="DBaseTerminalAEModeViewer.cpp" />
+    <ClCompile Include="DBaseUpgrade.cpp" />
+    <ClCompile Include="DBaseVehicleCon.cpp" />
+    <ClCompile Include="DBaseVersion_P001.cpp" />
+    <ClCompile Include="DBaseVersion_P003.cpp" />
+    <ClCompile Include="DBaseVersion_P004.cpp" />
+    <ClCompile Include="DBaseVersion_P005.cpp" />
+    <ClCompile Include="DBaseVersion_P010.cpp" />
+    <ClCompile Include="DBaseVersion_P011.cpp" />
+    <ClCompile Include="DBaseVersion_P012.cpp" />
+    <ClCompile Include="DBaseVersion_P013.cpp" />
+    <ClCompile Include="DBaseVersion_P014.cpp" />
+    <ClCompile Include="DBaseVersion_P015.cpp" />
+    <ClCompile Include="DBaseVersion_P016.cpp" />
+    <ClCompile Include="DBaseVersion_P017.cpp" />
+    <ClCompile Include="DBaseVersion_P018.cpp" />
+    <ClCompile Include="DBaseVersion_P019.cpp" />
+    <ClCompile Include="DBaseVersion_P020.cpp" />
+    <ClCompile Include="DBaseVersion_P021.cpp" />
+    <ClCompile Include="DBaseVersion_P022.cpp" />
+    <ClCompile Include="DefaultAccessStationSetting.cpp" />
+    <ClCompile Include="DefaultAccessTerminalSetting.cpp" />
+    <ClCompile Include="DefaultCo2EmissionsEquationParaDlg.cpp" />
+    <ClCompile Include="DefaultCo2EmissionsInterpolationParaDlg.cpp" />
+    <ClCompile Include="DefaultHighwayAssignment.cpp" />
+    <ClCompile Include="DefaultInterModeChoiceParaSubPage.cpp" />
+    <ClCompile Include="DefaultInterPathGenerator.cpp" />
+    <ClCompile Include="DefaultInterRunOptionDlg.cpp" />
+    <ClCompile Include="DefaultLogisticParaDlg.cpp" />
+    <ClCompile Include="DefaultMDefineVariableGroupDlg.cpp" />
+    <ClCompile Include="DefaultMultimodalPathGeneration.cpp" />
+    <ClCompile Include="DefaultMultimodalModeChoicePara.cpp" />
+    <ClCompile Include="DefaultPathGenerateConstraint.cpp" />
+    <ClCompile Include="DefaultRegionalModeChoiceParaDlg.cpp" />
+    <ClCompile Include="DefaultRegionalModeChoiceParaSubPage.cpp" />
+    <ClCompile Include="DefaultTGCrossPage.cpp" />
+    <ClCompile Include="DefaultTGRegressionPage.cpp" />
+    <ClCompile Include="DefaultTGZoneGroupPage.cpp" />
+    <ClCompile Include="DefaultTransitRouteChoicePara.cpp" />
+    <ClCompile Include="DefineModeDlg.cpp" />
+    <ClCompile Include="DefineNamesDefaultPara.cpp" />
+    <ClCompile Include="DefineNamesModels.cpp" />
+    <ClCompile Include="DefineRegionMode.cpp" />
+    <ClCompile Include="DefineSystemCodeDlg.cpp" />
+    <ClCompile Include="DefineTransitCodeCostDlg.cpp" />
+    <ClCompile Include="DefInterUrbanModeChoiceParaDlg.cpp" />
+    <ClCompile Include="DefVDFFactorDlg.cpp" />
+    <ClCompile Include="DeleteConfirmDlg.cpp" />
+    <ClCompile Include="DesireLineDlg.cpp" />
+    <ClCompile Include="DevPlanDDlg.cpp" />
+    <ClCompile Include="DevPlanDlg.cpp" />
+    <ClCompile Include="DevPlanGDlg.cpp" />
+    <ClCompile Include="DevPlanMDlg.cpp" />
+    <ClCompile Include="DevPlanModelDlg.cpp" />
+    <ClCompile Include="DevPlanGInfo.cpp" />
+    <ClCompile Include="DevPlanImportDirectInputStep1Dlg.cpp" />
+    <ClCompile Include="DevPlanImportDirectInputStep2Dlg.cpp" />
+    <ClCompile Include="DevPlanInfo.cpp" />
+    <ClCompile Include="DevPlanMgrDlg.cpp" />
+    <ClCompile Include="DevPlanODlg.cpp" />
+    <ClCompile Include="DevPlanProgressDlg.cpp" />
+    <ClCompile Include="DevPlanSelFacilityDlg.cpp" />
+    <ClCompile Include="DevPlanSelPlanDlg.cpp" />
+    <ClCompile Include="DevZoneSelectDlg.cpp" />
+    <ClCompile Include="DFormulaDefaultDlg.cpp" />
+    <ClCompile Include="DropdownEnterCombo.cpp" />
+    <ClCompile Include="EditAccessLineStation.cpp" />
+    <ClCompile Include="EditAccessLineStationDlg.cpp" />
+    <ClCompile Include="FDefaultPolicyContainerDlg.cpp" />
+    <ClCompile Include="FProjectInfoDlg.cpp" />
+    <ClCompile Include="FTableModeAddFieldDlg.cpp" />
+    <ClCompile Include="FTableODDeleteField.cpp" />
+    <ClCompile Include="InterModalResultDlg.cpp" />
+    <ClCompile Include="IOTerminalScheduleTableView.cpp" />
+    <ClCompile Include="KTestImportMatchDlg.cpp" />
+    <ClCompile Include="MainFrameWndMenuMapView.cpp" />
+    <ClCompile Include="MapViewDefaultPara.cpp" />
+    <ClCompile Include="MapViewEditLog.cpp" />
+    <ClCompile Include="NetworkEditLog.cpp" />
+    <ClCompile Include="NombaraTester.cpp" />
+    <ClCompile Include="PathVolumeAreaInterDlg.cpp" />
+    <ClCompile Include="PathVolumeAreaInterModeDlg.cpp" />
+    <ClCompile Include="PathVolumeAreaTransitDlg.cpp" />
+    <ClCompile Include="PathVolumeTerminalAccEgrDlg.cpp" />
+    <ClCompile Include="ProgramVersionInfo.cpp" />
+    <ClCompile Include="MapViewModelessDialog.cpp" />
+    <ClCompile Include="MapViewTxDrawUnion.cpp" />
+    <ClCompile Include="MapViewRuler.cpp" />
+    <ClCompile Include="ProjectInfoDlg.cpp" />
+    <ClCompile Include="QuickSearchDlg.cpp" />
+    <ClCompile Include="RulerDlg.cpp" />
+    <ClCompile Include="SeatCapaInfoDlg.cpp" />
+    <ClCompile Include="ShapeEditLinkTwoWayVertex.cpp" />
+    <ClCompile Include="ShapeExportDlg.cpp" />
+    <ClCompile Include="ShortestPathNHighwayDlg.cpp" />
+    <ClCompile Include="SplashDlg.cpp" />
+    <ClCompile Include="StationODCalculatorDlg.cpp" />
+    <ClCompile Include="StationODVirtualRecord.cpp" />
+    <ClCompile Include="SymbologyThemeLink.cpp" />
+    <ClCompile Include="TableEditVehicleFieldDlg.cpp" />
+    <ClCompile Include="ExcelManager.cpp" />
+    <ClCompile Include="FARunOptionDlg.cpp" />
+    <ClCompile Include="FormulaExpression.cpp" />
+    <ClCompile Include="FormulaInputDlg.cpp" />
+    <ClCompile Include="FormulaInputExp.cpp" />
+    <ClCompile Include="FreightBulkPathGenerate.cpp" />
+    <ClCompile Include="GBaseFormula.cpp" />
+    <ClCompile Include="GClassificationEditorDlg.cpp" />
+    <ClCompile Include="GClassificationFormula.cpp" />
+    <ClCompile Include="GDefaultSimpleFuntion.cpp" />
+    <ClCompile Include="GDefaultZoneGroupFunction.cpp" />
+    <ClCompile Include="GDefaultZoneInfo.cpp" />
+    <ClCompile Include="GenerationBusPathInfo.cpp" />
+    <ClCompile Include="GenerationBusPathStep1Dlg.cpp" />
+    <ClCompile Include="GenerationBusPathStep2Dlg.cpp" />
+    <ClCompile Include="GenerationClassificationPage.cpp" />
+    <ClCompile Include="GenerationInputTreeNavigator.cpp" />
+    <ClCompile Include="GenerationModelInfo.cpp" />
+    <ClCompile Include="DefaultGenerationParaMainDlg.cpp" />
+    <ClCompile Include="DefaultGenerationParaSubPage.cpp" />
+    <ClCompile Include="GenerationRegressionPage.cpp" />
+    <ClCompile Include="GenerationSelectModelDlg.cpp" />
+    <ClCompile Include="GenerationUnitPage.cpp" />
+    <ClCompile Include="GenerationZoneGroupPage.cpp" />
+    <ClCompile Include="GFormulaDefaultDlg.cpp" />
+    <ClCompile Include="GlobalTerminalSettingDlg.cpp" />
+    <ClCompile Include="GraphicTurnVolumeDisp.cpp" />
+    <ClCompile Include="GravityCalibrationDlg.cpp" />
+    <ClCompile Include="GRegressionFormula.cpp" />
+    <ClCompile Include="GUnitFormula.cpp" />
+    <ClCompile Include="GZoneGroupPage.cpp" />
+    <ClCompile Include="ImportTableDlg.cpp" />
+    <ClCompile Include="ImChampCommand.cpp" />
+    <ClCompile Include="ImTasDBase.cpp" />
+    <ClCompile Include="ImChampFileExist.cpp" />
+    <ClCompile Include="ImChampIDFind.cpp" />
+    <ClCompile Include="ImChampIDFind2Column.cpp" />
+    <ClCompile Include="ImTasLicenseCheck.cpp" />
+    <ClCompile Include="ImChampMapDefine.cpp" />
+    <ClCompile Include="ImChampMessage.cpp" />
+    <ClCompile Include="ImChampMultiZoneFind.cpp" />
+    <ClCompile Include="ImChampMultiIDFind.cpp" />
+    <ClCompile Include="ImTasStatus.cpp" />
+    <ClCompile Include="InitRelationProcess.cpp" />
+    <ClCompile Include="InspectionNetwork.cpp" />
+    <ClCompile Include="InterBPRFnDlg.cpp" />
+    <ClCompile Include="InterBPRFnMgrDlg.cpp" />
+    <ClCompile Include="InterDefineCostPublicSector.cpp" />
+    <ClCompile Include="InterDefineVDFDlg.cpp" />
+    <ClCompile Include="InterFunctionBase.cpp" />
+    <ClCompile Include="InterFunctionBPR.cpp" />
+    <ClCompile Include="InterFunctionUser.cpp" />
+    <ClCompile Include="InterFunctionUserEXP.cpp" />
+    <ClCompile Include="InterHighwayRunOption.cpp" />
+    <ClCompile Include="InterBPRFunctionDlg.cpp" />
+    <ClCompile Include="InterModalMainDlg.cpp" />
+    <ClCompile Include="InterModalOutputDlg.cpp" />
+    <ClCompile Include="InterModalPathInfo.cpp" />
+    <ClCompile Include="InterModeDefineDlg.cpp" />
+    <ClCompile Include="InterModeRouteParaDlg.cpp" />
+    <ClCompile Include="InterPathGeneratorMainDlg.cpp" />
+    <ClCompile Include="InterPathGeneratorRegionalDlg.cpp" />
+    <ClCompile Include="InterPathGeneratorUrbanDlg.cpp" />
+    <ClCompile Include="InterPathGenMain.cpp" />
+    <ClCompile Include="InterPathGenTypeA.cpp" />
+    <ClCompile Include="InterPathGenTypeB.cpp" />
+    <ClCompile Include="InterPathGenTypeC.cpp" />
+    <ClCompile Include="InterRegionalChoiceParaSubPage.cpp" />
+    <ClCompile Include="InterRegionChoiceParaDlg.cpp" />
+    <ClCompile Include="InterResultDetailDlg.cpp" />
+    <ClCompile Include="IntersectionEditMainDlg.cpp" />
+    <ClCompile Include="IntersectionExtensionPage.cpp" />
+    <ClCompile Include="IntersectionThreeBasicPage.cpp" />
+    <ClCompile Include="IntersectionTopologyAnalysis.cpp" />
+    <ClCompile Include="IntersectionTopologyAnalysisDlg.cpp" />
+    <ClCompile Include="IntersectionTopologyPage.cpp" />
+    <ClCompile Include="AOBDefineVDFDlg.cpp" />
+    <ClCompile Include="AOBSingleVDFDlg.cpp" />
+    <ClCompile Include="InterStoppingDlg.cpp" />
+    <ClCompile Include="InterTransitModeParaDlg.cpp" />
+    <ClCompile Include="InterTransitPathEditDlg.cpp" />
+    <ClCompile Include="InterUrbanChoiceParameterDlg.cpp" />
+    <ClCompile Include="InterUrbanChoiceParaSubPage.cpp" />
+    <ClCompile Include="IOAssignRelationColumn.cpp" />
+    <ClCompile Include="KDBaseAccessibilityModify.cpp" />
+    <ClCompile Include="InformationDlg.cpp" />
+    <ClCompile Include="GenerationModelMainDlg.cpp" />
+    <ClCompile Include="ImChampMultiIDFind2Column.cpp" />
+    <ClCompile Include="DefaultDistributionParaSettingDlg.cpp" />
+    <ClCompile Include="DefaultTGUnitPage.cpp" />
+    <ClCompile Include="FAEditModeDlg.cpp" />
+    <ClCompile Include="MapViewDrawAccent.cpp" />
+    <ClCompile Include="KXmlDefaultGeneration.cpp" />
+    <ClCompile Include="MapViewModelProcess.cpp" />
+    <ClCompile Include="MDefineVariableEdit.cpp" />
+    <ClCompile Include="MDefineVariableGroupDlg.cpp" />
+    <ClCompile Include="MDefVarSubPage.cpp" />
+    <ClCompile Include="ModeChoiceModelNewDlg.cpp" />
+    <ClCompile Include="ModeInfoCollection.cpp" />
+    <ClCompile Include="ModelProcessInterModal.cpp" />
+    <ClCompile Include="ModelProcessMultiModal.cpp" />
+    <ClCompile Include="MultiCodeSettingDlg.cpp" />
+    <ClCompile Include="ODGroupGenerationDlg.cpp" />
+    <ClCompile Include="PrjCommodityInfoDlg.cpp" />
+    <ClCompile Include="ScreenDrawFlashZone.cpp" />
+    <ClCompile Include="ShapeEditLinkOneWayVertex.cpp" />
+    <ClCompile Include="TableEditCodeFieldDlg.cpp" />
+    <ClCompile Include="TableEditFieldDlg.cpp" />
+    <ClCompile Include="TableEditFieldInfo.cpp" />
+    <ClCompile Include="TableModeEditFieldDlg.cpp" />
+    <ClCompile Include="TablePurposeEditFieldDlg.cpp" />
+    <ClCompile Include="TableRelationInfo.cpp" />
+    <ClCompile Include="TableVehicleConvAddFieldDlg.cpp" />
+    <ClCompile Include="TableVehicleDeleteField.cpp" />
+    <ClCompile Include="TableZoneEditFieldDlg.cpp" />
+    <ClCompile Include="TabMainSample.cpp" />
+    <ClCompile Include="TabSubSample.cpp" />
+    <ClCompile Include="LinkViaTransitSearchDlg.cpp" />
+    <ClCompile Include="Launcher.cpp" />
+    <ClCompile Include="MainFrameWndMenu.cpp" />
+    <ClCompile Include="MainFrameWndMenuPolicy.cpp" />
+    <ClCompile Include="MapViewContactFares.cpp" />
+    <ClCompile Include="MapViewInterModal.cpp" />
+    <ClCompile Include="MapViewNetworkInspection.cpp" />
+    <ClCompile Include="MapViewODMatrix.cpp" />
+    <ClCompile Include="MapViewSelectionFeedback.cpp" />
+    <ClCompile Include="MTransitPathEditDlg.cpp" />
+    <ClCompile Include="MultiModalTransitInsert.cpp" />
+    <ClCompile Include="NetworkCompareDlg.cpp" />
+    <ClCompile Include="NetworkInspectionDlg.cpp" />
+    <ClCompile Include="NodeViaTransitSearchDlg.cpp" />
+    <ClCompile Include="ODGroupGeneration.cpp" />
+    <ClCompile Include="ParameterDefineCostDlg.cpp" />
+    <ClCompile Include="ParameterDefineTime.cpp" />
+    <ClCompile Include="PathVolumeAreaDlg.cpp" />
+    <ClCompile Include="PathVolumeDlg.cpp" />
+    <ClCompile Include="PathVolumeInfo.cpp" />
+    <ClCompile Include="PreferenceForm.cpp" />
+    <ClCompile Include="PreferenceLabel.cpp" />
+    <ClCompile Include="PreferenceMaxNetworkID.cpp" />
+    <ClCompile Include="PreferenceSymbol.cpp" />
+    <ClCompile Include="RegularExp.cpp" />
+    <ClCompile Include="ScenarioImportKTDB.cpp" />
+    <ClCompile Include="ScreenDrawEditMultiLinkSelect.cpp" />
+    <ClCompile Include="MatrixOperVRecord.cpp" />
+    <ClCompile Include="ScreenDrawEditSearchPolygon.cpp" />
+    <ClCompile Include="ScreenDrawEditSearchRect.cpp" />
+    <ClCompile Include="ScreenDrawEditTargetRegionEdit.cpp" />
+    <ClCompile Include="ScreenDrawEditTargetRegionInsert.cpp" />
+    <ClCompile Include="KThemDrawIntersection.cpp" />
+    <ClCompile Include="KThemeDrawLinkSelection.cpp" />
+    <ClCompile Include="KThemeDrawNodeSelection.cpp" />
+    <ClCompile Include="KThemeDrawStation.cpp" />
+    <ClCompile Include="SubNetworkDlg.cpp" />
+    <ClCompile Include="TableAddFieldInfo.cpp" />
+    <ClCompile Include="TableExpEmmeDefineModesDlg.cpp" />
+    <ClCompile Include="TableExpEmmeMatrixDlg.cpp" />
+    <ClCompile Include="TableExpEmmeNetworkDlg.cpp" />
+    <ClCompile Include="TableImpEmmeMatrixDlg.cpp" />
+    <ClCompile Include="TableImpEmmeNetworkDlg.cpp" />
+    <ClCompile Include="TableImpEmmeSelectFileDlg.cpp" />
+    <ClCompile Include="TableImpEmmeNodeSubDlg.cpp" />
+    <ClCompile Include="TableImpEmmeLinkSubDlg.cpp" />
+    <ClCompile Include="TableRenameFieldDlg.cpp" />
+    <ClCompile Include="ATripMatrix.cpp" />
+    <ClCompile Include="TerminalAEModeChartDlg.cpp" />
+    <ClCompile Include="TerminalAEModeViewerDlg.cpp" />
+    <ClCompile Include="ThemeFunctionDlg.cpp" />
+    <ClCompile Include="TocFrameWnd.cpp" />
+    <ClCompile Include="TocHideShowView.cpp" />
+    <ClCompile Include="KDlgTransitInfluenceArea.cpp" />
+    <ClCompile Include="TurnViewDlg.cpp" />
+    <ClCompile Include="TurnVolumeViewDlg.cpp" />
+    <ClCompile Include="VectorOperVRecord.cpp" />
+    <ClCompile Include="MultiModalResultInfo.cpp" />
+    <ClCompile Include="MultiModalDefineMode.cpp" />
+    <ClCompile Include="MultiModalResultDetailDlg.cpp" />
+    <ClCompile Include="MultimodalResultDlg.cpp" />
+    <ClCompile Include="PrepareChartNetworkDlg.cpp" />
+    <ClCompile Include="PrepareChartODDlg.cpp" />
+    <ClCompile Include="PrepareChartPAColumnDlg.cpp" />
+    <ClCompile Include="PrepareChartPADlg.cpp" />
+    <ClCompile Include="KThemeLayerUnion.cpp" />
+    <ClCompile Include="ScreenDrawEditSingleLinkSelect.cpp" />
+    <ClCompile Include="KEditForeDrawTransitPath.cpp" />
+    <ClCompile Include="PrepareChartTransitDlg.cpp" />
+    <ClCompile Include="KThemeDrawUserLine.cpp" />
+    <ClCompile Include="KThemeDrawZoneAccessBoundary.cpp" />
+    <ClCompile Include="ShapeEditNodeMove.cpp" />
+    <ClCompile Include="ShapeEditNodeProperties.cpp" />
+    <ClCompile Include="ShapeEditTransitEdit.cpp" />
+    <ClCompile Include="ShapeEditTransitInsert.cpp" />
+    <ClCompile Include="ShortestPathNTransitDlg.cpp" />
+    <ClCompile Include="TableManagerMatrixDlg.cpp" />
+    <ClCompile Include="TableManagerVectorDlg.cpp" />
+    <ClCompile Include="TableModeAddFieldDlg.cpp" />
+    <ClCompile Include="TablePurposeAddFieldDlg.cpp" />
+    <ClCompile Include="TableZoneAddFieldDlg.cpp" />
+    <ClCompile Include="TargetRegionSetting.cpp" />
+    <ClCompile Include="TerminalScheduleDesireDlg.cpp" />
+    <ClCompile Include="TerminalScheduleEditDlg.cpp" />
+    <ClCompile Include="ThemeSetFilterDlg.cpp" />
+    <ClCompile Include="TransitPathDirectionSelect.cpp" />
+    <ClCompile Include="TransitPathEditDlg.cpp" />
+    <ClCompile Include="TransitLineThemesDlg.cpp" />
+    <ClCompile Include="TransitLineThemesInfo.cpp" />
+    <ClCompile Include="TransitPathInsertDlg.cpp" />
+    <ClCompile Include="TransitPathViewDlg.cpp" />
+    <ClCompile Include="ViewChartDlg.cpp" />
+    <ClCompile Include="WoStoppingTransitDlg.cpp" />
+    <ClCompile Include="WriteCodeAgrument.cpp" />
+    <ClCompile Include="WStoopingTransitDlg.cpp" />
+    <ClCompile Include="ZMapViewDevTest.cpp" />
+    <ClCompile Include="MapViewTransit.cpp" />
+    <ClCompile Include="ReportCtrlSetting.cpp" />
+    <ClCompile Include="ScreenDrawDesireMap.cpp" />
+    <ClCompile Include="LinkDevideSelectDlg.cpp" />
+    <ClCompile Include="LayerXmlRenderer.cpp" />
+    <ClCompile Include="LineStyleTypeEdit.cpp" />
+    <ClCompile Include="LineStyleValueEdit.cpp" />
+    <ClCompile Include="MAOutputDesignDlg.cpp" />
+    <ClCompile Include="MapViewInspection.cpp" />
+    <ClCompile Include="MapViewSymbology.cpp" />
+    <ClCompile Include="MARunOptionDlg.cpp" />
+    <ClCompile Include="MATransitAssignInfoDlg.cpp" />
+    <ClCompile Include="MATripMatrix.cpp" />
+    <ClCompile Include="MultiModalInfo.cpp" />
+    <ClCompile Include="MultiModalMainDlg.cpp" />
+    <ClCompile Include="NameInputDlg.cpp" />
+    <ClCompile Include="PolygonStyleValueEdit.cpp" />
+    <ClCompile Include="PropertiesDlg.cpp" />
+    <ClCompile Include="ScreenDrawEditMapIdentify.cpp" />
+    <ClCompile Include="ScreenDrawFlashLinkPath.cpp" />
+    <ClCompile Include="ScreenDrawFlashNode.cpp" />
+    <ClCompile Include="ScreenDrawEditNodeSelect.cpp" />
+    <ClCompile Include="SetAccessibility.cpp" />
+    <ClCompile Include="ShapeEditTurnDeletes.cpp" />
+    <ClCompile Include="ShapeEditLinkDelete.cpp" />
+    <ClCompile Include="ShapeEditNodeDelete.cpp" />
+    <ClCompile Include="SymbologyThemeLinkDlg.cpp" />
+    <ClCompile Include="SymbologyThemeNodeDlg.cpp" />
+    <ClCompile Include="SymbologyThemeZoneDlg.cpp" />
+    <ClCompile Include="TocEditorDemarcation.cpp" />
+    <ClCompile Include="TocEditorLink.cpp" />
+    <ClCompile Include="TocEditorNode.cpp" />
+    <ClCompile Include="TocEditorTransit.cpp" />
+    <ClCompile Include="TocEditorTurn.cpp" />
+    <ClCompile Include="ThemeLinkValueClassify.cpp" />
+    <ClCompile Include="PointStyleTypeEdit.cpp" />
+    <ClCompile Include="PointStyleValueEdit.cpp" />
+    <ClCompile Include="PolygonStyleEdit.cpp" />
+    <ClCompile Include="KThemeDrawZone.cpp" />
+    <ClCompile Include="TocConfigLabelDlg.cpp" />
+    <ClCompile Include="TocLayerCommon.cpp" />
+    <ClCompile Include="ThemeLinkValueScale.cpp" />
+    <ClCompile Include="ThemeNodeCategory.cpp" />
+    <ClCompile Include="TocNodeProperties.cpp" />
+    <ClCompile Include="LinkAnalysisDlg.cpp" />
+    <ClCompile Include="LinkAnalysisMapDisplayDlg.cpp" />
+    <ClCompile Include="LinkAnalysisTableODDlg.cpp" />
+    <ClCompile Include="ObjectIDSelectDlg.cpp" />
+    <ClCompile Include="MapEditMaster.cpp" />
+    <ClCompile Include="MapFindDlg.cpp" />
+    <ClCompile Include="MapLayerTreeCtrl.cpp" />
+    <ClCompile Include="MapViewLinkAnalysis.cpp" />
+    <ClCompile Include="MapViewPathVolume.cpp" />
+    <ClCompile Include="NaviExplorerWnd.cpp" />
+    <ClCompile Include="NaviItemAddDlg.cpp" />
+    <ClCompile Include="NaviItemRenameDlg.cpp" />
+    <ClCompile Include="NetworkOnOffDlg.cpp" />
+    <ClCompile Include="InterUserFunctionDlg.cpp" />
+    <ClCompile Include="IOIntersectionTableView.cpp" />
+    <ClCompile Include="IOTransitTableView.cpp" />
+    <ClCompile Include="IOTurnTableView.cpp" />
+    <ClCompile Include="IORelationColumn.cpp" />
+    <ClCompile Include="IntersectionBasicPage.cpp" />
+    <ClCompile Include="ImChampDir.cpp" />
+    <ClCompile Include="MapViewIntersection.cpp" />
+    <ClCompile Include="MapViewTurn.cpp" />
+    <ClCompile Include="MapViewZoning.cpp" />
+    <ClCompile Include="ModelChoiceArgInfo.cpp" />
+    <ClCompile Include="PA2ODOutputDesignDlg.cpp" />
+    <ClCompile Include="ParseExpression.cpp" />
+    <ClCompile Include="ScreenDrawFlashLink.cpp" />
+    <ClCompile Include="KThemDrawLinkViaPathVolume.cpp" />
+    <ClCompile Include="KThemDrawZoneToZonePathVolume.cpp" />
+    <ClCompile Include="KThemeDrawTurn.cpp" />
+    <ClCompile Include="SelectRegionDlg.cpp" />
+    <ClCompile Include="SelectVariableDlg.cpp" />
+    <ClCompile Include="ShapeEditTurnInsert.cpp" />
+    <ClCompile Include="PA2ODDefinePADlg.cpp" />
+    <ClCompile Include="PA2ODInfo.cpp" />
+    <ClCompile Include="PA2ODModelDlg.cpp" />
+    <ClCompile Include="PA2ODPAImport1Dlg.cpp" />
+    <ClCompile Include="PA2ODPAImport2Dlg.cpp" />
+    <ClCompile Include="PA2ODParamImport1Dlg.cpp" />
+    <ClCompile Include="PA2ODParamImport2Dlg.cpp" />
+    <ClCompile Include="PopupMessenger.cpp" />
+    <ClCompile Include="RailTimeCostInfo.cpp" />
+    <ClCompile Include="SCChangeColumnName.cpp" />
+    <ClCompile Include="ShapeEditController.cpp" />
+    <ClCompile Include="ShapeEditDemarcationInsert.cpp" />
+    <ClCompile Include="ShapeEditDemarcationVertex.cpp" />
+    <ClCompile Include="ShapeEditLinkEdit.cpp" />
+    <ClCompile Include="ShapeEditLinkInsert.cpp" />
+    <ClCompile Include="ShapeEditNodeInsert.cpp" />
+    <ClCompile Include="KASetTransitAssignOptionsDlg.cpp" />
+    <ClCompile Include="KBulkDBaseUtil.cpp" />
+    <ClCompile Include="KCalculateTrafficVolumeDlg.cpp" />
+    <ClCompile Include="KGCategoryExpressionDlg.cpp" />
+    <ClCompile Include="KDBaseInspection.cpp" />
+    <ClCompile Include="KDBaseOD2PASum.cpp" />
+    <ClCompile Include="KDBaseZonePASum.cpp" />
+    <ClCompile Include="KDBaseStatistics.cpp" />
+    <ClCompile Include="KGCategoryExpression.cpp" />
+    <ClCompile Include="KGCategoryPage.cpp" />
+    <ClCompile Include="KGChangeFieldName.cpp" />
+    <ClCompile Include="KInfluenceStatisticsDlg.cpp" />
+    <ClCompile Include="KInspectionLinkDlg.cpp" />
+    <ClCompile Include="KInspectionNodeDlg.cpp" />
+    <ClCompile Include="KInspectionTransitDlg.cpp" />
+    <ClCompile Include="KInspectionTurnDlg.cpp" />
+    <ClCompile Include="KInspectionZoneDlg.cpp" />
+    <ClCompile Include="MapDiplayMonitor.cpp" />
+    <ClCompile Include="KMatrixTableRecord.cpp" />
+    <ClCompile Include="KxBulkDbase.cpp" />
+    <ClCompile Include="MapViewCommandReceiver.cpp" />
+    <ClCompile Include="MapViewFlashShape.cpp" />
+    <ClCompile Include="MapViewGraphicContainer.cpp" />
+    <ClCompile Include="MapViewInfluence.cpp" />
+    <ClCompile Include="MapViewIdentify.cpp" />
+    <ClCompile Include="MapViewMapEvent.cpp" />
+    <ClCompile Include="MapViewMapRequest.cpp" />
+    <ClCompile Include="MapViewScreenDraw.cpp" />
+    <ClCompile Include="MapViewShortestPath.cpp" />
+    <ClCompile Include="MapViewZoomControl.cpp" />
+    <ClCompile Include="MapViewQueryFeature.cpp" />
+    <ClCompile Include="MapViewRenderer.cpp" />
+    <ClCompile Include="MapViewRoute.cpp" />
+    <ClCompile Include="MapViewScreenCordonLine.cpp" />
+    <ClCompile Include="MapViewSync.cpp" />
+    <ClCompile Include="KOD2PASumDlg.cpp" />
+    <ClCompile Include="KPurposeKey.cpp" />
+    <ClCompile Include="MultiStatisticsBaseDefineDlg.cpp" />
+    <ClCompile Include="MultiStatisticsDlg.cpp" />
+    <ClCompile Include="NetworkShapeInsert.cpp" />
+    <ClCompile Include="ODMatrixDlg.cpp" />
+    <ClCompile Include="ODResultViewVRecord.cpp" />
+    <ClCompile Include="ProjectUserNewDlg.cpp" />
+    <ClCompile Include="PurposeInfoCollection.cpp" />
+    <ClCompile Include="PurposeNewDlg.cpp" />
+    <ClCompile Include="RatioRegionInfo.cpp" />
+    <ClCompile Include="ResultViewDistributionDlg.cpp" />
+    <ClCompile Include="ResultViewModeDlg.cpp" />
+    <ClCompile Include="SCAnalysisCriteriaDlg.cpp" />
+    <ClCompile Include="SCAnalysisDlg.cpp" />
+    <ClCompile Include="SCAnalysisInputDlg.cpp" />
+    <ClCompile Include="SCAnalysisSelectDlg.cpp" />
+    <ClCompile Include="SCAnalysisInfo.cpp" />
+    <ClCompile Include="SCAnalysisOutputDesignDlg.cpp" />
+    <ClCompile Include="SCManageDlg.cpp" />
+    <ClCompile Include="SCMapAnalysis.cpp" />
+    <ClCompile Include="ThemeDrawControl.cpp" />
+    <ClCompile Include="KThemeDrawCordonLine.cpp" />
+    <ClCompile Include="ScreenDrawEditCordonLine.cpp" />
+    <ClCompile Include="ScreenDrawEditScreenLine.cpp" />
+    <ClCompile Include="KThemeDrawLink.cpp" />
+    <ClCompile Include="KThemeDrawNode.cpp" />
+    <ClCompile Include="KThemeDrawHighwayShortestPath.cpp" />
+    <ClCompile Include="KThemeDrawScreenLine.cpp" />
+    <ClCompile Include="KThemeDrawTransit.cpp" />
+    <ClCompile Include="KPASumDlg.cpp" />
+    <ClCompile Include="KStatisticsDlg.cpp" />
+    <ClCompile Include="RouteDeleter.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="CodeGroupNewDlg.cpp" />
+    <ClCompile Include="CodeManagementDlg.cpp" />
+    <ClCompile Include="CodeNewDlg.cpp" />
+    <ClCompile Include="CustomReportRecordItem.cpp" />
+    <ClCompile Include="DBaseODDlg.cpp" />
+    <ClCompile Include="KStartSplashDlg.cpp" />
+    <ClCompile Include="ExpressionChecker.cpp" />
+    <ClCompile Include="KBulkDBase.cpp" />
+    <ClCompile Include="KBulkDBase2File.cpp" />
+    <ClCompile Include="KmzSystem.cpp" />
+    <ClCompile Include="MAdjustmentDummy.cpp" />
+    <ClCompile Include="MarkupStatic.cpp" />
+    <ClCompile Include="MBaseVariable.cpp" />
+    <ClCompile Include="MDecisionTreePage.cpp" />
+    <ClCompile Include="MFunctionDlg.cpp" />
+    <ClCompile Include="MGroupVariable.cpp" />
+    <ClCompile Include="ModeFunction.cpp" />
+    <ClCompile Include="MAdjustmentDlg.cpp" />
+    <ClCompile Include="MDefineVariableDlg.cpp" />
+    <ClCompile Include="MDemandStratumDlg.cpp" />
+    <ClCompile Include="DImpedanceFunctionDlg.cpp" />
+    <ClCompile Include="DInputDlg.cpp" />
+    <ClCompile Include="DistributionFunction1.cpp" />
+    <ClCompile Include="DistributionFunction2.cpp" />
+    <ClCompile Include="DistributionFunction3.cpp" />
+    <ClCompile Include="DistributionFunctionBase.cpp" />
+    <ClCompile Include="DistributionInfo.cpp" />
+    <ClCompile Include="DistributionInfoList.cpp" />
+    <ClCompile Include="DOutputDesignDlg.cpp" />
+    <ClCompile Include="DSelectModelDlg.cpp" />
+    <ClCompile Include="DSetStoppingDlg.cpp" />
+    <ClCompile Include="ExpressionElement.cpp" />
+    <ClCompile Include="ExpressionElementField.cpp" />
+    <ClCompile Include="ExpressionElementFunction.cpp" />
+    <ClCompile Include="ExpressionElementNumber.cpp" />
+    <ClCompile Include="ExpressionElementOperator.cpp" />
+    <ClCompile Include="GBaseExpressionContainer.cpp" />
+    <ClCompile Include="GenerationInfo.cpp" />
+    <ClCompile Include="GenerationInfoList.cpp" />
+    <ClCompile Include="GFunctionRegressionDlg.cpp" />
+    <ClCompile Include="GFunctionUnitDlg.cpp" />
+    <ClCompile Include="GGroupExpressionContainer.cpp" />
+    <ClCompile Include="GInputTreeNavigator.cpp" />
+    <ClCompile Include="GOutputDesignDlg.cpp" />
+    <ClCompile Include="GRegressionExpression.cpp" />
+    <ClCompile Include="GSimpleExpressionContainer.cpp" />
+    <ClCompile Include="GSimpleRegressionPage.cpp" />
+    <ClCompile Include="GSimpleUnitPage.cpp" />
+    <ClCompile Include="GUnitExpression.cpp" />
+    <ClCompile Include="BlankExpressionPage.cpp" />
+    <ClCompile Include="DistributionModelDlg.cpp" />
+    <ClCompile Include="KExRecordItem.cpp" />
+    <ClCompile Include="KmzApp.cpp" />
+    <ClCompile Include="KPointMarkerSelectDlg.cpp" />
+    <ClCompile Include="Mode.cpp" />
+    <ClCompile Include="ModeChoiceInfo.cpp" />
+    <ClCompile Include="ModeChoiceModelDlg.cpp" />
+    <ClCompile Include="model_common.cpp" />
+    <ClCompile Include="MOutputInfo.cpp" />
+    <ClCompile Include="ShortestPathBase.cpp" />
+    <ClCompile Include="ShortestPathHighwayDlg.cpp" />
+    <ClCompile Include="SimpleProgressOld.cpp" />
+    <ClCompile Include="PurposeManager.cpp" />
+    <ClCompile Include="PictureEx.cpp" />
+    <ClCompile Include="ModeManager.cpp" />
+    <ClCompile Include="ModeTree.cpp" />
+    <ClCompile Include="ModeTreeNode.cpp" />
+    <ClCompile Include="ModeTreeNodeMode.cpp" />
+    <ClCompile Include="MOutputDesignDlg.cpp" />
+    <ClCompile Include="MSimpleVariable.cpp" />
+    <ClCompile Include="PAPurpose.cpp" />
+    <ClCompile Include="DBaseConnector.cpp" />
+    <ClCompile Include="StatisticsBaseDefineDlg.cpp" />
+    <ClCompile Include="StatisticsFunctionDefineDlg.cpp" />
+    <ClCompile Include="DefineNames.cpp" />
+    <ClCompile Include="MainFrameWnd.cpp" />
+    <ClCompile Include="GSimpleExpressionPage.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TableOwnerTarget.cpp" />
+    <ClCompile Include="RoadTimeCostInfo.cpp" />
+    <ClCompile Include="TimeODDefPurposeMode.cpp" />
+    <ClCompile Include="TimeODGenerationDlg.cpp" />
+    <ClCompile Include="TimeODInfo.cpp" />
+    <ClCompile Include="TimeODInputDlg.cpp" />
+    <ClCompile Include="TimeODOutputDesignDlg.cpp" />
+    <ClCompile Include="TimeODSelectSurveyCodeDlg.cpp" />
+    <ClCompile Include="TimeODSurveyImport1Dlg.cpp" />
+    <ClCompile Include="TimeODSurveyImport2Dlg.cpp" />
+    <ClCompile Include="TimeODZoneCharacterDlg.cpp" />
+    <ClCompile Include="IOTableRecordSelection.cpp" />
+    <ClCompile Include="ResultViewTreeCtrl.cpp" />
+    <ClCompile Include="TocFormView.cpp" />
+    <ClCompile Include="TocLinkProperties.cpp" />
+    <ClCompile Include="ThemeNodePropertiesMulti.cpp" />
+    <ClCompile Include="ThemeNodeValueClassify.cpp" />
+    <ClCompile Include="ThemeNodeValueScale.cpp" />
+    <ClCompile Include="ThemeStyleSave.cpp" />
+    <ClCompile Include="TocWindow.cpp" />
+    <ClCompile Include="TocZoneProperties.cpp" />
+    <ClCompile Include="ThemeZoneValueClassify.cpp" />
+    <ClCompile Include="ResultViewAssignmentDlg.cpp" />
+    <ClCompile Include="ViewResultInfo.cpp" />
+    <ClCompile Include="WOStoppingDlg.cpp" />
+    <ClCompile Include="WOTrimpMatrix.cpp" />
+    <ClCompile Include="WStoppingDlg.cpp" />
+    <ClCompile Include="XmlManager.cpp" />
+    <ClCompile Include="ZoneGroupBase.cpp" />
+    <ClCompile Include="ZoneGroupColumn.cpp" />
+    <ClCompile Include="ZoneGroupGeneration.cpp" />
+    <ClCompile Include="ZoneGroupValue.cpp" />
+    <ClCompile Include="AttributeSetDlg.cpp" />
+    <ClCompile Include="MapFrameWnd.cpp" />
+    <ClCompile Include="MapView.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="Scenario.cpp" />
+    <ClCompile Include="Target.cpp" />
+    <ClCompile Include="AddScenarioDlg.cpp" />
+    <ClCompile Include="DefinePurposeDlg.cpp" />
+    <ClCompile Include="ScenarioAddYearDlg.cpp" />
+    <ClCompile Include="ScenarioCopyDlg.cpp" />
+    <ClCompile Include="SelectTargetYearDlg.cpp" />
+    <ClCompile Include="TargetCopyDlg.cpp" />
+    <ClCompile Include="ProjectExplorerWnd.cpp" />
+    <ClCompile Include="ColumnNameManager.cpp" />
+    <ClCompile Include="IOColumnToInsertSQL.cpp" />
+    <ClCompile Include="IOColumnToSQL.cpp" />
+    <ClCompile Include="IOColumnToString.cpp" />
+    <ClCompile Include="IOColumnToUpdateSQL.cpp" />
+    <ClCompile Include="IORecordsetFactory.cpp" />
+    <ClCompile Include="DisplayColumnSetDlg.cpp" />
+    <ClCompile Include="FieldCalculatorDlg.cpp" />
+    <ClCompile Include="IOFrameWnd.cpp" />
+    <ClCompile Include="IOTableRecord.cpp" />
+    <ClCompile Include="IOTableView.cpp" />
+    <ClCompile Include="IOView.cpp" />
+    <ClCompile Include="SelectByAttributeDlg.cpp" />
+    <ClCompile Include="TableAddFieldDlg.cpp" />
+    <ClCompile Include="TableExportDlg.cpp" />
+    <ClCompile Include="IOTableController.cpp" />
+    <ClCompile Include="CommandWnd.cpp" />
+    <ClCompile Include="ExistNameChecker.cpp" />
+    <ClCompile Include="kmz_common.cpp" />
+    <ClCompile Include="RenameDlg.cpp" />
+    <ClCompile Include="ScaleInfo.cpp" />
+    <ClCompile Include="XTPReportRecordItemCheck.cpp" />
+    <ClCompile Include="Purpose.cpp" />
+    <ClCompile Include="GBaseExpression.cpp" />
+    <ClCompile Include="GenerationModelDlg.cpp" />
+    <ClCompile Include="GSelectModelDlg.cpp" />
+    <ClCompile Include="ZoneODGroupGenerationDlg.cpp" />
+    <ClCompile Include="ZoneSelectDlg.cpp" />
+    <ClCompile Include="ZoneSelectIntergrationDlg.cpp" />
+    <ClCompile Include="ZoningDivisionDlg.cpp" />
+    <ClCompile Include="ZoningIntegrationDlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AccessTripODToVehODDlg.h" />
+    <ClInclude Include="DBaseMultiAssignSOBA.h" />
+    <ClInclude Include="ExcelExportConfigDlg.h" />
+    <ClInclude Include="FODDiv.h" />
+    <ClInclude Include="KSelectedPathCompareRegionDlg.h" />
+    <ClInclude Include="KSelectedPathCompareTypes.h" />
+    <ClInclude Include="DBaseVersion_P1001.h" />
+    <ClInclude Include="KDefInterUrbanModeChoiceVariableSettingDlg.h" />
+    <ClInclude Include="KMapBackgroundColorDlg.h" />
+    <ClInclude Include="KSelectedPathCompareUrbanDlg.h" />
+    <ClInclude Include="MultiAssignModelSOBADlg.h" />
+    <ClInclude Include="SOBASelectScenarioDlg.h" />
+    <ClInclude Include="TripODToVehODDlg.h" />
+    <ClInclude Include="UtilExcelHandler.h" />
+    <ClInclude Include="ZoningMultiScenarioSelectDlg.h" />
+    <ClInclude Include="ABOMultiFnManagerDlg.h" />
+    <ClInclude Include="ABPRFnDlg.h" />
+    <ClInclude Include="ABPRFnManagerDlg.h" />
+    <ClInclude Include="AccessNodeEditorDlg.h" />
+    <ClInclude Include="AccessTermianlEditerDlg.h" />
+    <ClInclude Include="AccessTerminalGeneratorDlg.h" />
+    <ClInclude Include="AddModeNameDlg.h" />
+    <ClInclude Include="AImportDBDlg.h" />
+    <ClInclude Include="AInputInfo.h" />
+    <ClInclude Include="AOBMultiVDFDlg.h" />
+    <ClInclude Include="AOBVDFInfo.h" />
+    <ClInclude Include="AODDemandShareDlg.h" />
+    <ClInclude Include="ApplyDistributionModelDataDlg.h" />
+    <ClInclude Include="ApplyGenerationModelDataDlg.h" />
+    <ClInclude Include="ApplyModeChoiceModelDataDlg.h" />
+    <ClInclude Include="AProgressDlg.h" />
+    <ClInclude Include="ARunningOptionInfo.h" />
+    <ClInclude Include="ARunOptionDlg.h" />
+    <ClInclude Include="AssignmentModelDlg.h" />
+    <ClInclude Include="DBaseMultiAssign.h" />
+    <ClInclude Include="DBaseVersion_P023.h" />
+    <ClInclude Include="DlgExportTable.h" />
+    <ClInclude Include="DlgExportTurnTable.h" />
+    <ClInclude Include="DlgImportAccessStopNode.h" />
+    <ClInclude Include="DlgImportLink.h" />
+    <ClInclude Include="DlgImportMode.h" />
+    <ClInclude Include="DlgImportNode.h" />
+    <ClInclude Include="DlgImportParaOD.h" />
+    <ClInclude Include="DlgImportPod.h" />
+    <ClInclude Include="DlgImportSedPop.h" />
+    <ClInclude Include="DlgImportSedVector.h" />
+    <ClInclude Include="DlgImportTerminalSchedule.h" />
+    <ClInclude Include="DlgImportTransit.h" />
+    <ClInclude Include="DlgImportTransitLine.h" />
+    <ClInclude Include="DlgImportTransitLineNode.h" />
+    <ClInclude Include="DlgImportTurn.h" />
+    <ClInclude Include="DlgImportZone.h" />
+    <ClInclude Include="DlgShapeDemarcation.h" />
+    <ClInclude Include="DlgShapeLink.h" />
+    <ClInclude Include="DlgShapeNode.h" />
+    <ClInclude Include="DlgTransitStyle.h" />
+    <ClInclude Include="IMapReceiver.h" />
+    <ClInclude Include="IMapView.h" />
+    <ClInclude Include="ImportCommon.h" />
+    <ClInclude Include="ImTasMenuPathDefine.h" />
+    <ClInclude Include="KDlgLinkZoneTypeEdit.h" />
+    <ClInclude Include="KDlgNetworkEditorMain.h" />
+    <ClInclude Include="KDlgNetworkStartID.h" />
+    <ClInclude Include="KDlgNodeZoneTypeEdit.h" />
+    <ClInclude Include="KDlgTurnTypeEdit.h" />
+    <ClInclude Include="KLayerID.h" />
+    <ClInclude Include="KThemeDrawUserPoint.h" />
+    <ClInclude Include="LayerDrawInfo.h" />
+    <ClInclude Include="MakeTurnDispShp.h" />
+    <ClInclude Include="MultiAssignInfo.h" />
+    <ClInclude Include="MultiAssignModelDlg.h" />
+    <ClInclude Include="AssignOutputInformationDlg.h" />
+    <ClInclude Include="AStoppingCriteriaDlg.h" />
+    <ClInclude Include="AStoppingCriteriaMMDlg.h" />
+    <ClInclude Include="AStoppingOriginBaseUeDlg.h" />
+    <ClInclude Include="AvailableCommodity.h" />
+    <ClInclude Include="AWarmStartDlg.h" />
+    <ClInclude Include="BoundaryIntersectTransit.h" />
+    <ClInclude Include="BulkDBaseDemarcation.h" />
+    <ClInclude Include="BulkDBaseIntersection.h" />
+    <ClInclude Include="BulkDBaseLink.h" />
+    <ClInclude Include="BulkDBaseNode.h" />
+    <ClInclude Include="BulkDBaseOD.h" />
+    <ClInclude Include="BulkDBaseScreenCordon.h" />
+    <ClInclude Include="BulkDBaseTargetRegion.h" />
+    <ClInclude Include="BulkDBaseTransit.h" />
+    <ClInclude Include="BulkDBaseTurn.h" />
+    <ClInclude Include="CalculatePathFindInfoDlg.h" />
+    <ClInclude Include="CalculateRatioRegionDlg.h" />
+    <ClInclude Include="CalculateZoneDistance.h" />
+    <ClInclude Include="CalculateParameterDlg.h" />
+    <ClInclude Include="CO2EmissionEquation1Dlg.h" />
+    <ClInclude Include="CO2EmissionEquationDlg.h" />
+    <ClInclude Include="CO2EmissionInterpolationDlg.h" />
+    <ClInclude Include="CO2EmissionsEquationFnDlg.h" />
+    <ClInclude Include="CO2EmissionsEquationModeMangerDlg.h" />
+    <ClInclude Include="CopyProject.h" />
+    <ClInclude Include="CopyUserFieldVectorDlg.h" />
+    <ClInclude Include="CustomReportRecordCtrl.h" />
+    <ClInclude Include="DBaseAssignImport.h" />
+    <ClInclude Include="DBaseCO2EmissionEquation.h" />
+    <ClInclude Include="DBaseCO2EmissionInterpolation.h" />
+    <ClInclude Include="DBaseDefaultCo2EmissionsEquation.h" />
+    <ClInclude Include="DBaseDefaultCo2EmissionsInterpolation.h" />
+    <ClInclude Include="DBaseDefaultDistribution.h" />
+    <ClInclude Include="DBaseDefaultInterRunOption.h" />
+    <ClInclude Include="DBaseDefaultLogistic.h" />
+    <ClInclude Include="DBaseDefaultParaAccessTerminalSetting.h" />
+    <ClInclude Include="DBaseDefaultParaInterPathGenerator.h" />
+    <ClInclude Include="DBaseDefaultParaInterUrbanModeChoice.h" />
+    <ClInclude Include="DBaseDefaultParaRegionalModeChoice.h" />
+    <ClInclude Include="DBaseDefineTransitCost.h" />
+    <ClInclude Include="DBaseAssignment.h" />
+    <ClInclude Include="DBaseCalibration.h" />
+    <ClInclude Include="DBaseChart.h" />
+    <ClInclude Include="DBaseCheckData.h" />
+    <ClInclude Include="DBaseDefaultParaAccessSetting.h" />
+    <ClInclude Include="DBaseDefaultParaHighwayAssign.h" />
+    <ClInclude Include="DBaseDefaultParaMultimodalModeChoice.h" />
+    <ClInclude Include="DBaseDefaultParaPathGenerateConstraint.h" />
+    <ClInclude Include="DBaseDefaultParaMultimodalPathGeneration.h" />
+    <ClInclude Include="DBaseDefaultParaTransitRouteChoice.h" />
+    <ClInclude Include="DBaseDefPolicyContainer.h" />
+    <ClInclude Include="DBaseDevPlan.h" />
+    <ClInclude Include="DBaseFGenerationModel.h" />
+    <ClInclude Include="DBaseFieldCalculator.h" />
+    <ClInclude Include="DBaseGeneration.h" />
+    <ClInclude Include="DBaseGenerationParaModel.h" />
+    <ClInclude Include="DBaseImpExpShapeFile.h" />
+    <ClInclude Include="DBaseImportTable.h" />
+    <ClInclude Include="DBaseInterModal.h" />
+    <ClInclude Include="DBaseIOTerminalScheduleTableView.h" />
+    <ClInclude Include="DBaseMap.h" />
+    <ClInclude Include="DBaseMatrixView.h" />
+    <ClInclude Include="DBasePathVolume.h" />
+    <ClInclude Include="DBaseProject.h" />
+    <ClInclude Include="DBaseQuickSearch.h" />
+    <ClInclude Include="DBaseResultView.h" />
+    <ClInclude Include="DBaseRuler.h" />
+    <ClInclude Include="DBaseSubNetwork.h" />
+    <ClInclude Include="DBaseSystem.h" />
+    <ClInclude Include="DBaseTableMgr.h" />
+    <ClInclude Include="DBaseTerminalAEModeViewer.h" />
+    <ClInclude Include="DBaseUpgrade.h" />
+    <ClInclude Include="DBaseVehicleCon.h" />
+    <ClInclude Include="DBaseVersion_P001.h" />
+    <ClInclude Include="DBaseVersion_P003.h" />
+    <ClInclude Include="DBaseVersion_P004.h" />
+    <ClInclude Include="DBaseVersion_P005.h" />
+    <ClInclude Include="DBaseVersion_P010.h" />
+    <ClInclude Include="DBaseVersion_P011.h" />
+    <ClInclude Include="DBaseVersion_P012.h" />
+    <ClInclude Include="DBaseVersion_P013.h" />
+    <ClInclude Include="DBaseVersion_P014.h" />
+    <ClInclude Include="DBaseVersion_P015.h" />
+    <ClInclude Include="DBaseVersion_P016.h" />
+    <ClInclude Include="DBaseVersion_P017.h" />
+    <ClInclude Include="DBaseVersion_P018.h" />
+    <ClInclude Include="DBaseVersion_P019.h" />
+    <ClInclude Include="DBaseVersion_P020.h" />
+    <ClInclude Include="DBaseVersion_P021.h" />
+    <ClInclude Include="DBaseVersion_P022.h" />
+    <ClInclude Include="DefaultAccessStationSetting.h" />
+    <ClInclude Include="DefaultAccessTerminalSetting.h" />
+    <ClInclude Include="DefaultCo2EmissionsEquationParaDlg.h" />
+    <ClInclude Include="DefaultCo2EmissionsInterpolationParaDlg.h" />
+    <ClInclude Include="DefaultHighwayAssignment.h" />
+    <ClInclude Include="DefaultInterModeChoiceParaSubPage.h" />
+    <ClInclude Include="DefaultInterPathGenerator.h" />
+    <ClInclude Include="DefaultInterRunOptionDlg.h" />
+    <ClInclude Include="DefaultLogisticParaDlg.h" />
+    <ClInclude Include="DefaultMDefineVariableGroupDlg.h" />
+    <ClInclude Include="DefaultMultimodalPathGeneration.h" />
+    <ClInclude Include="DefaultMultimodalModeChoicePara.h" />
+    <ClInclude Include="DefaultPathGenerateConstraint.h" />
+    <ClInclude Include="DefaultRegionalModeChoiceParaDlg.h" />
+    <ClInclude Include="DefaultRegionalModeChoiceParaSubPage.h" />
+    <ClInclude Include="DefaultTGCrossPage.h" />
+    <ClInclude Include="DefaultTGRegressionPage.h" />
+    <ClInclude Include="DefaultTGZoneGroupPage.h" />
+    <ClInclude Include="DefaultTransitRouteChoicePara.h" />
+    <ClInclude Include="DefineModeDlg.h" />
+    <ClInclude Include="DefineNamesDefaultPara.h" />
+    <ClInclude Include="DefineNamesModels.h" />
+    <ClInclude Include="DefineRegionMode.h" />
+    <ClInclude Include="DefineSystemCodeDlg.h" />
+    <ClInclude Include="DefineTransitCodeCostDlg.h" />
+    <ClInclude Include="DefInterUrbanModeChoiceParaDlg.h" />
+    <ClInclude Include="DefVDFFactorDlg.h" />
+    <ClInclude Include="DeleteConfirmDlg.h" />
+    <ClInclude Include="DesireLineDlg.h" />
+    <ClInclude Include="DevPlanDDlg.h" />
+    <ClInclude Include="DevPlanDlg.h" />
+    <ClInclude Include="DevPlanGDlg.h" />
+    <ClInclude Include="DevPlanMDlg.h" />
+    <ClInclude Include="DevPlanModelDlg.h" />
+    <ClInclude Include="DevPlanGInfo.h" />
+    <ClInclude Include="DevPlanImportDirectInputStep1Dlg.h" />
+    <ClInclude Include="DevPlanImportDirectInputStep2Dlg.h" />
+    <ClInclude Include="DevPlanInfo.h" />
+    <ClInclude Include="DevPlanMgrDlg.h" />
+    <ClInclude Include="DevPlanODlg.h" />
+    <ClInclude Include="DevPlanProgressDlg.h" />
+    <ClInclude Include="DevPlanSelFacilityDlg.h" />
+    <ClInclude Include="DevPlanSelPlanDlg.h" />
+    <ClInclude Include="DevZoneSelectDlg.h" />
+    <ClInclude Include="DFormulaDefaultDlg.h" />
+    <ClInclude Include="DropdownEnterCombo.h" />
+    <ClInclude Include="EditAccessLineStation.h" />
+    <ClInclude Include="EditAccessLineStationDlg.h" />
+    <ClInclude Include="FDefaultPolicyContainerDlg.h" />
+    <ClInclude Include="FProjectInfoDlg.h" />
+    <ClInclude Include="FTableModeAddFieldDlg.h" />
+    <ClInclude Include="FTableODDeleteField.h" />
+    <ClInclude Include="InterModalResultDlg.h" />
+    <ClInclude Include="IOTerminalScheduleTableView.h" />
+    <ClInclude Include="KTestImportMatchDlg.h" />
+    <ClInclude Include="NetworkEditLog.h" />
+    <ClInclude Include="NombaraTester.h" />
+    <ClInclude Include="PathVolumeAreaInterDlg.h" />
+    <ClInclude Include="PathVolumeAreaInterModeDlg.h" />
+    <ClInclude Include="PathVolumeAreaTransitDlg.h" />
+    <ClInclude Include="PathVolumeTerminalAccEgrDlg.h" />
+    <ClInclude Include="ProgramVersionInfo.h" />
+    <ClInclude Include="ProjectInfoDlg.h" />
+    <ClInclude Include="QuickSearchDlg.h" />
+    <ClInclude Include="RulerDlg.h" />
+    <ClInclude Include="KThemeDrawTransitShortestPath.h" />
+    <ClInclude Include="KThemeTransitPathInfo.h" />
+    <ClInclude Include="SeatCapaInfoDlg.h" />
+    <ClInclude Include="ShapeEditLinkTwoWayVertex.h" />
+    <ClInclude Include="ShapeExportDlg.h" />
+    <ClInclude Include="ShortestPathNHighwayDlg.h" />
+    <ClInclude Include="SplashDlg.h" />
+    <ClInclude Include="StationODCalculatorDlg.h" />
+    <ClInclude Include="StationODVirtualRecord.h" />
+    <ClInclude Include="SymbologyThemeLink.h" />
+    <ClInclude Include="TableEditVehicleFieldDlg.h" />
+    <ClInclude Include="EnumerateDefine.h" />
+    <ClInclude Include="ExcelManager.h" />
+    <ClInclude Include="FARunOptionDlg.h" />
+    <ClInclude Include="FormulaExpression.h" />
+    <ClInclude Include="FormulaInputDlg.h" />
+    <ClInclude Include="FormulaInputExp.h" />
+    <ClInclude Include="FreightBulkPathGenerate.h" />
+    <ClInclude Include="GBaseFormula.h" />
+    <ClInclude Include="GClassificationEditorDlg.h" />
+    <ClInclude Include="GClassificationFormula.h" />
+    <ClInclude Include="GenerationBusPathInfo.h" />
+    <ClInclude Include="GenerationBusPathStep1Dlg.h" />
+    <ClInclude Include="GenerationBusPathStep2Dlg.h" />
+    <ClInclude Include="GenerationClassificationPage.h" />
+    <ClInclude Include="GenerationInputTreeNavigator.h" />
+    <ClInclude Include="GenerationModelInfo.h" />
+    <ClInclude Include="DefaultGenerationParaMainDlg.h" />
+    <ClInclude Include="DefaultGenerationParaSubPage.h" />
+    <ClInclude Include="GenerationRegressionPage.h" />
+    <ClInclude Include="GenerationSelectModelDlg.h" />
+    <ClInclude Include="GenerationUnitPage.h" />
+    <ClInclude Include="GenerationZoneGroupPage.h" />
+    <ClInclude Include="GFormulaDefaultDlg.h" />
+    <ClInclude Include="GlobalTerminalSettingDlg.h" />
+    <ClInclude Include="GraphicTurnVolumeDisp.h" />
+    <ClInclude Include="GravityCalibrationDlg.h" />
+    <ClInclude Include="GRegressionFormula.h" />
+    <ClInclude Include="GroupGenerationInfo.h" />
+    <ClInclude Include="GUnitFormula.h" />
+    <ClInclude Include="IMapEditObserver.h" />
+    <ClInclude Include="ImportTableDlg.h" />
+    <ClInclude Include="ImportTableInfo.h" />
+    <ClInclude Include="ImChampFileExist.h" />
+    <ClInclude Include="ImChampIDFind.h" />
+    <ClInclude Include="ImChampIDFind2Column.h" />
+    <ClInclude Include="ImTasLicenseCheck.h" />
+    <ClInclude Include="ImChampMapDefine.h" />
+    <ClInclude Include="ImChampMapDefineInfo.h" />
+    <ClInclude Include="ImChampMessage.h" />
+    <ClInclude Include="ImChampMultiZoneFind.h" />
+    <ClInclude Include="ImChampMultiIDFind.h" />
+    <ClInclude Include="InitRelationProcess.h" />
+    <ClInclude Include="InspectionNetwork.h" />
+    <ClInclude Include="InterHighwayRunOption.h" />
+    <ClInclude Include="InterModalMainDlg.h" />
+    <ClInclude Include="InterModalOutputDlg.h" />
+    <ClInclude Include="InterModalPathInfo.h" />
+    <ClInclude Include="InterModeDefineDlg.h" />
+    <ClInclude Include="InterModeRouteParaDlg.h" />
+    <ClInclude Include="InterPathGeneratorMainDlg.h" />
+    <ClInclude Include="InterPathGeneratorRegionalDlg.h" />
+    <ClInclude Include="InterPathGeneratorUrbanDlg.h" />
+    <ClInclude Include="InterPathGenMain.h" />
+    <ClInclude Include="InterPathGenTypeA.h" />
+    <ClInclude Include="InterPathGenTypeB.h" />
+    <ClInclude Include="InterPathGenTypeC.h" />
+    <ClInclude Include="InterRegionalChoiceParaSubPage.h" />
+    <ClInclude Include="InterRegionChoiceParaDlg.h" />
+    <ClInclude Include="InterResultDetailDlg.h" />
+    <ClInclude Include="IntersectionEditMainDlg.h" />
+    <ClInclude Include="IntersectionTopologyAnalysisDlg.h" />
+    <ClInclude Include="InterStoppingDlg.h" />
+    <ClInclude Include="InterTransitModeParaDlg.h" />
+    <ClInclude Include="InterTransitPathEditDlg.h" />
+    <ClInclude Include="InterUrbanChoiceParameterDlg.h" />
+    <ClInclude Include="InterUrbanChoiceParaSubPage.h" />
+    <ClInclude Include="IOAssignRelationColumn.h" />
+    <ClInclude Include="ITransitPathEditOpener.h" />
+    <ClInclude Include="KDBaseAccessibilityModify.h" />
+    <ClInclude Include="InformationDlg.h" />
+    <ClInclude Include="GenerationModelMainDlg.h" />
+    <ClInclude Include="DefaultDistributionParaSettingDlg.h" />
+    <ClInclude Include="DefaultTGUnitPage.h" />
+    <ClInclude Include="KEMFreight.h" />
+    <ClInclude Include="KEMParameter.h" />
+    <ClInclude Include="ImChampMultiIDFind2Column.h" />
+    <ClInclude Include="FAEditModeDlg.h" />
+    <ClInclude Include="KUIDefineMultiModelsProess.h" />
+    <ClInclude Include="KUIDefInterModalProcess.h" />
+    <ClInclude Include="KXmlDefaultGeneration.h" />
+    <ClInclude Include="MDefineVariableEdit.h" />
+    <ClInclude Include="MDefineVariableGroupDlg.h" />
+    <ClInclude Include="MDefVarSubPage.h" />
+    <ClInclude Include="ModeChoiceModelInfo.h" />
+    <ClInclude Include="ModeChoiceModelNewDlg.h" />
+    <ClInclude Include="ModeInfoCollection.h" />
+    <ClInclude Include="ModelProcessInterModal.h" />
+    <ClInclude Include="ModelProcessMultiModal.h" />
+    <ClInclude Include="MultiCodeSettingDlg.h" />
+    <ClInclude Include="ODGroupGenerationDlg.h" />
+    <ClInclude Include="PrjCommodityInfoDlg.h" />
+    <ClInclude Include="ScreenDrawFlashZone.h" />
+    <ClInclude Include="ShapeEditLinkOneWayVertex.h" />
+    <ClInclude Include="TableEditCodeFieldDlg.h" />
+    <ClInclude Include="TableEditFieldDlg.h" />
+    <ClInclude Include="TableEditFieldInfo.h" />
+    <ClInclude Include="TableModeEditFieldDlg.h" />
+    <ClInclude Include="TablePurposeEditFieldDlg.h" />
+    <ClInclude Include="TableRelationInfo.h" />
+    <ClInclude Include="TableVehicleConvAddFieldDlg.h" />
+    <ClInclude Include="TableVehicleDeleteField.h" />
+    <ClInclude Include="TableZoneEditFieldDlg.h" />
+    <ClInclude Include="TabMainSample.h" />
+    <ClInclude Include="TabSubSample.h" />
+    <ClInclude Include="KTransitStationSeqKey.h" />
+    <ClInclude Include="KUIDefInterModalMain.h" />
+    <ClInclude Include="LinkViaTransitSearchDlg.h" />
+    <ClInclude Include="KMapEvents.h" />
+    <ClInclude Include="ImChampCommand.h" />
+    <ClInclude Include="ImTasDBase.h" />
+    <ClInclude Include="ImChampFrameWindow.h" />
+    <ClInclude Include="IMapFeedback.h" />
+    <ClInclude Include="ImChampMapSelectionReceiver.h" />
+    <ClInclude Include="IncludeArcGISEngine.h" />
+    <ClInclude Include="IncludeBoost.h" />
+    <ClInclude Include="IncludeMap.h" />
+    <ClInclude Include="IncludeModelCommon.h" />
+    <ClInclude Include="IncludeCommon.h" />
+    <ClInclude Include="IncludeScreenDraw.h" />
+    <ClInclude Include="IncludeScreenDrawEdit.h" />
+    <ClInclude Include="IncludeShapeEdit.h" />
+    <ClInclude Include="IncludeException.h" />
+    <ClInclude Include="IncludeSTL.h" />
+    <ClInclude Include="InterBPRFnDlg.h" />
+    <ClInclude Include="InterBPRFnMgrDlg.h" />
+    <ClInclude Include="IntersectionExtensionPage.h" />
+    <ClInclude Include="IntersectionNodeType.h" />
+    <ClInclude Include="IntersectionThreeBasicPage.h" />
+    <ClInclude Include="IntersectionTopologyAnalysis.h" />
+    <ClInclude Include="IntersectionTopologyPage.h" />
+    <ClInclude Include="intersection_common.h" />
+    <ClInclude Include="IOIntersectionTableView.h" />
+    <ClInclude Include="IOTurnTableView.h" />
+    <ClInclude Include="IShapeEditOwner.h" />
+    <ClInclude Include="IThemeLayer.h" />
+    <ClInclude Include="IScreenDrawEdit.h" />
+    <ClInclude Include="IShapeEdit.h" />
+    <ClInclude Include="IShapeEditController.h" />
+    <ClInclude Include="IORelationColumn.h" />
+    <ClInclude Include="IntersectionBasicPage.h" />
+    <ClInclude Include="AOBDefineVDFDlg.h" />
+    <ClInclude Include="AOBSingleVDFDlg.h" />
+    <ClInclude Include="ImChampDir.h" />
+    <ClInclude Include="KEMLayer.h" />
+    <ClInclude Include="Launcher.h" />
+    <ClInclude Include="MapViewRenderInfo.h" />
+    <ClInclude Include="MapViewSelectionFeedback.h" />
+    <ClInclude Include="ImTasStatus.h" />
+    <ClInclude Include="MTransitPathEditDlg.h" />
+    <ClInclude Include="NetworkCompareDlg.h" />
+    <ClInclude Include="NetworkInspectionDlg.h" />
+    <ClInclude Include="NodeViaTransitSearchDlg.h" />
+    <ClInclude Include="ODGroupGeneration.h" />
+    <ClInclude Include="ParameterDefineCostDlg.h" />
+    <ClInclude Include="ParameterDefineTime.h" />
+    <ClInclude Include="PathVolumeAreaDlg.h" />
+    <ClInclude Include="PathVolumeDlg.h" />
+    <ClInclude Include="PathVolumeInfo.h" />
+    <ClInclude Include="PreferenceForm.h" />
+    <ClInclude Include="PreferenceLabel.h" />
+    <ClInclude Include="PreferenceMaxNetworkID.h" />
+    <ClInclude Include="PreferenceSymbol.h" />
+    <ClInclude Include="RegularExp.h" />
+    <ClInclude Include="ScreenDrawEditMultiLinkSelect.h" />
+    <ClInclude Include="MatrixOperVRecord.h" />
+    <ClInclude Include="ScreenDrawEditSearchPolygon.h" />
+    <ClInclude Include="ScreenDrawEditSearchRect.h" />
+    <ClInclude Include="ScreenDrawEditTargetRegionEdit.h" />
+    <ClInclude Include="ScreenDrawEditTargetRegionInsert.h" />
+    <ClInclude Include="KThemDrawIntersection.h" />
+    <ClInclude Include="KThemeDrawLinkSelection.h" />
+    <ClInclude Include="KThemeDrawNodeSelection.h" />
+    <ClInclude Include="KThemeDrawStation.h" />
+    <ClInclude Include="SubNetworkDlg.h" />
+    <ClInclude Include="TableAddFieldInfo.h" />
+    <ClInclude Include="TableExpEmmeDefineModesDlg.h" />
+    <ClInclude Include="TableExpEmmeMatrixDlg.h" />
+    <ClInclude Include="TableExpEmmeNetworkDlg.h" />
+    <ClInclude Include="TableImpEmmeMatrixDlg.h" />
+    <ClInclude Include="TableImpEmmeNetworkDlg.h" />
+    <ClInclude Include="TableImpEmmeSelectFileDlg.h" />
+    <ClInclude Include="TableImpEmmeNodeSubDlg.h" />
+    <ClInclude Include="TableImpEmmeLinkSubDlg.h" />
+    <ClInclude Include="TableRenameFieldDlg.h" />
+    <ClInclude Include="TCoordinate.h" />
+    <ClInclude Include="TerminalAEModeChartDlg.h" />
+    <ClInclude Include="TerminalAEModeViewerDlg.h" />
+    <ClInclude Include="ThemeFunctionDlg.h" />
+    <ClInclude Include="TocFrameWnd.h" />
+    <ClInclude Include="TocHideShowView.h" />
+    <ClInclude Include="TProjectInfo.h" />
+    <ClInclude Include="ATripMatrix.h" />
+    <ClInclude Include="KDlgTransitInfluenceArea.h" />
+    <ClInclude Include="TurnViewDlg.h" />
+    <ClInclude Include="TurnVolumeViewDlg.h" />
+    <ClInclude Include="VectorOperVRecord.h" />
+    <ClInclude Include="MultiModalResultInfo.h" />
+    <ClInclude Include="MultiModalDefineMode.h" />
+    <ClInclude Include="MultiModalResultDetailDlg.h" />
+    <ClInclude Include="MultimodalResultDlg.h" />
+    <ClInclude Include="PrepareChartNetworkDlg.h" />
+    <ClInclude Include="PrepareChartODDlg.h" />
+    <ClInclude Include="PrepareChartPAColumnDlg.h" />
+    <ClInclude Include="PrepareChartPADlg.h" />
+    <ClInclude Include="KThemeLayerUnion.h" />
+    <ClInclude Include="ScreenDrawEditSingleLinkSelect.h" />
+    <ClInclude Include="KEditForeDrawTransitPath.h" />
+    <ClInclude Include="PrepareChartTransitDlg.h" />
+    <ClInclude Include="KThemeDrawUserLine.h" />
+    <ClInclude Include="KThemeDrawZoneAccessBoundary.h" />
+    <ClInclude Include="ShapeEditNodeMove.h" />
+    <ClInclude Include="ShapeEditNodeProperties.h" />
+    <ClInclude Include="ShapeEditTransitInsert.h" />
+    <ClInclude Include="ShortestPathNTransitDlg.h" />
+    <ClInclude Include="TableManager.h" />
+    <ClInclude Include="TableManagerMatrixDlg.h" />
+    <ClInclude Include="TableManagerVectorDlg.h" />
+    <ClInclude Include="TableModeAddFieldDlg.h" />
+    <ClInclude Include="TablePurposeAddFieldDlg.h" />
+    <ClInclude Include="TableZoneAddFieldDlg.h" />
+    <ClInclude Include="TargetRegionSetting.h" />
+    <ClInclude Include="TChartPA.h" />
+    <ClInclude Include="TChartTransit.h" />
+    <ClInclude Include="ITocForm.h" />
+    <ClInclude Include="TClassRange.h" />
+    <ClInclude Include="TerminalScheduleDesire.h" />
+    <ClInclude Include="TerminalScheduleDesireDlg.h" />
+    <ClInclude Include="TerminalScheduleEditDlg.h" />
+    <ClInclude Include="TerminalScheduleEditInfo.h" />
+    <ClInclude Include="ThemeSetFilterDlg.h" />
+    <ClInclude Include="IDCaption.h" />
+    <ClInclude Include="TPrepareChart.h" />
+    <ClInclude Include="TransitPathDirectionSelect.h" />
+    <ClInclude Include="TransitPathEditDlg.h" />
+    <ClInclude Include="TransitLineThemesDlg.h" />
+    <ClInclude Include="TransitLineThemesInfo.h" />
+    <ClInclude Include="TransitPathViewDlg.h" />
+    <ClInclude Include="TSystemField.h" />
+    <ClInclude Include="TTransitPassenger.h" />
+    <ClInclude Include="TTransitPassengerInfo.h" />
+    <ClInclude Include="TUserGeometryInfo.h" />
+    <ClInclude Include="WoStoppingTransitDlg.h" />
+    <ClInclude Include="WriteCodeAgrument.h" />
+    <ClInclude Include="WStoopingTransitDlg.h" />
+    <ClInclude Include="XTPPropertyGridUtil.h" />
+    <ClInclude Include="ReportCtrlSetting.h" />
+    <ClInclude Include="ScreenDrawDesireMap.h" />
+    <ClInclude Include="KUIDefImportTable.h" />
+    <ClInclude Include="KUIDefMultiModal.h" />
+    <ClInclude Include="LinkDevideSelectDlg.h" />
+    <ClInclude Include="LayerXmlRenderer.h" />
+    <ClInclude Include="LineStyleTypeEdit.h" />
+    <ClInclude Include="LineStyleValueEdit.h" />
+    <ClInclude Include="MAOutputDesignDlg.h" />
+    <ClInclude Include="MARunOptionDlg.h" />
+    <ClInclude Include="MATransitAssignInfoDlg.h" />
+    <ClInclude Include="MATripMatrix.h" />
+    <ClInclude Include="MultiModalInfo.h" />
+    <ClInclude Include="MultiModalMainDlg.h" />
+    <ClInclude Include="NameInputDlg.h" />
+    <ClInclude Include="PolygonStyleValueEdit.h" />
+    <ClInclude Include="PropertiesDlg.h" />
+    <ClInclude Include="ScreenDrawEditMapIdentify.h" />
+    <ClInclude Include="ScreenDrawFlashLinkPath.h" />
+    <ClInclude Include="ScreenDrawFlashNode.h" />
+    <ClInclude Include="ScreenDrawEditNodeSelect.h" />
+    <ClInclude Include="SetAccessibility.h" />
+    <ClInclude Include="ShapeEditTransitEdit.h" />
+    <ClInclude Include="ShapeEditTurnDeletes.h" />
+    <ClInclude Include="ShapeEditLinkDelete.h" />
+    <ClInclude Include="ShapeEditNodeDelete.h" />
+    <ClInclude Include="SymbologyThemeLinkDlg.h" />
+    <ClInclude Include="SymbologyThemeNodeDlg.h" />
+    <ClInclude Include="SymbologyThemeZoneDlg.h" />
+    <ClInclude Include="TDrawDesireMap.h" />
+    <ClInclude Include="NodeSelectionInfo.h" />
+    <ClInclude Include="TocEditorDemarcation.h" />
+    <ClInclude Include="TocEditorLink.h" />
+    <ClInclude Include="TocEditorNode.h" />
+    <ClInclude Include="TocEditorTransit.h" />
+    <ClInclude Include="TocEditorTurn.h" />
+    <ClInclude Include="ThemeLinkValueClassify.h" />
+    <ClInclude Include="PointStyleTypeEdit.h" />
+    <ClInclude Include="PointStyleValueEdit.h" />
+    <ClInclude Include="PolygonStyleEdit.h" />
+    <ClInclude Include="KThemeDrawZone.h" />
+    <ClInclude Include="TDrawZoneInfo.h" />
+    <ClInclude Include="TocConfigLabelDlg.h" />
+    <ClInclude Include="TocLayerCommon.h" />
+    <ClInclude Include="ThemeLinkValueScale.h" />
+    <ClInclude Include="ThemeNodeCategory.h" />
+    <ClInclude Include="TocNodeProperties.h" />
+    <ClInclude Include="KUIDefDevPlan.h" />
+    <ClInclude Include="LinkAnalysisDlg.h" />
+    <ClInclude Include="LinkAnalysisInfo.h" />
+    <ClInclude Include="LinkAnalysisMapDisplayDlg.h" />
+    <ClInclude Include="LinkAnalysisTableODDlg.h" />
+    <ClInclude Include="ObjectIDSelectDlg.h" />
+    <ClInclude Include="MapEditMaster.h" />
+    <ClInclude Include="MapFindDlg.h" />
+    <ClInclude Include="MapLayerTreeCtrl.h" />
+    <ClInclude Include="ModelChoiceArgInfo.h" />
+    <ClInclude Include="NaviExplorerWnd.h" />
+    <ClInclude Include="NaviItemAddDlg.h" />
+    <ClInclude Include="NaviItemRenameDlg.h" />
+    <ClInclude Include="NetworkOnOffDlg.h" />
+    <ClInclude Include="PA2ODOutputDesignDlg.h" />
+    <ClInclude Include="ParseExpression.h" />
+    <ClInclude Include="ScreenDrawFlashLink.h" />
+    <ClInclude Include="KThemDrawLinkViaPathVolume.h" />
+    <ClInclude Include="KThemDrawZoneToZonePathVolume.h" />
+    <ClInclude Include="TocFormView.h" />
+    <ClInclude Include="TocLinkProperties.h" />
+    <ClInclude Include="ThemeNodePropertiesMulti.h" />
+    <ClInclude Include="ThemeNodeValueClassify.h" />
+    <ClInclude Include="ThemeNodeValueScale.h" />
+    <ClInclude Include="ThemeStyleSave.h" />
+    <ClInclude Include="TocWindow.h" />
+    <ClInclude Include="TocZoneProperties.h" />
+    <ClInclude Include="ThemeZoneValueClassify.h" />
+    <ClInclude Include="TPathAnalysisInfo.h" />
+    <ClInclude Include="KThemeDrawTurn.h" />
+    <ClInclude Include="SelectRegionDlg.h" />
+    <ClInclude Include="SelectVariableDlg.h" />
+    <ClInclude Include="ShapeEditTurnInsert.h" />
+    <ClInclude Include="KUIDefPA2OD.h" />
+    <ClInclude Include="KUIDefTimeOD.h" />
+    <ClInclude Include="PA2ODDefinePADlg.h" />
+    <ClInclude Include="PA2ODInfo.h" />
+    <ClInclude Include="PA2ODModelDlg.h" />
+    <ClInclude Include="PA2ODPAImport1Dlg.h" />
+    <ClInclude Include="PA2ODPAImport2Dlg.h" />
+    <ClInclude Include="PA2ODParamImport1Dlg.h" />
+    <ClInclude Include="PA2ODParamImport2Dlg.h" />
+    <ClInclude Include="PopupMessenger.h" />
+    <ClInclude Include="RailTimeCostInfo.h" />
+    <ClInclude Include="SCChangeColumnName.h" />
+    <ClInclude Include="ShapeEditController.h" />
+    <ClInclude Include="ShapeEditDemarcationInsert.h" />
+    <ClInclude Include="ShapeEditDemarcationVertex.h" />
+    <ClInclude Include="ShapeEditLinkEdit.h" />
+    <ClInclude Include="ShapeEditLinkInsert.h" />
+    <ClInclude Include="ShapeEditNodeInsert.h" />
+    <ClInclude Include="KBulkTypeKTDB.h" />
+    <ClInclude Include="KEMMapMode.h" />
+    <ClInclude Include="KEMTree.h" />
+    <ClInclude Include="SCManageDlg.h" />
+    <ClInclude Include="SCMapAnalysis.h" />
+    <ClInclude Include="KThemeDrawCordonLine.h" />
+    <ClInclude Include="ScreenDrawEditCordonLine.h" />
+    <ClInclude Include="KUIDefSCAnalysis.h" />
+    <ClInclude Include="KxBulkDbase.h" />
+    <ClInclude Include="MultiStatisticsBaseDefineDlg.h" />
+    <ClInclude Include="MultiStatisticsDlg.h" />
+    <ClInclude Include="NetworkShapeInsert.h" />
+    <ClInclude Include="ODResultViewVRecord.h" />
+    <ClInclude Include="RatioRegionInfo.h" />
+    <ClInclude Include="ResultViewDistributionDlg.h" />
+    <ClInclude Include="ResultViewModeDlg.h" />
+    <ClInclude Include="SCAnalysisCriteriaDlg.h" />
+    <ClInclude Include="SCAnalysisDlg.h" />
+    <ClInclude Include="SCAnalysisInputDlg.h" />
+    <ClInclude Include="SCAnalysisSelectDlg.h" />
+    <ClInclude Include="SCAnalysisInfo.h" />
+    <ClInclude Include="SCAnalysisOutputDesignDlg.h" />
+    <ClInclude Include="ThemeDrawControl.h" />
+    <ClInclude Include="ScreenDrawEditScreenLine.h" />
+    <ClInclude Include="ThemeLayerDrawFactory.h" />
+    <ClInclude Include="KEMEncoding.h" />
+    <ClInclude Include="KEMNode.h" />
+    <ClInclude Include="KEMProject.h" />
+    <ClInclude Include="GDefaultSimpleFuntion.h" />
+    <ClInclude Include="GDefaultZoneGroupFunction.h" />
+    <ClInclude Include="GDefaultZoneInfo.h" />
+    <ClInclude Include="GZoneGroupPage.h" />
+    <ClInclude Include="IMapDisplayObserver.h" />
+    <ClInclude Include="InterDefineCostPublicSector.h" />
+    <ClInclude Include="InterDefineVDFDlg.h" />
+    <ClInclude Include="InterFunctionBase.h" />
+    <ClInclude Include="InterFunctionBPR.h" />
+    <ClInclude Include="InterFunctionUser.h" />
+    <ClInclude Include="InterFunctionUserEXP.h" />
+    <ClInclude Include="InterBPRFunctionDlg.h" />
+    <ClInclude Include="InterUserFunctionDlg.h" />
+    <ClInclude Include="IOTransitTableView.h" />
+    <ClInclude Include="KASetTransitAssignOptionsDlg.h" />
+    <ClInclude Include="KBulkDBaseUtil.h" />
+    <ClInclude Include="KBulkType.h" />
+    <ClInclude Include="KCalculateTrafficVolumeDlg.h" />
+    <ClInclude Include="KGCategoryExpressionDlg.h" />
+    <ClInclude Include="KDBaseInspection.h" />
+    <ClInclude Include="KDBaseOD2PASum.h" />
+    <ClInclude Include="KDBaseZonePASum.h" />
+    <ClInclude Include="KDBaseStatistics.h" />
+    <ClInclude Include="KGCategoryExpression.h" />
+    <ClInclude Include="KGCategoryPage.h" />
+    <ClInclude Include="KGChangeFieldName.h" />
+    <ClInclude Include="KInfluenceStatisticsDlg.h" />
+    <ClInclude Include="KInspectionLinkDlg.h" />
+    <ClInclude Include="KInspectionNodeDlg.h" />
+    <ClInclude Include="KInspectionTransitDlg.h" />
+    <ClInclude Include="KInspectionTurnDlg.h" />
+    <ClInclude Include="KInspectionZoneDlg.h" />
+    <ClInclude Include="MapDiplayMonitor.h" />
+    <ClInclude Include="KMatrixTableRecord.h" />
+    <ClInclude Include="KOD2PASumDlg.h" />
+    <ClInclude Include="KPurposeKey.h" />
+    <ClInclude Include="ODMatrixDlg.h" />
+    <ClInclude Include="ProjectUserNewDlg.h" />
+    <ClInclude Include="PurposeInfoCollection.h" />
+    <ClInclude Include="PurposeNewDlg.h" />
+    <ClInclude Include="KThemeDrawLink.h" />
+    <ClInclude Include="KThemeDrawNode.h" />
+    <ClInclude Include="KThemeDrawHighwayShortestPath.h" />
+    <ClInclude Include="KThemeDrawScreenLine.h" />
+    <ClInclude Include="KThemeDrawTransit.h" />
+    <ClInclude Include="KUIDefAssignment.h" />
+    <ClInclude Include="KPASumDlg.h" />
+    <ClInclude Include="KStatisticsDlg.h" />
+    <ClInclude Include="RouteDeleter.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="CodeGroupNewDlg.h" />
+    <ClInclude Include="CodeManagementDlg.h" />
+    <ClInclude Include="CodeNewDlg.h" />
+    <ClInclude Include="CustomReportRecordItem.h" />
+    <ClInclude Include="DBaseODDlg.h" />
+    <ClInclude Include="KStartSplashDlg.h" />
+    <ClInclude Include="ExpressionChecker.h" />
+    <ClInclude Include="KBulkDBase.h" />
+    <ClInclude Include="KBulkDBase2File.h" />
+    <ClInclude Include="KUIDefGeneration.h" />
+    <ClInclude Include="KUIDefDistribution.h" />
+    <ClInclude Include="KmzSystem.h" />
+    <ClInclude Include="KUIDefModeChoice.h" />
+    <ClInclude Include="MAdjustmentDummy.h" />
+    <ClInclude Include="MarkupStatic.h" />
+    <ClInclude Include="MBaseVariable.h" />
+    <ClInclude Include="MDecisionTreePage.h" />
+    <ClInclude Include="MFunctionDlg.h" />
+    <ClInclude Include="MGroupVariable.h" />
+    <ClInclude Include="ModeFunction.h" />
+    <ClInclude Include="MAdjustmentDlg.h" />
+    <ClInclude Include="MDefineVariableDlg.h" />
+    <ClInclude Include="MDemandStratumDlg.h" />
+    <ClInclude Include="DImpedanceFunctionDlg.h" />
+    <ClInclude Include="DInputDlg.h" />
+    <ClInclude Include="DistributionFunction1.h" />
+    <ClInclude Include="DistributionFunction2.h" />
+    <ClInclude Include="DistributionFunction3.h" />
+    <ClInclude Include="DistributionFunctionBase.h" />
+    <ClInclude Include="DistributionInfo.h" />
+    <ClInclude Include="DistributionInfoList.h" />
+    <ClInclude Include="DOutputDesignDlg.h" />
+    <ClInclude Include="DSelectModelDlg.h" />
+    <ClInclude Include="DSetStoppingDlg.h" />
+    <ClInclude Include="ExpressionElement.h" />
+    <ClInclude Include="ExpressionElementField.h" />
+    <ClInclude Include="ExpressionElementFunction.h" />
+    <ClInclude Include="ExpressionElementNumber.h" />
+    <ClInclude Include="ExpressionElementOperator.h" />
+    <ClInclude Include="GBaseExpressionContainer.h" />
+    <ClInclude Include="GenerationInfo.h" />
+    <ClInclude Include="GenerationInfoList.h" />
+    <ClInclude Include="GFunctionRegressionDlg.h" />
+    <ClInclude Include="GFunctionUnitDlg.h" />
+    <ClInclude Include="GGroupExpressionContainer.h" />
+    <ClInclude Include="GInputTreeNavigator.h" />
+    <ClInclude Include="GOutputDesignDlg.h" />
+    <ClInclude Include="GRegressionExpression.h" />
+    <ClInclude Include="GSimpleExpressionContainer.h" />
+    <ClInclude Include="GSimpleRegressionPage.h" />
+    <ClInclude Include="GSimpleUnitPage.h" />
+    <ClInclude Include="GUnitExpression.h" />
+    <ClInclude Include="BlankExpressionPage.h" />
+    <ClInclude Include="DistributionModelDlg.h" />
+    <ClInclude Include="KExRecordItem.h" />
+    <ClInclude Include="KmzApp.h" />
+    <ClInclude Include="KPointMarkerSelectDlg.h" />
+    <ClInclude Include="Mode.h" />
+    <ClInclude Include="ModeChoiceInfo.h" />
+    <ClInclude Include="ModeChoiceModelDlg.h" />
+    <ClInclude Include="MOutputInfo.h" />
+    <ClInclude Include="ShortestPathBase.h" />
+    <ClInclude Include="ShortestPathHighwayDlg.h" />
+    <ClInclude Include="ShortestPathInfo.h" />
+    <ClInclude Include="SimpleProgressOld.h" />
+    <ClInclude Include="PurposeManager.h" />
+    <ClInclude Include="PictureEx.h" />
+    <ClInclude Include="ModeManager.h" />
+    <ClInclude Include="ModeTree.h" />
+    <ClInclude Include="ModeTreeNode.h" />
+    <ClInclude Include="ModeTreeNodeMode.h" />
+    <ClInclude Include="MOutputDesignDlg.h" />
+    <ClInclude Include="MSimpleVariable.h" />
+    <ClInclude Include="PAPurpose.h" />
+    <ClInclude Include="DBaseConnector.h" />
+    <ClInclude Include="StatisticsBaseDefineDlg.h" />
+    <ClInclude Include="StatisticsFunctionDefineDlg.h" />
+    <ClInclude Include="DefineNames.h" />
+    <ClInclude Include="MainFrameWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="GSimpleExpressionPage.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TableOwnerTarget.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TDrawLabelInfo.h" />
+    <ClInclude Include="TDrawLinkInfo.h" />
+    <ClInclude Include="TDrawNodeInfo.h" />
+    <ClInclude Include="TDrawScreenCordonInfo.h" />
+    <ClInclude Include="TDrawTransitInfo.h" />
+    <ClInclude Include="RoadTimeCostInfo.h" />
+    <ClInclude Include="TDrawZoningInfo.h" />
+    <ClInclude Include="TimeODDefPurposeMode.h" />
+    <ClInclude Include="TimeODGenerationDlg.h" />
+    <ClInclude Include="TimeODInfo.h" />
+    <ClInclude Include="TimeODInputDlg.h" />
+    <ClInclude Include="TimeODOutputDesignDlg.h" />
+    <ClInclude Include="TimeODSelectSurveyCodeDlg.h" />
+    <ClInclude Include="TimeODSurveyImport1Dlg.h" />
+    <ClInclude Include="TimeODSurveyImport2Dlg.h" />
+    <ClInclude Include="TimeODZoneCharacterDlg.h" />
+    <ClInclude Include="timeod_common.h" />
+    <ClInclude Include="IOTableRecordSelection.h" />
+    <ClInclude Include="ResultViewTreeCtrl.h" />
+    <ClInclude Include="TransitPathInsertDlg.h" />
+    <ClInclude Include="TShapeEdit.h" />
+    <ClInclude Include="TStatisticsInfo.h" />
+    <ClInclude Include="TThemeType.h" />
+    <ClInclude Include="TTransitPath.h" />
+    <ClInclude Include="ResultViewAssignmentDlg.h" />
+    <ClInclude Include="ViewChartDlg.h" />
+    <ClInclude Include="ViewResultInfo.h" />
+    <ClInclude Include="WOStoppingDlg.h" />
+    <ClInclude Include="WOTrimpMatrix.h" />
+    <ClInclude Include="WStoppingDlg.h" />
+    <ClInclude Include="XmlManager.h" />
+    <ClInclude Include="ZoneDivisionInfo.h" />
+    <ClInclude Include="ZoneGroupBase.h" />
+    <ClInclude Include="ZoneGroupColumn.h" />
+    <ClInclude Include="ZoneGroupGeneration.h" />
+    <ClInclude Include="ZoneGroupValue.h" />
+    <ClInclude Include="AttributeSetDlg.h" />
+    <ClInclude Include="MapFrameWnd.h" />
+    <ClInclude Include="MapView.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Project.h" />
+    <ClInclude Include="Scenario.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="AddScenarioDlg.h" />
+    <ClInclude Include="DefinePurposeDlg.h" />
+    <ClInclude Include="ScenarioAddYearDlg.h" />
+    <ClInclude Include="ScenarioCopyDlg.h" />
+    <ClInclude Include="SelectTargetYearDlg.h" />
+    <ClInclude Include="TargetCopyDlg.h" />
+    <ClInclude Include="ProjectExplorerWnd.h" />
+    <ClInclude Include="ColumnNameManager.h" />
+    <ClInclude Include="IOColumnToInsertSQL.h" />
+    <ClInclude Include="IOColumnToSQL.h" />
+    <ClInclude Include="IOColumnToString.h" />
+    <ClInclude Include="IOColumnToUpdateSQL.h" />
+    <ClInclude Include="IORecordsetFactory.h" />
+    <ClInclude Include="DisplayColumnSetDlg.h" />
+    <ClInclude Include="FieldCalculatorDlg.h" />
+    <ClInclude Include="IOFrameWnd.h" />
+    <ClInclude Include="IOTableRecord.h" />
+    <ClInclude Include="IOTableView.h" />
+    <ClInclude Include="IOView.h" />
+    <ClInclude Include="SelectByAttributeDlg.h" />
+    <ClInclude Include="TableAddFieldDlg.h" />
+    <ClInclude Include="TableExportDlg.h" />
+    <ClInclude Include="IOTableController.h" />
+    <ClInclude Include="CommandWnd.h" />
+    <ClInclude Include="ExistNameChecker.h" />
+    <ClInclude Include="KeyGenerator.h" />
+    <ClInclude Include="kmz_common.h" />
+    <ClInclude Include="officeTreeCtrl.h" />
+    <ClInclude Include="RenameDlg.h" />
+    <ClInclude Include="ScaleInfo.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="XTPReportRecordItemCheck.h" />
+    <ClInclude Include="anyconverter.h" />
+    <ClInclude Include="model_common.h" />
+    <ClInclude Include="Purpose.h" />
+    <ClInclude Include="GBaseExpression.h" />
+    <ClInclude Include="GenerationModelDlg.h" />
+    <ClInclude Include="GSelectModelDlg.h" />
+    <ClInclude Include="ZoneODGroupGenerationDlg.h" />
+    <ClInclude Include="ZoneSelectDlg.h" />
+    <ClInclude Include="ZoneSelectIntergrationDlg.h" />
+    <ClInclude Include="ZoningDivisionDlg.h" />
+    <ClInclude Include="ZoningIntegrationDlg.h" />
+    <ClInclude Include="DefInterUrbanModeChoiceParaTypes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IDB_SIGNAL_AR_A20.BMP" />
+    <None Include="packages.config" />
+    <None Include="res\donkey.gif" />
+    <None Include="res\32bit.bmp" />
+    <None Include="res\AddEditingEditTool32.cur" />
+    <None Include="res\AlphaSettings.bmp" />
+    <None Include="res\arrow_01.bmp" />
+    <None Include="res\ar_1.bmp" />
+    <None Include="res\ar_10.bmp" />
+    <None Include="res\ar_10_d.bmp" />
+    <None Include="res\ar_11.bmp" />
+    <None Include="res\ar_11_d.bmp" />
+    <None Include="res\ar_12.bmp" />
+    <None Include="res\ar_12_d.bmp" />
+    <None Include="res\ar_13.bmp" />
+    <None Include="res\ar_13_d.bmp" />
+    <None Include="res\ar_14.bmp" />
+    <None Include="res\ar_14_d.bmp" />
+    <None Include="res\ar_15.bmp" />
+    <None Include="res\ar_15_d.bmp" />
+    <None Include="res\ar_16.bmp" />
+    <None Include="res\ar_16_d.bmp" />
+    <None Include="res\ar_17.bmp" />
+    <None Include="res\ar_17_d.bmp" />
+    <None Include="res\ar_18.bmp" />
+    <None Include="res\ar_18_d.bmp" />
+    <None Include="res\ar_1_d.bmp" />
+    <None Include="res\ar_2.bmp" />
+    <None Include="res\ar_20.bmp" />
+    <None Include="res\ar_2_d.bmp" />
+    <None Include="res\ar_3.bmp" />
+    <None Include="res\ar_3_d.bmp" />
+    <None Include="res\ar_4.bmp" />
+    <None Include="res\ar_4_d.bmp" />
+    <None Include="res\ar_5.bmp" />
+    <None Include="res\ar_5_d.bmp" />
+    <None Include="res\ar_6.bmp" />
+    <None Include="res\ar_6_d.bmp" />
+    <None Include="res\ar_7.bmp" />
+    <None Include="res\ar_7_d.bmp" />
+    <None Include="res\ar_8.bmp" />
+    <None Include="res\ar_8_d.bmp" />
+    <None Include="res\ar_9.bmp" />
+    <None Include="res\ar_9_d.bmp" />
+    <None Include="res\BackGround.bmp" />
+    <None Include="res\bitmap10.bmp" />
+    <None Include="res\bitmap12.bmp" />
+    <None Include="res\bitmap13.bmp" />
+    <None Include="res\bitmap15.bmp" />
+    <None Include="res\bitmap16.bmp" />
+    <None Include="res\bitmap17.bmp" />
+    <None Include="res\bitmap19.bmp" />
+    <None Include="res\bitmap2.bmp" />
+    <None Include="res\bitmap22.bmp" />
+    <None Include="res\bitmap3.bmp" />
+    <None Include="res\bitmap4.bmp" />
+    <None Include="res\bitmap5.bmp" />
+    <None Include="res\bitmap6.bmp" />
+    <None Include="res\bitmap9.bmp" />
+    <None Include="res\bitmaplayer.bmp" />
+    <None Include="res\bitmap_r.bmp" />
+    <None Include="res\bmp00001.bmp" />
+    <None Include="res\bpr.bmp" />
+    <None Include="res\bpr_Default.bmp" />
+    <None Include="res\bpr_Default1.bmp" />
+    <None Include="res\bpr_Default2.bmp" />
+    <None Include="res\ButtonsWin3000.bmp" />
+    <None Include="res\ButtonTest.bmp" />
+    <None Include="res\Capture.ico" />
+    <None Include="res\check_target_n.ico" />
+    <None Include="res\check_target_y.ico" />
+    <None Include="res\Circledefined.bmp" />
+    <None Include="res\CloseButton.bmp" />
+    <None Include="res\cursor2.cur" />
+    <None Include="res\cursor_startPoint.cur" />
+    <None Include="res\cur_edit.cur" />
+    <None Include="res\cur_hitshape.cur" />
+    <None Include="res\cur_hitvertex.cur" />
+    <None Include="res\cur_Identify.cur" />
+    <None Include="res\cur_pan.cur" />
+    <None Include="res\cur_shapeCreate.cur" />
+    <None Include="res\cur_zoomin.cur" />
+    <None Include="res\cur_zoomout.cur" />
+    <None Include="res\Distribution_Input.bmp" />
+    <None Include="res\Distribution_Model.bmp" />
+    <None Include="res\Distribution_Output.bmp" />
+    <None Include="res\EditingEditTool32.cur" />
+    <None Include="res\Find.ico" />
+    <None Include="res\Generation_input.bmp" />
+    <None Include="res\Generation_model.bmp" />
+    <None Include="res\Generation_output.bmp" />
+    <None Include="res\gif2.bin" />
+    <None Include="res\gif3.bin" />
+    <None Include="res\gif4.bin" />
+    <None Include="res\GravityCali_Entropy_Fn.bmp" />
+    <None Include="res\GravityCali_Impedance_Fn.bmp" />
+    <None Include="res\GravityCali_Impedance_Fn.png" />
+    <None Include="res\GravityCali_Im_Rij_1.bmp" />
+    <None Include="res\GravityCali_Im_Rij_2.bmp" />
+    <None Include="res\GravityCali_Im_Rij_3.bmp" />
+    <None Include="res\icon2.ico" />
+    <None Include="res\icon6.ico" />
+    <None Include="res\IDB_BITMAP_BACK.bmp" />
+    <None Include="res\IDB_BITMAP_MAPLAYER.bmp" />
+    <None Include="res\IDB_LAYERONOFF_STATE.bmp" />
+    <None Include="res\IDB_RADIO_BTN.bmp" />
+    <None Include="res\IDB_ZOOM.bmp" />
+    <None Include="res\IDC_ADDNODE.cur" />
+    <None Include="res\IDC_CREATEZONE.cur" />
+    <None Include="res\IDC_EditingAddVertexTool32.cur" />
+    <None Include="res\IDC_QBicMap_Add00.cur" />
+    <None Include="res\IDC_QBicMap_Arrow.cur" />
+    <None Include="res\IDC_QBicMap_Identify.cur" />
+    <None Include="res\IDC_QBicMap_Pan.cur" />
+    <None Include="res\IDC_QBicMap_ZoomIn.cur" />
+    <None Include="res\IDC_QBicMap_ZoomOut.cur" />
+    <None Include="res\IDC_SELECT_ELEMENT.cur" />
+    <None Include="res\IDC_SELECT_IN_LINK.cur" />
+    <None Include="res\IDC_SELECT_LINK_ELEMENT.cur" />
+    <None Include="res\IDC_SELECT_OUT_LINK.cur" />
+    <None Include="res\IDC_TABLE_BACKWARD.ico" />
+    <None Include="res\IDC_TABLE_BACKWARD_FIRST.ico" />
+    <None Include="res\IDC_TABLE_FORWARD.ico" />
+    <None Include="res\IDC_TABLE_FORWARD_END.ico" />
+    <None Include="res\IDI_ICON_MAPDRAG.ico" />
+    <None Include="res\IDR_DLG_ICO.ico" />
+    <None Include="res\IDR_IOMENU_LEFT.bmp" />
+    <None Include="res\IDR_MAPVIEW_RIGHT.bmp" />
+    <None Include="res\img_3state_checkbox.bmp" />
+    <None Include="res\img_MainFrame_toolbar.png" />
+    <None Include="res\img_MainFrame_toolbar_2.png" />
+    <None Include="res\img_mapview_toolbar.png" />
+    <None Include="res\img_ProjectView_tree.bmp" />
+    <None Include="res\img_SEDView_tree.bmp" />
+    <None Include="res\img_target_button.bmp" />
+    <None Include="res\img_turn_turnimage600.bmp" />
+    <None Include="res\img_turn_turnimage630.bmp" />
+    <None Include="res\img_turn_turnimage661.bmp" />
+    <None Include="res\img_turn_turnimage690.bmp" />
+    <None Include="res\Inter_Arrow.bmp" />
+    <None Include="res\INTRO.bmp" />
+    <None Include="res\LOADING.bmp" />
+    <None Include="res\mainfram.bmp" />
+    <None Include="res\MapIdentify.ico" />
+    <None Include="res\MapNextview.ico" />
+    <None Include="res\MapPreview.ico" />
+    <None Include="res\MapSync.ico" />
+    <None Include="res\MapSyncNone.ico" />
+    <None Include="res\MapSyncPos.ico" />
+    <None Include="res\muTas.ico" />
+    <None Include="res\muTas.rc2" />
+    <None Include="res\MapAttributePaste.ico" />
+    <None Include="res\MapClear.ico" />
+    <None Include="res\MapEdit.ico" />
+    <None Include="res\MapEditEnd.ico" />
+    <None Include="res\MapEditStart.ico" />
+    <None Include="res\MapEditStop.ico" />
+    <None Include="res\MapSelectPolygon.ico" />
+    <None Include="res\MapSelectRect.ico" />
+    <None Include="res\mapsymbol_600.bmp" />
+    <None Include="res\mapsymbol_630.bmp" />
+    <None Include="res\mapsymbol_660.bmp" />
+    <None Include="res\mapsymbol_661.bmp" />
+    <None Include="res\mapsymbol_690.bmp" />
+    <None Include="res\mapsymbol_900.bmp" />
+    <None Include="res\MapToolbar.bmp" />
+    <None Include="res\MapUnSelect.ico" />
+    <None Include="res\ModeChoice_Input.bmp" />
+    <None Include="res\ModeChoice_Model.bmp" />
+    <None Include="res\ModeChoice_Output.bmp" />
+    <None Include="res\ModelState.bmp" />
+    <None Include="res\model_generation.bmp" />
+    <None Include="res\model_generation_d.bmp" />
+    <None Include="res\navigation_view.bmp" />
+    <None Include="res\next.bmp" />
+    <None Include="res\paneicons.bmp" />
+    <None Include="res\Process_Arrow.bmp" />
+    <None Include="res\Process_Arrow2.bmp" />
+    <None Include="res\Process_Arrow3.bmp" />
+    <None Include="res\progress.bin" />
+    <None Include="res\Ruler16.ico" />
+    <None Include="res\sedview1.bmp" />
+    <None Include="res\SelectPoint.cur" />
+    <None Include="res\steop03.bmp" />
+    <None Include="res\step01.bmp" />
+    <None Include="res\step02.bmp" />
+    <None Include="res\test1.bmp" />
+    <None Include="res\test2.bmp" />
+    <None Include="res\toolbar1.bmp" />
+    <None Include="res\toolbar2.bmp" />
+    <None Include="res\Toolbar_mainframe.bmp" />
+    <None Include="res\toolbar_mapview.bmp" />
+    <None Include="res\toolbar_tableview.bmp" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\Tree_Check2.bmp" />
+    <None Include="res\TREE_ICON.bmp" />
+    <None Include="res\tree_images.bmp" />
+    <None Include="res\ZoomExtent.ico" />
+    <None Include="res\ZoomIn.ico" />
+    <None Include="res\ZoomOut.ico" />
+    <None Include="res\ZoomPan.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="muTas.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kmzModel\kmzModel.vcxproj">
+      <Project>{264f987d-e037-4235-a87a-d058b6d96147}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicCommon\QBicCommon.vcxproj">
+      <Project>{76690305-b1e8-43c4-b56f-5dc00f2852bc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicDataStructure\QBicDataStructure.vcxproj">
+      <Project>{5069d11a-7c86-499c-84aa-8caa41e48f44}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicExtStaticCppLib\QBicExtStaticCppLib.vcxproj">
+      <Project>{14fc6bf5-8a7e-44c1-b87f-1409bc79695a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicGIS\QBicGIS.vcxproj">
+      <Project>{25f98f42-9356-4eb3-bd9e-03f2912e8f7e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicWindow\QBicWindow.vcxproj">
+      <Project>{e93232e8-312e-47d7-8f97-dc5866e0c130}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\zcontrols\ZControls.vcxproj">
+      <Project>{efd49909-2d1f-4f2f-9ef3-b813e50d6da5}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TOVA수정일지.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\background_color.ico" />
+    <Image Include="res\donkey-ezgif.com-resize.gif" />
+    <Image Include="res\donkey_5x_transparent.gif" />
+    <Image Include="res\donkey_resize.gif" />
+    <Image Include="res\icon_cap.ico" />
+    <Image Include="res\IDI_MAP_BACKGROUND_COLOR.ico" />
+    <Image Include="res\loading.gif" />
+    <Image Include="res\map_back.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" />
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="muTas.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.12.0\build\native\nlohmann.json.targets'))" />
+  </Target>
+</Project>

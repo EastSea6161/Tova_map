@@ -1,0 +1,4855 @@
+
+//
+
+#include "stdafx.h"
+#include "MultiModalMainDlg.h"
+#include "afxdialogex.h"
+#include "Target.h"
+#include "MultiModalInfo.h"
+#include "KUIDefMultiModal.h"
+#include "MATripMatrix.h"
+#include "WOTrimpMatrix.h"
+#include "MARunOptionDlg.h"
+#include "WOStoppingDlg.h"
+#include "WStoppingDlg.h"
+#include "MAOutputDesignDlg.h"
+#include "Project.h"
+#include "Mode.h"
+#include "KBulkDBase2File.h"
+#include "MATransitAssignInfoDlg.h"
+
+#include "KxBulkDbase.h"
+#include "KBulkDBase.h"
+#include "KBulkDBase2File.h"
+#include "ChildFrm.h"
+#include "MainFrameWnd.h"
+#include "IOView.h"
+#include "IOTableController.h"
+#include "WriteCodeAgrument.h"
+#include "Launcher.h"
+#include "MultiModalDefineMode.h"
+#include "WStoopingTransitDlg.h"
+#include "WoStoppingTransitDlg.h"
+#include "DBaseDefaultParaTransitRouteChoice.h"
+#include "DBaseDefaultParaMultimodalModeChoice.h"
+#include "DefineNamesDefaultPara.h"
+#include "DBaseDefaultParaPathGenerateConstraint.h"
+#include "ImChampDir.h"
+
+const int		TRANSIT_TYPE_BUS			= 3;
+const int		TRANSIT_TYPE_SUBWAY			= 4;
+const int		TRANSIT_TYPE_BUS_SUBWAY		= 5; 
+const int		TRANSTI_TYPE_UPPERLEVER		= 9;
+const TCHAR*    MULTIMODAL_LOG_FILE		= _T("MultiModalTA_Log.txt");
+
+using namespace UIMultiModal;
+
+const int MODELOPTION_WITHHIGHWAY	 = 0;
+const int MODELOPTION_WOHIGHWAY		 = 1;
+const double DEFALUT_MEU			 = 0.1089390;
+const double DEFALUT_BATIME			 = 2.0;
+const double DEFAULT_ALPHA			 = 0.15;
+const double DEFAULT_BETA			 = 2.0;
+
+const TCHAR* MULTIMODA_LOGFILE = _T("KMULTIMODAL_ASSIGN.txt");
+
+#if WINVER >= 0x0500
+#include <uxtheme.h>
+#pragma comment (lib, "UxTheme.lib")
+#endif
+
+IMPLEMENT_DYNAMIC(KMultiModalMainDlg, KDialogEx)
+
+KMultiModalMainDlg::KMultiModalMainDlg(KTarget* a_pTarget, CWnd* pParent /*=NULL*/)
+	: KDialogEx(KMultiModalMainDlg::IDD, pParent),
+	m_pTarget(a_pTarget),
+	m_dAnalysisTime(10),
+	m_nChkRunOption(0),
+	m_nOutterTAIteration(5),
+	m_dOutterL2Norm(100.0),
+	m_nInnerTAIteation(5),
+	m_dInnerL2Norm(0.1),
+	m_nUEIteration(100),
+	m_dRelativeGap(1e-012),
+	m_dScaleFactor(0.5),
+	m_nScaleFactorCursor(0),
+	m_nHighwayRelativeGapExp(12),
+	m_pLinkTimeColumn(nullptr),
+	m_nUsingLInkTime(1),
+	m_strTargetLocation(_T("")),
+	m_bUsePathGeneratorData(true),
+	m_bUsedDefault(true)
+{
+
+}
+
+KMultiModalMainDlg::~KMultiModalMainDlg()
+{
+}
+
+void KMultiModalMainDlg::DoDataExchange(CDataExchange* pDX)
+{
+	KDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_STATIC_BACK, m_uiBackImage);
+	DDX_Control(pDX, IDC_STATIC_MODEL, m_lblModel);
+	DDX_Control(pDX, IDC_STATIC_ARROW1,m_uiArrow1);
+	DDX_Control(pDX, IDC_STATIC_ARROW2,m_uiArrow2);
+	DDX_Control(pDX, IDC_STATIC_ARROW3,m_uiArrow3);
+	DDX_Control(pDX, IDC_STATIC_ARROW4,m_uiArrow4);
+	DDX_Control(pDX, IDC_STATIC_ARROW5,m_uiArrow5);
+	DDX_Control(pDX, IDC_STATIC_ARROW6,m_uiArrow6);
+	DDX_Control(pDX, IDC_STATIC_ARROW7,m_uiArrow7);
+	DDX_Control(pDX, IDC_MODEDEFINE, m_btnModeDefine);
+	DDX_Control(pDX, IDC_TRIPMATRIX, m_btnTripMatrix);
+	DDX_Control(pDX, IDC_VDF, m_btnVDF);
+	DDX_Control(pDX, IDC_HIGHRUNOPTION, m_btnHighRunOptions);
+	DDX_Control(pDX, IDC_TAOPTIONSINFO, m_btnTAOptionInfo);
+	DDX_Control(pDX, IDC_STOPCRITERIA, m_btnStopping);
+	DDX_Control(pDX, IDC_OUTPUTDESIGN, m_btnOutputDesign);
+	DDX_Control(pDX, IDC_VIEWTABLE, m_btnViewTable);
+	DDX_Control(pDX, IDC_LOGVIEW, m_btnViewLog);
+}
+
+
+BEGIN_MESSAGE_MAP(KMultiModalMainDlg, KDialogEx)
+	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDC_MODEDEFINE, &KMultiModalMainDlg::OnBnClickedModedefine)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_RADIO1, IDC_RADIO2, &KMultiModalMainDlg::OnRadioClicked)
+	ON_BN_CLICKED(IDC_TRIPMATRIX, &KMultiModalMainDlg::OnBnClickedTripmatrix)
+	ON_BN_CLICKED(IDC_VDF, &KMultiModalMainDlg::OnBnClickedVdf)
+	ON_BN_CLICKED(IDC_HIGHRUNOPTION, &KMultiModalMainDlg::OnBnClickedHighrunoption)
+	ON_BN_CLICKED(IDC_TAOPTIONSINFO, &KMultiModalMainDlg::OnBnClickedTaoptionsinfo)
+	ON_BN_CLICKED(IDC_STOPCRITERIA, &KMultiModalMainDlg::OnBnClickedStopcriteria)
+	ON_BN_CLICKED(IDC_OUTPUTDESIGN, &KMultiModalMainDlg::OnBnClickedOutputdesign)
+	ON_BN_CLICKED(IDC_RUN, &KMultiModalMainDlg::OnBnClickedRun)
+	ON_BN_CLICKED(IDC_CLOSE, &KMultiModalMainDlg::OnBnClickedClose)
+	ON_BN_CLICKED(IDC_VIEWTABLE, &KMultiModalMainDlg::OnBnClickedViewtable)
+	ON_BN_CLICKED(IDC_LOGVIEW, &KMultiModalMainDlg::OnBnClickedLogview)
+	ON_WM_COPYDATA()
+END_MESSAGE_MAP()
+
+
+
+BOOL KMultiModalMainDlg::OnInitDialog()
+{
+	KDialogEx::OnInitDialog();
+	KDialogEx::UseKeyEscEnter(true, true);
+
+	HICON hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_DLG_ICO) );
+	SetIcon( hIcon, TRUE );
+	SetIcon( hIcon, FALSE );
+
+	//outputinfo 초기화
+	m_oTMAOutputDesignInfo.TbUseData = false;
+
+	m_strTargetLocation = m_pTarget->GetLocation();
+
+	UINT nID_DISTRIBUTION_MODEL  = 90905;
+	XTPImageManager()->SetIcons(IDB_DISTRIBUTION_MODEL, &nID_DISTRIBUTION_MODEL, 1, 0); 
+	UINT nID_MODECHOICE_OUTPUT = 90927;
+	XTPImageManager()->SetIcons(IDB_MODECHOICE_OUTPUT, &nID_MODECHOICE_OUTPUT, 1, 0); 
+
+	m_uiBackImage.MoveWindow(6, 5, 590, 260);    
+	m_uiBackImage.SetMarkupText(UIXAML_MA_BACKIMAGE);
+
+	m_uiArrow1.SetPosition(ZEMArrowPositionLT, ZEMArrowPositionRB);
+	m_uiArrow2.SetPosition(ZEMArrowPositionLT, ZEMArrowPositionRB);
+	m_uiArrow3.SetPosition(ZEMArrowPositionLC, ZEMArrowPositionRC);
+	m_uiArrow4.SetPosition(ZEMArrowPositionLB, ZEMArrowPositionRT);
+	m_uiArrow5.SetPosition(ZEMArrowPositionLB, ZEMArrowPositionRT);
+	m_uiArrow6.SetPosition(ZEMArrowPositionCB, ZEMArrowPositionCT);
+	m_uiArrow7.SetPosition(ZEMArrowPositionLC, ZEMArrowPositionRC);
+	//m_uiArrow7.ArrowLineColor(RGB(0,0,0));
+	
+	CButton* pRadio = (CButton*)(GetDlgItem(IDC_RADIO1));
+	pRadio->SetCheck(BST_CHECKED);
+
+    if (CheckUsingOutFile() == false)
+    {
+        KDialogEx::OnCancel();
+    }
+
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		m_lblModel.SetMarkupText(KR_UIXAML_MA_MODEL_SELECTED);
+	}
+	else {
+		m_lblModel.SetMarkupText(UIXAML_MA_MODEL_SELECTED);
+	}
+	
+	SetWindowTheme( GetDlgItem(IDC_RADIO1)->m_hWnd, _T(""), _T(""));
+	SetWindowTheme( GetDlgItem(IDC_RADIO2)->m_hWnd, _T(""), _T("") );
+
+	InitButtonControl();
+	SendMessageToDescendants(WM_XTP_SETCONTROLTHEME, (XTPControlTheme)1); // 1, 
+	KRedrawWindow();
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
+
+
+HBRUSH KMultiModalMainDlg::OnCtlColor( CDC* pDC, CWnd* pWnd, UINT nCtlColor )
+{
+	HBRUSH hbr = KDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  여기서 DC의 특성을 변경합니다.       
+	UINT ID = pWnd->GetDlgCtrlID();
+	if( ID == IDC_RADIO1 || ID == IDC_RADIO2 )  
+	{        
+		pDC->SetBkMode(TRANSPARENT);
+		return (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+	}
+	return hbr;
+}
+
+
+bool KMultiModalMainDlg::CheckUsingOutFile()
+{
+	try
+	{
+
+		KDBaseAssignment::GetOptionCost(m_pTarget, m_vecTransitCost);
+		if (m_vecTransitCost.size() < 1)
+		{
+			AfxMessageBox(_T("대중교통 경로 데이터가 존재하지 않습니다.\r\n경로 만들기 > 대중교통 > 대중교통 경로 생성을 먼저 실행해야 합니다."));
+			return false;
+		}
+
+		KDBaseAssignment::GetInitBusPathValue(m_pTarget, m_oOptionBaseInfo);
+		KDBaseAssignment::GetTransitGeneratorMode(m_pTarget, m_lstGeneratorInfo);
+		m_nMaxRouteOD					= m_oOptionBaseInfo.TnMaxofNo;
+		m_oOptionBaseInfo.TdMEU			= DEFALUT_MEU;
+		m_oOptionBaseInfo.TdDWTimeInBus = DEFALUT_BATIME;
+		m_oOptionBaseInfo.TdAlpha		= DEFAULT_ALPHA;
+		m_oOptionBaseInfo.TdBeta		= DEFAULT_BETA;
+
+
+		bool bExcluesive(false);
+		std::list<TGenerationPathInfo>::iterator iter = m_lstGeneratorInfo.begin();
+		std::list<TGenerationPathInfo>::iterator end  = m_lstGeneratorInfo.end();
+		while (iter != end)
+		{
+			TGenerationPathInfo oInfo = *iter;
+			if (oInfo.nExclusive == 1) {
+				bExcluesive = true;
+			}
+			++iter;
+		}
+        
+        UtilityFnCoefficient(m_vecFnCofficient);
+        TransitInfoSetting(m_oOptionBaseInfo);
+
+		WatingVDFSetting();
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+		return false;
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+
+	return true;
+}
+
+
+void KMultiModalMainDlg::InitButtonControl()
+{
+
+	m_btnModeDefine.EnableMarkup(TRUE);
+	m_btnModeDefine.EnableWindow(TRUE);
+
+	m_btnTripMatrix.EnableMarkup(TRUE);
+	m_btnTripMatrix.EnableWindow(FALSE);
+
+	m_btnVDF.EnableMarkup(TRUE);
+	m_btnVDF.EnableWindow(FALSE);
+	m_bUsedDefault = true;
+
+	m_btnHighRunOptions.EnableMarkup(TRUE);
+	m_btnHighRunOptions.EnableWindow(FALSE);
+
+	m_btnTAOptionInfo.EnableMarkup(TRUE);
+	m_btnTAOptionInfo.EnableWindow(FALSE);
+
+	m_btnStopping.EnableMarkup(TRUE);
+	m_btnStopping.EnableWindow(FALSE);
+
+	m_btnOutputDesign.EnableMarkup(TRUE);
+	m_btnOutputDesign.EnableWindow(FALSE);
+
+	m_btnViewTable.EnableMarkup(TRUE);
+	m_btnViewTable.EnableWindow(FALSE);
+
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		m_btnModeDefine.SetWindowText(KR_UIXAML_MA_MODEDDEFINE_DEFAULT);
+		m_btnTripMatrix.SetWindowText(KR_UIXAML_MA_TRIP_FALSE);
+		m_btnVDF.SetWindowText(KR_UIXAML_MA_VDF_FALSE);
+		m_btnHighRunOptions.SetWindowText(KR_UIXAML_MA_HRUNOPTIONS_FALSE);
+		m_btnTAOptionInfo.SetWindowText(KR_UIXAML_MA_OPTIONSINFO_FALSE);
+		m_btnStopping.SetWindowText(KR_UIXAML_MA_STOPPING_FALSE);
+		m_btnOutputDesign.SetWindowText(KR_UIXAML_MA_OUTPUT_FALSE);
+		m_btnViewTable.SetWindowText(KR_UIXAML_MA_VIEWTABLE_FALSE);
+	}
+	else {
+		m_btnModeDefine.SetWindowText(UIXAML_MA_MODEDDEFINE_DEFAULT);
+		m_btnTripMatrix.SetWindowText(UIXAML_MA_TRIP_FALSE);
+		m_btnVDF.SetWindowText(UIXAML_MA_VDF_FALSE);
+		m_btnHighRunOptions.SetWindowText(UIXAML_MA_HRUNOPTIONS_FALSE);
+		m_btnTAOptionInfo.SetWindowText(UIXAML_MA_OPTIONSINFO_FALSE);
+		m_btnStopping.SetWindowText(UIXAML_MA_STOPPING_FALSE);
+		m_btnOutputDesign.SetWindowText(UIXAML_MA_OUTPUT_FALSE);
+		m_btnViewTable.SetWindowText(UIXAML_MA_VIEWTABLE_FALSE);
+	}
+
+	if (FindLogFile() == false)
+	{
+		m_btnViewLog.EnableMarkup(TRUE);
+		m_btnViewLog.EnableWindow(FALSE);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnViewLog.SetWindowText(KR_UIXAML_MA_VIEWLOG_FALSE);
+		}
+		else {
+			m_btnViewLog.SetWindowText(UIXAML_MA_VIEWLOG_FALSE);
+		}
+	}
+	else
+	{
+		m_btnViewLog.EnableMarkup(TRUE);
+		m_btnViewLog.EnableWindow(TRUE);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnViewLog.SetWindowText(KR_UIXAML_MA_VIEWLOG_DEFAULT);
+		}
+		else {
+			m_btnViewLog.SetWindowText(UIXAML_MA_VIEWLOG_DEFAULT);
+		}
+	}
+}
+
+
+void KMultiModalMainDlg::OnRadioClicked( UINT nID )
+{
+	InitButtonControl();
+
+	int  nCheckedRadioBtn  = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2);
+	if (nCheckedRadioBtn == IDC_RADIO1)
+	{
+		m_nModelOption = MODELOPTION_WITHHIGHWAY;
+	}
+	else
+	{
+		m_nModelOption = MODELOPTION_WOHIGHWAY;
+	}
+
+	m_bUsePathGeneratorData = true;
+}
+
+
+void KMultiModalMainDlg::KRedrawWindow()
+{
+	RedrawWindow(0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE|RDW_ERASE);
+}
+
+
+void KMultiModalMainDlg::InitTAssingReulstColumn( TAssignResultColumnName& a_oRuslutColumn )
+{
+	a_oRuslutColumn.AverageTime			= _T("");
+	a_oRuslutColumn.VC					= _T("");
+	a_oRuslutColumn.SumVolume			= _T("");
+	a_oRuslutColumn.Trip				= _T("");
+	a_oRuslutColumn.AvgTimeToll			= _T("");
+	a_oRuslutColumn.BusInitialVolumn	= _T("");
+	a_oRuslutColumn.ModeVolumn.clear();
+	a_oRuslutColumn.VDFTime.clear();
+	a_oRuslutColumn.VDFTollTime.clear();
+
+	a_oRuslutColumn.ODAvgTime			= _T("");
+	a_oRuslutColumn.ODAvgBusTime		= _T("");
+	a_oRuslutColumn.ODAvgSubwayTime		= _T("");
+	a_oRuslutColumn.ODBusDirect			= _T("");
+	a_oRuslutColumn.ODBusOneTransfer	= _T("");
+	a_oRuslutColumn.ODBustwoTransfer    = _T("");
+	a_oRuslutColumn.ODAVgBusSubwayTime	= _T("");
+	a_oRuslutColumn.ODVDFTime.clear();
+
+	a_oRuslutColumn.ODMBus				= _T("");
+	a_oRuslutColumn.ODMRail				= _T("");
+	a_oRuslutColumn.ODMBusRail			= _T("");
+
+	a_oRuslutColumn.LinfoPassenger		= _T("");
+
+	a_oRuslutColumn.LineBoardNet		= _T("");
+	a_oRuslutColumn.LineBoardTransfer	= _T("");
+	a_oRuslutColumn.LineBoardTotal		= _T("");
+	a_oRuslutColumn.LineAlightNet		= _T("");
+	a_oRuslutColumn.LineAlightTransfer	= _T("");
+	a_oRuslutColumn.LineAlightTotal		= _T("");
+	a_oRuslutColumn.LinePassenger		= _T("");
+
+	a_oRuslutColumn.NodeBusNetBorad			= _T("");
+	a_oRuslutColumn.NodeBusTransferBoard	= _T("");
+	a_oRuslutColumn.NodeBusSumBoard			= _T("");
+	a_oRuslutColumn.NodeBusNetAlight		= _T("");
+	a_oRuslutColumn.NodeBusTransferAlight	= _T("");
+	a_oRuslutColumn.NodeBusSumAlight		= _T("");
+
+	a_oRuslutColumn.TerminalTrip			=_T("");
+}
+
+
+void KMultiModalMainDlg::OnBnClickedModedefine()
+{
+
+	InitButtonControl();
+
+	int  nCheckedRadioBtn  = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2);
+	if (nCheckedRadioBtn == IDC_RADIO1)
+	{
+		m_nModelOption = MODELOPTION_WITHHIGHWAY;
+	}
+	else
+	{
+		m_nModelOption = MODELOPTION_WOHIGHWAY;
+	}
+
+	KMultiModalDefineMode oMADefineMode(m_pTarget, m_nModelOption, m_lstMultiInfo, m_oOptionBaseInfo.TnUsingBusSubway, m_bUsePathGeneratorData, m_lstGeneratorInfo);
+	
+	if (oMADefineMode.DoModal() == IDOK)
+	{
+		oMADefineMode.GetMultiModalInfo(m_lstMultiInfo);
+		m_btnTripMatrix.EnableWindow(TRUE);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnModeDefine.SetWindowText(KR_UIXAML_MA_MODEDDEFINE_SELECTED);
+			m_btnTripMatrix.SetWindowText(KR_UIXAML_MA_TRIP_DEFAULT);
+		}
+		else {
+			m_btnModeDefine.SetWindowText(UIXAML_MA_MODEDDEFINE_SELECTED);
+			m_btnTripMatrix.SetWindowText(UIXAML_MA_TRIP_DEFAULT);
+		}
+		m_bUsePathGeneratorData = false;
+		m_bUsedDefault = true;
+	}
+
+}
+
+
+void KMultiModalMainDlg::OnBnClickedTripmatrix()
+{
+	int  nCheckedRadioBtn  = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2);
+	if (nCheckedRadioBtn == IDC_RADIO1)
+	{
+		KMATripMatrix oTripMatrix(m_pTarget, m_nModelOption, m_lstMultiInfo, m_dAnalysisTime);
+		if (oTripMatrix.DoModal() == IDOK)
+		{
+			m_btnVDF.EnableWindow(TRUE);
+			if (KmzSystem::GetLanguage()==KEMKorea) {
+				m_btnTripMatrix.SetWindowText(KR_UIXAML_MA_TRIP_SELECTED);
+				m_btnVDF.SetWindowText(KR_UIXAML_MA_VDF_DEFAULT);
+			}
+			else {
+				m_btnTripMatrix.SetWindowText(UIXAML_MA_TRIP_SELECTED);
+				m_btnVDF.SetWindowText(UIXAML_MA_VDF_DEFAULT);
+			}
+			m_bUsedDefault = true;
+		}
+
+	}
+	else
+	{
+		KWOTrimpMatrix oWOTripMatrix(m_pTarget, m_lstMultiInfo, m_nUsingLInkTime, m_pLinkTimeColumn);
+		if (oWOTripMatrix.DoModal() == IDOK)
+		{
+			m_btnTAOptionInfo.EnableWindow(TRUE);
+			m_btnStopping.EnableWindow(TRUE);
+			
+			if (KmzSystem::GetLanguage()==KEMKorea) {
+				m_btnTripMatrix.SetWindowText(KR_UIXAML_MA_TRIP_SELECTED);
+				m_btnTAOptionInfo.SetWindowText(KR_UIXAML_MA_OPTIONSINFO_DEFAULT);
+				m_btnStopping.SetWindowText(KR_UIXAML_MA_STOPPING_DEFAULT);
+			}
+			else {
+				m_btnTripMatrix.SetWindowText(UIXAML_MA_TRIP_SELECTED);
+				m_btnTAOptionInfo.SetWindowText(UIXAML_MA_OPTIONSINFO_DEFAULT);
+				m_btnStopping.SetWindowText(UIXAML_MA_STOPPING_DEFAULT);
+			}
+			m_bUsedDefault = true;
+		}
+	}
+
+}
+
+
+void KMultiModalMainDlg::OnBnClickedVdf()
+{
+	m_oBPRFnDlg.Target(m_pTarget);
+	m_oBPRFnDlg.UsedDefault(m_bUsedDefault);
+	if (m_oBPRFnDlg.DoModal() == IDOK)
+	{
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnVDF.SetWindowText(KR_UIXAML_MA_VDF_SELECTED);
+			m_btnHighRunOptions.SetWindowText(KR_UIXAML_MA_HRUNOPTIONS_DEFAULT);
+		}
+		else {
+			m_btnVDF.SetWindowText(UIXAML_MA_VDF_SELECTED);
+			m_btnHighRunOptions.SetWindowText(UIXAML_MA_HRUNOPTIONS_DEFAULT);
+		}
+		m_btnHighRunOptions.EnableWindow(TRUE);
+		m_bUsedDefault = false;
+	}
+}
+
+
+void KMultiModalMainDlg::OnBnClickedHighrunoption()
+{
+	KMARunOptionDlg oDlg(m_pTarget, m_nChkRunOption);
+	if (oDlg.DoModal() == IDOK)
+	{
+		m_btnTAOptionInfo.EnableWindow(TRUE);
+		m_btnStopping.EnableWindow(TRUE);
+		
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnHighRunOptions.SetWindowText(KR_UIXAML_MA_HRUNOPTIONS_SELECTED);
+			m_btnTAOptionInfo.SetWindowText(KR_UIXAML_MA_OPTIONSINFO_DEFAULT);
+			m_btnStopping.SetWindowText(KR_UIXAML_MA_STOPPING_DEFAULT);
+		}
+		else {
+			m_btnHighRunOptions.SetWindowText(UIXAML_MA_HRUNOPTIONS_SELECTED);
+			m_btnTAOptionInfo.SetWindowText(UIXAML_MA_OPTIONSINFO_DEFAULT);
+			m_btnStopping.SetWindowText(UIXAML_MA_STOPPING_DEFAULT);
+		}
+	}
+}
+
+
+void KMultiModalMainDlg::OnBnClickedTaoptionsinfo()
+{
+	
+	KMATransitAssignInfoDlg oDlg(m_pTarget, m_lstMultiInfo, m_vecFnCofficient, m_vecTransitCost, m_oOptionBaseInfo, m_nMaxRouteOD);
+
+	if (oDlg.DoModal()  == IDOK)
+	{
+		int nMaxRoute(0);
+		oDlg.GetAssignInfoValue(m_vecFnCofficient, m_vecTransitCost, m_oOptionBaseInfo);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnTAOptionInfo.SetWindowTextW(KR_UIXAML_MA_OPTIONSINFO_SELECTED);
+		}
+		else {
+			m_btnTAOptionInfo.SetWindowTextW(UIXAML_MA_OPTIONSINFO_SELECTED);
+		}
+	}
+}
+
+	
+void KMultiModalMainDlg::OnBnClickedStopcriteria()
+{
+	bool bUseBus(false);
+	bool bUseRail(false);
+	bool bUseBusRail(false);
+	bool bUseExClusive(false);
+	
+	UsedBusSubway(bUseBus,bUseRail,bUseBusRail,bUseExClusive);
+
+	bool bOK = false;
+	int  nCheckedRadioBtn  = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2);
+	if (nCheckedRadioBtn == IDC_RADIO1)
+	{
+		if (bUseExClusive == false)
+		{
+			KWStoopingTransitDlg oWDlg;
+			oWDlg.OutterIteration(m_nOutterTAIteration);
+			oWDlg.OutterL2Norm(m_dOutterL2Norm);
+			oWDlg.InnerIteration(m_nInnerTAIteation);
+			oWDlg.InnerL2Norm(m_dInnerL2Norm);
+			oWDlg.UEIteration(m_nUEIteration);
+			oWDlg.RelationGap(m_dRelativeGap);
+			oWDlg.ScaleFactor(m_dScaleFactor);
+			oWDlg.ScaleFactorCursor(m_nScaleFactorCursor);
+			oWDlg.RelatevGapExp(m_nHighwayRelativeGapExp);
+			if (oWDlg.DoModal() == IDOK)
+			{
+				m_nOutterTAIteration	= oWDlg.OutterIteration();
+				m_dOutterL2Norm			= oWDlg.OutterL2Norm();
+				m_nInnerTAIteation		= oWDlg.InnerIteration();
+				m_dInnerL2Norm			= oWDlg.InnerL2Norm();
+				m_nUEIteration			= oWDlg.UEIteration();
+				m_dRelativeGap			= oWDlg.RelationGap();
+				m_dScaleFactor			= oWDlg.ScaleFactor();
+				m_nScaleFactorCursor	= oWDlg.ScaleFactorCursor();
+				m_nHighwayRelativeGapExp = oWDlg.RelatevGapExp();
+				bOK = true;
+			}
+		}
+		else
+		{
+			KWStoppingDlg oWDlg;
+			oWDlg.TAIteration(m_nInnerTAIteation);
+			oWDlg.UEIteration(m_nUEIteration);
+			oWDlg.L2Norm(m_dInnerL2Norm);
+			oWDlg.RelationGap(m_dRelativeGap);
+			oWDlg.ScaleFactor(m_dScaleFactor);
+			oWDlg.ScaleFactorCursor(m_nScaleFactorCursor);
+			oWDlg.RelatevGapExp(m_nHighwayRelativeGapExp);
+			if (oWDlg.DoModal() == IDOK)
+			{
+				m_nInnerTAIteation	 = oWDlg.TAIteration();
+				m_nUEIteration		 = oWDlg.UEIteration();
+				m_dInnerL2Norm		 = oWDlg.L2Norm();
+				m_dRelativeGap		 = oWDlg.RelationGap();
+				m_dScaleFactor		 = oWDlg.ScaleFactor();
+				m_nScaleFactorCursor = oWDlg.ScaleFactorCursor();
+				m_nHighwayRelativeGapExp = oWDlg.RelatevGapExp();
+				bOK = true;
+			}
+		}
+	}
+	else
+	{
+		if (false == bUseExClusive)
+		{
+			KWoStoppingTransitDlg oWODlg;
+			oWODlg.OutterNumberOfIteration(m_nOutterTAIteration);
+			oWODlg.OutterL2Norm(m_dOutterL2Norm);
+			oWODlg.InnerNumberOfIteration(m_nInnerTAIteation);
+			oWODlg.InnerL2Norm(m_dInnerL2Norm);
+
+			if (oWODlg.DoModal() == IDOK)
+			{
+				m_nOutterTAIteration	= oWODlg.OutterNumberOfIteration();
+				m_dOutterL2Norm			= oWODlg.OutterL2Norm();
+				m_nInnerTAIteation		= oWODlg.InnerNumberOfIteration();
+				m_dInnerL2Norm			= oWODlg.InnerL2Norm();
+				bOK = true;
+			}
+		}
+		else
+		{
+			KWOStoppingDlg oWODlg;
+			oWODlg.NumberOfIteration(m_nInnerTAIteation);
+			oWODlg.L2Norm(m_dInnerL2Norm);
+
+			if (oWODlg.DoModal() == IDOK)
+			{
+				m_nInnerTAIteation = oWODlg.NumberOfIteration();
+				m_dInnerL2Norm	 = oWODlg.L2Norm();
+				bOK = true;
+			}
+		}
+		
+	}
+	
+	if (bOK == true)
+	{
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnStopping.SetWindowText(KR_UIXAML_MA_STOPPING_SELECTED);
+			m_btnOutputDesign.SetWindowText(KR_UIXAML_MA_OUTPUT_DEFAULT);
+		}
+		else {
+			m_btnStopping.SetWindowText(UIXAML_MA_STOPPING_SELECTED);
+			m_btnOutputDesign.SetWindowText(UIXAML_MA_OUTPUT_DEFAULT);
+		}
+		m_btnOutputDesign.EnableWindow(TRUE);
+	}
+}
+
+
+void KMultiModalMainDlg::OnBnClickedOutputdesign()
+{
+	KMAOutputDesignDlg oDlg(m_pTarget,m_lstMultiInfo,m_oTMAOutputDesignInfo, m_nModelOption);
+	if (oDlg.DoModal() == IDOK)
+	{
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnOutputDesign.SetWindowText(KR_UIXAML_MA_OUTPUT_SELECTED);
+		}
+		else {
+			m_btnOutputDesign.SetWindowText(UIXAML_MA_OUTPUT_SELECTED);
+		}
+		CButton* pBtnRun	= (CButton*)(GetDlgItem(IDC_RUN));
+		pBtnRun->EnableWindow(TRUE);
+	}
+}
+
+
+void KMultiModalMainDlg::OnBnClickedRun()
+{
+	bool bCheck = true;
+	m_nResultCode = DLL_CREATE_ARGFILE_ERROR;
+
+	try
+	{
+		ThreadPara oPara(this);
+
+		// 2019.06.11 Progress 다이얼로그 언어설정 관련 수정
+		int nLang = 1;
+		if (KmzSystem::GetLanguage() == KEMKorea)
+		{
+			nLang = 0;
+		}
+
+		if (true) {
+			oPara.TKeyInt[0] = 0; // 온전한 성공여부 1:성공, 0:실패
+
+			RThreadInfo.Init();
+			QBicListSimpleProgressThread::ExecuteThread(MAssignmentModelThreadProc, &oPara, bCheck, nLang);
+
+			if (RThreadInfo.IsOK() == false) {
+				ThrowException(RThreadInfo.ErrorMsg());
+			}
+			// 성공
+
+			if (1 == oPara.TKeyInt[0]) { // 완전 성공
+				KIOTable* pLinkTable = m_pTarget->Tables()->FindTable(TABLE_LINK);
+				pLinkTable->Notify();
+				KIOTable* pModeODTable = m_pTarget->Tables()->FindTable(TABLE_MODE_OD);
+				pModeODTable->Notify();
+				KIOTable* pNodeTable = m_pTarget->Tables()->FindTable(TABLE_NODE);
+				pNodeTable->Notify();
+				KIOTable* pTransit = m_pTarget->Tables()->FindTable(TABLE_TRANSIT);
+				pTransit->Notify();
+				KIOTable* pTransitLine = m_pTarget->Tables()->FindTable(TABLE_TRANSITNODES);
+				pTransitLine->Notify();
+				KIOTable* pParaODTable = m_pTarget->Tables()->FindTable(TABLE_PARAMETER_OD);
+				pParaODTable->Notify();
+			}
+		}
+	}
+	catch (int& ex) {
+		CString strError(_T(""));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			strError.Format(_T("오류 : %d"), ex);
+		}
+		else {
+			strError.Format(_T("Error : %d"), ex);
+		}
+		TxLogDebug((LPCTSTR)strError);
+	}
+	catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	}
+	catch (...) {
+		TxLogDebugException();
+	}
+
+	if (DLL_PLANNED_TERMINATION == m_nResultCode)
+	{
+		InitializationModelData();
+		m_btnViewTable.EnableMarkup(TRUE);
+		m_btnViewTable.EnableWindow(TRUE);
+
+		m_btnViewLog.EnableMarkup(TRUE);
+		m_btnViewLog.EnableWindow(TRUE);
+
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnViewTable.SetWindowText(KR_UIXAML_MA_VIEWTABLE_DEFAULT);
+			m_btnViewLog.SetWindowText(KR_UIXAML_MA_VIEWLOG_DEFAULT);
+		}
+		else {
+			m_btnViewTable.SetWindowText(UIXAML_MA_VIEWTABLE_DEFAULT);
+			m_btnViewLog.SetWindowText(UIXAML_MA_VIEWLOG_DEFAULT);
+		}
+
+		CopyFile( _T("assignment.arg"), ConvertSavePath( _T("assignment.arg")), FALSE);
+	}
+	else
+	{
+		m_btnOutputDesign.EnableWindow(TRUE);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			m_btnOutputDesign.SetWindowText(KR_UIXAML_MA_OUTPUT_DEFAULT);
+		}
+		else {
+			m_btnOutputDesign.SetWindowText(UIXAML_MA_OUTPUT_DEFAULT);
+		}
+	}
+	
+	CButton* pBtnRun	= (CButton*)(GetDlgItem(IDC_RUN));
+	pBtnRun->EnableWindow(FALSE);
+
+	return;
+}
+
+
+void KMultiModalMainDlg::OnBnClickedViewtable()
+{
+	TxLogDebugStartMsg();
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable* pLinkTable = pIOTables->FindTable(TABLE_LINK);
+	ASSERT(NULL != pLinkTable);
+
+	CChildFrame* pChildFrame = (CChildFrame*)((CMainFrameWnd*)AfxGetMainWnd())->MDIGetActive();
+	pChildFrame->ShowIOView( true );
+	KIOView* pIOView = pChildFrame->GetIOView();
+
+	if(NULL != pIOView)
+	{
+		KIOTableView* pTableView = pIOView->FindTableView(pLinkTable->Name());
+		if(NULL == pTableView)
+		{
+			pTableView = pIOView->CreateNewTableView(pLinkTable);
+			KIOTableController* pController = new KIOTableController(m_pTarget);
+			pController->Attach(pLinkTable, pTableView);
+		}
+		pIOView->SetActiveTableView(pLinkTable->Name());
+	}
+	KRedrawWindow();
+	TxLogDebugEndMsg();
+}
+
+
+void KMultiModalMainDlg::OnBnClickedLogview()
+{
+	CString strFileName = ConvertSavePath(ASSIGN_LOGFILE_NAME);
+
+	CFileFind   cFileFinder;
+	if(FALSE == cFileFinder.FindFile(strFileName) )
+	{
+		CString strMsg(_T(""));
+		strMsg.Format(_T("%s 파일이 존재 하지 않습니다."), ASSIGN_LOGFILE_NAME);
+		AfxMessageBox(strMsg);
+		return;
+	}
+
+	ShellExecute(NULL, _T("open"), strFileName, NULL, NULL, SW_SHOW);   
+}
+
+
+void KMultiModalMainDlg::OnBnClickedClose()
+{
+	KDialogEx::OnCancel();
+}
+
+
+void KMultiModalMainDlg::ReceiveStatusMessageFromDll( void* pParam1, int nStatus, char* strMsg )
+{
+	CString strDllMsg(strMsg);
+
+	QBicListSimpleProgressPtr spProgressWindow = QBicListSimpleProgressThread::SimpleProgress();
+	if (spProgressWindow)
+	{
+		spProgressWindow->SetStatus(strDllMsg);
+	}
+
+}
+
+
+void KMultiModalMainDlg::AddStatusMessage( CString strMsg )
+{
+	QBicListSimpleProgressPtr spProgressWindow = QBicListSimpleProgressThread::SimpleProgress();
+	if (spProgressWindow)
+	{
+		spProgressWindow->SetStatus(CString(strMsg));
+	}
+}
+
+
+unsigned __stdcall KMultiModalMainDlg::MAssignmentModelThreadProc( void* pParam )
+{
+	QBicListSimpleProgressParameter* pParameter = (QBicListSimpleProgressParameter*)pParam;
+	if (pParameter != nullptr) {
+		ThreadPara* pPara = (ThreadPara*)pParameter->GetParameter(); {
+			KMultiModalMainDlg* pDlg = (KMultiModalMainDlg*)pPara->TWindow;
+
+			pDlg->RunMultiModalModel(pPara);
+		}
+	}
+
+	return 1;
+}
+
+
+void KMultiModalMainDlg::WriteDllLog( CString &a_strContent )
+{
+	CString strLocation; 
+	CString strFileName = strLocation + _T("\\") + MULTIMODA_LOGFILE;
+	UINT nOpenMode = CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite | CFile::typeText; 
+
+	CStdioFileEx of(strFileName, nOpenMode);
+	of.SeekToEnd();
+	of.WriteString(a_strContent);
+	of.WriteString(_T("\r\n"));
+	of.Close();
+}
+
+
+void KMultiModalMainDlg::RunMultiModalModel(ThreadPara* pPara)
+{
+
+	CString strModelFolder;
+	strModelFolder.Format(_T("%s%s"),m_pTarget->GetLocation(), DLL_READ_WRITE_PATH);
+	CreateDirectory(strModelFolder, NULL);
+
+	CString strDllPath = ConvertSavePath(_T(""));
+	CreateDirectory(strDllPath, NULL);
+
+	CString strResultPath = strDllPath + MULTIMODAL_RESULT_PATH;
+	DeleteAFolderFile(strResultPath);
+
+	CreateDirectory(strResultPath, NULL);
+
+	TxLogDebugStartMsg();
+	AddStatusMessage(_T("> Creating Argument File..."));
+
+	KIOColumns  modeColumnCollection;
+	
+	CString strNetworkCodeFolder(_T(""));
+	strNetworkCodeFolder.Format(_T("%s\\%s"), DLL_MODEL_FOLDER_NAME, DLL_MULTIMODAL_FOLDER_NAME);
+
+	try 
+	{
+		KWriteCodeAgrument::WirteMatchingCodeArument(m_pTarget, strNetworkCodeFolder);
+	} catch (...) {
+		TxLogDebugWarning();
+		return;
+	}
+
+	if (m_nModelOption == MODELOPTION_WITHHIGHWAY)
+	{
+		//Include Highway Assign
+		 if (CreateArgumentWithHighway(modeColumnCollection) == false)
+		 {
+			 TxLogDebugWarning();
+			 return;
+		 }
+	}
+	else 
+	{
+		//Only Multimodal Assign
+		 if (CreateArgumetWithOutHighway(modeColumnCollection) == false)
+		 {
+			 TxLogDebugWarning();
+			 return;
+		 }
+	}
+
+	AddStatusMessage(_T("> Create Argument File End."));
+	TxLogDebug(_T("Create Argument End.."));
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return;
+	}
+
+#pragma region Dll_Load
+	TxLogDebug(_T("DLL Start."));
+	
+	m_nResultCode = DLL_UNEXPECTED_ERROR;
+
+	CString strWindowName;
+	GetWindowText(strWindowName);
+
+	CTime timeStart = CTime::GetCurrentTime();
+
+	CTime timeDoneDll = CTime::GetCurrentTime();
+	CString strDllStartTime = _T("");
+	strDllStartTime.Format(_T("[Start][%s]"), timeDoneDll.Format(_T("%Y-%m-%d %H:%M:%S")));
+	
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return;
+	}
+    
+	AddStatusMessage(_T("> Multimodal Assignment Start..."));
+
+    //★ 
+	KLauncher::Run(strWindowName, 5);
+	//KLauncher::Run64(strWindowName, 5);
+
+	timeDoneDll = CTime::GetCurrentTime();
+	CString strDllEndTime = _T(""); {
+        strDllEndTime.Format(_T("[ End ][%s]"), timeDoneDll.Format(_T("%Y-%m-%d %H:%M:%S")));
+    }	
+	
+	if(DLL_PLANNED_TERMINATION == m_nResultCode /*OK*/)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment End."));
+		TxLogDebug(_T("Model Run Ok.."));
+	}
+	else if (DLL_USER_STOPPING == m_nResultCode)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		TxLogDebug(_T("Model Stop.."));
+		return;
+	}
+	else if (DLL_LOAD_ERROR == m_nResultCode)
+	{
+		AddStatusMessage(_T("> MultiModal Dll Not Found ..."));
+		TxLogDebug(_T("DLL NOT Found.."));
+		return;
+	}
+	else
+	{
+		if (QBicListSimpleProgressThread::IsUserStopped())
+		{
+			AddStatusMessage(_T("> User Stopped..."));
+			TxLogDebug(_T("User Stop.."));
+		}
+		else
+		{
+			AddStatusMessage(_T("> Assignment Module End with Error..."));
+			TxLogDebug(_T("Model Run Error.."));
+		}
+		return;
+	}
+
+#pragma endregion Dll_Load
+ 	
+
+#pragma region 결과정보생성
+	
+	AddStatusMessage(_T("> Saving Output Data..."));
+	KIOColumns		rLinkColumnCollection; 
+	KIOColumns		rModeODColumnCollection;
+	KIOColumns		rParameterODColumnCollection;
+	
+	KIOColumns		rLineInfoColumnCollection;
+    KIOColumns		rLineColumnCollection;
+    KIOColumns	    rLineResultColumnCollection;
+
+	KIOColumns		rNodeColumnCollection;
+	TAssignResultColumnName	oResultColumnName; {
+        InitTAssingReulstColumn(oResultColumnName);
+    }	
+
+	int nRunSeq = 0;
+	CString strDescription = m_oTMAOutputDesignInfo.TstrDescription;
+	try
+	{
+		TxLogDebug(_T("GetNewSeq"));
+		nRunSeq = KDBaseAssignment::GetNewAssignRunSeq(m_pTarget);
+
+		if (m_nModelOption == MODELOPTION_WITHHIGHWAY) {
+			AddWithMultiModalResultColumn(nRunSeq, rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection, oResultColumnName, m_oTMAOutputDesignInfo.TstrDescription);
+		}
+		else {	
+			AddWithOutMultiModalResultColumn(nRunSeq, rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection,rNodeColumnCollection, rParameterODColumnCollection, oResultColumnName, m_oTMAOutputDesignInfo.TstrDescription);
+		}
+	}
+	catch(KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+		DeleteCreateColumn(rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection);
+		AfxMessageBox(_T("데이터 컬럼 추가 시 예상치 못한 오류가 발생하였습니다."));
+		return;
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+		DeleteCreateColumn(rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection);
+		AfxMessageBox(_T("데이터 컬럼 추가 시 예상치 못한 오류가 발생하였습니다."));
+		return;
+	}
+#pragma endregion 결과정보생성
+
+
+#pragma region 결과데이터삽입
+	/*Step 5.3 UpdateDataBase*/
+	KDBaseConPtr spDBaseConnection = m_pTarget->GetDBaseConnection();
+	try
+	{
+		spDBaseConnection->BeginTransaction();
+
+		/*Step 5.3.1 링크 정보 입력 ...*/
+
+		int niii = rLinkColumnCollection.ColumnCount();
+
+		AddStatusMessage(_T("> Saving Output Data(Link Table)..."));
+
+		if (m_nModelOption == MODELOPTION_WITHHIGHWAY) {
+			UpdateWithLinkFile2DB(spDBaseConnection, rLinkColumnCollection);
+		}
+		else {
+			UpdateWithOutLinkFile2DB(spDBaseConnection, rLinkColumnCollection);
+		}
+
+		if (QBicListSimpleProgressThread::IsUserStopped() == true)
+		{
+			AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+			ThrowException(_T("MultiModal Stopping..."));
+		}
+
+		AddStatusMessage(_T("> Saving Output Data(Attribute Table)..."));
+		/*Step 5.3.2 OD 정보 입력 ...*/
+		if (m_nModelOption == MODELOPTION_WITHHIGHWAY) {
+			UpdateWithParaODFile2DB(spDBaseConnection, rParameterODColumnCollection);
+		}
+		else {
+			UpdateWithOutParaODFile2DB(spDBaseConnection, rParameterODColumnCollection);
+		}
+
+		if (QBicListSimpleProgressThread::IsUserStopped() == true) {
+			AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+			ThrowException(_T("MultiModal Stopping..."));
+		}
+
+		//ModeOD 정보입력
+		UpdateODFile2DB(spDBaseConnection, rModeODColumnCollection);
+
+		/*Step 5.3.3 Line 정보 입력 ...*/
+		AddStatusMessage(_T("> Saving Output Data(Urban Transit Info Table)..."));
+		UpdateLineInfoFile2DB(spDBaseConnection, rLineInfoColumnCollection);
+
+		UpdateNodeFile2DB(spDBaseConnection, rNodeColumnCollection);
+
+		AddStatusMessage(_T("> Saving Output Data(Urban Transit Line Table)..."));
+		//UpdateLineFile2DB_Old20161005(spDBaseConnection, rLineColumnCollection);
+        //UpdateLineFile2DB_201610_28(spDBaseConnection, rLineColumnCollection);
+        UpdateLineFile2DB(spDBaseConnection, rLineColumnCollection);
+		if (QBicListSimpleProgressThread::IsUserStopped() == true) {
+			AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+			ThrowException(_T("MultiModal Stopping..."));
+		}
+
+		/*Step 5.3.4. 배정모형 종료정보 업데이트 ...*/
+		CTime timeEnd = CTime::GetCurrentTime();
+
+		AddStatusMessage(_T("> Update DB..."));
+
+		nRunSeq = KDBaseAssignment::GetNewAssignRunSeq(m_pTarget);
+		
+		if (m_oTMAOutputDesignInfo.TbUseOverWrite == true) {
+			DeleteOverWriteAssignModel(spDBaseConnection);
+		}
+
+		//Assign Model Update
+		KDBaseAssignment::UpdateMuliModalRunSeq(spDBaseConnection, nRunSeq, oResultColumnName, timeStart.Format(_T("%Y-%m-%d %H:%M:%S")), timeEnd.Format(_T("%Y-%m-%d %H:%M:%S")), strDescription, KEMAssignmentModelMultiModal);
+		
+        if (true) {
+		    rNodeColumnCollection.Clear();
+		    rLinkColumnCollection.Clear();
+		    rModeODColumnCollection.Clear();
+		    rLineInfoColumnCollection.Clear();
+		    rLineColumnCollection.Clear();
+		    rParameterODColumnCollection.Clear();
+        }
+
+		spDBaseConnection->Commit();
+
+	}
+	catch(KExceptionPtr ex)
+	{
+		AddStatusMessage(_T(" Assignment Module End with Error..."));
+		spDBaseConnection->RollBack();
+		DeleteCreateColumn(rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection);
+		TxLogDebug(ex->GetErrorMessage());
+		return;
+	}
+	catch(...)
+	{
+		AddStatusMessage(_T(" Assignment Module End with Error..."));
+		spDBaseConnection->RollBack();
+		DeleteCreateColumn(rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection);
+		TxLogDebugException();
+		return;
+	}
+
+#pragma endregion 결과데이터삽입
+
+	try
+	{
+		if (DeleteCreateColumn(rLinkColumnCollection, rModeODColumnCollection, rLineColumnCollection, rLineInfoColumnCollection, rNodeColumnCollection, rParameterODColumnCollection))
+		{
+			if (m_oTMAOutputDesignInfo.TbUseOverWrite == true)
+			{
+				AddStatusMessage(_T("> Delete Old Column Data..."));
+				KDBaseAssignment::DeleteOverWriteColumn(m_pTarget, m_oTMAOutputDesignInfo);
+			}
+		}
+
+		pPara->TKeyInt[0] = 1; // 성공
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+
+	AddStatusMessage(_T("> Multimodal Assignment Complete."));
+	TxLogDebugEndMsg();
+}
+
+
+bool KMultiModalMainDlg::CreateArgumentWithHighway( KIOColumns& a_modeColumnCollection )
+{
+	if (! ClearFiles())
+	{
+		AfxMessageBox(_T("파일 삭제 중 오류가 발생하였습니다."));
+		return false;
+	}
+
+	ImChampDir::SetCurrentDirectoryToApp();
+
+	CString strFileName = _T("assignment.arg");
+
+	UINT nOpenMode = CFile::modeCreate | CFile::modeWrite | CFile::typeText;
+	CStdioFileEx of(strFileName, nOpenMode);
+
+	bool bResult = false;
+
+	bResult = WriteInfoArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(WriteInfoArgumet) 중 오류가 발생하였습니다. !"));
+		return false;
+	}
+
+	bResult = WriteWithOBAssignArgument(of);
+	if(!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(WithOBAssign)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteInputArgument(of, a_modeColumnCollection);
+
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(InputInfo)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteRunOption(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Run Option)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteVDFArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(VDF)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteTransitoptionArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Transit Assign Info)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteStoppingWithHighway(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Stopping Criteria)중 오류가 발생하였습니다. !"));
+	}
+
+
+	bResult = WriteNoClassArguemnt(of);
+	if(!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(No.Class)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteConstraintArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Constrantaint)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteMEUArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(MEU)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteFolderArguemnt(of);
+	if(!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Folder)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WritePathFolderArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(PathFolder)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteModelTitle(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(출력 제목)중 오류가 발생하였습니다. !"));
+	}
+
+	of.Close();
+
+	 AddStatusMessage(_T("> Creating Input Files for Multimodal Assignment Model..."));
+	//node binary
+	CString strNodeLocation = ConvertSavePath(_T("node.dat"));
+
+	bResult = KBulkDBase2File::ExportDB2NodeFile(m_pTarget->GetDBaseConnection(), strNodeLocation);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(ExportDB2NodeFile) 중 오류가 발생하였습니다. !!!"));
+		return false;
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//link binary
+	CString strLinkLocation = ConvertSavePath(_T("link.dat"));
+	KIOColumns userLinkColumnsLink;
+	CString strTemp = m_oBPRFnDlg.GetAddQuery();
+	bResult = m_oBPRFnDlg.ExportDB2LinkFile(m_pTarget->GetDBaseConnection(),userLinkColumnsLink,strTemp, strLinkLocation);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(ExportDB2LinkFile) 중 오류가 발생하였습니다. !!!"));
+		return false;
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//od Binary 
+	CString strODLocation= ConvertSavePath(_T("mode_od.dat"));
+	bResult = KDBaseAssignment::ExportDB2ODFile(m_pTarget->GetDBaseConnection(), _T("mode_od"), a_modeColumnCollection, strODLocation);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(ExportDB2ODFile) 중 오류가 발생하였습니다. !!!"));
+		return false;
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//line Binary
+	CString strLineInfoLocation = ConvertSavePath(_T("line_info.dat")) ;
+	CString strLIneLocation		= ConvertSavePath(_T("line.dat"));
+
+	if ( !KBulkDBase2File::ExportDB2LineFile(m_pTarget->GetDBaseConnection(), strLineInfoLocation, strLIneLocation))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2LineFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//turn Binary
+	CString strTurnLocation	= ConvertSavePath(_T("turn.dat"));
+	if ( !KBulkDBase2File::ExportDB2TurnFile(m_pTarget->GetDBaseConnection(), strTurnLocation))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2TurnFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	if ( !KBulkDBase2File::ExportDB2AccessStopNodeFile(m_pTarget->GetDBaseConnection(), ConvertSavePath(T_DAT_OUT_ACC_BUSSUBWAYSTOP_ATZONE) ))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2AccessNodeStopFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::CreateArgumetWithOutHighway( KIOColumns& a_modeColumnCollention )
+{
+	if (! ClearFiles())
+	{
+		AfxMessageBox(_T("파일 삭제 중 오류가 발생하였습니다."));
+		return false;
+	}
+
+	ImChampDir::SetCurrentDirectoryToApp();
+
+	CString strFileName = _T("assignment.arg");
+
+	UINT nOpenMode = CFile::modeCreate | CFile::modeWrite | CFile::typeText;
+	CStdioFileEx of(strFileName, nOpenMode);
+
+	bool bResult = false;
+
+	bResult = WriteInfoArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(WriteInfoArgumet) 중 오류가 발생하였습니다. !"));
+		return false;
+	}
+
+	bResult = WriteWithOBAssignArgument(of);
+	if(!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(WithOBAssign)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteInputArgument(of, a_modeColumnCollention);
+
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(InputInfo)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteTransitoptionArgument(of);
+
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Transit_Info)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteStoppingWithOutHighway(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Stopping Criteria)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteNoClassArguemnt(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(No. Class)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteConstraintArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Constrantaint)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteMEUArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(MEU)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WriteFolderArguemnt(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(Folder)중 오류가 발생하였습니다.!"));
+		return false;
+	}
+
+	bResult = WritePathFolderArgument(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(PathFolder)중 오류가 발생하였습니다. !"));
+	}
+
+	bResult = WriteModelTitle(of);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(출력 제목)중 오류가 발생하였습니다. !"));
+	}
+
+	AddStatusMessage(_T("> Creating Input Files for Multimodal Assignment Model..."));
+	of.Close();
+
+	
+	//node binary
+	CString strNodeLocation = ConvertSavePath(_T("node.dat"));
+	bResult = KBulkDBase2File::ExportDB2NodeFile(m_pTarget->GetDBaseConnection(),strNodeLocation);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(ExportDB2NodeFile) 중 오류가 발생하였습니다. !!!"));
+		return false;
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+
+	//link binary
+
+	CString strLinkLocation = ConvertSavePath(_T("link.dat"));
+
+	bResult = KDBaseAssignment::ExportDB2LinkFileWithOutHighway(m_pTarget->GetDBaseConnection(),m_nUsingLInkTime, m_pLinkTimeColumn, strLinkLocation);
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//od Binary 
+
+	CString strODLocation= ConvertSavePath(_T("mode_od.dat"));
+	
+	bResult = KDBaseAssignment::ExportDB2ODFile(m_pTarget->GetDBaseConnection(), _T("mode_od"), a_modeColumnCollention, strODLocation);
+	if (!bResult)
+	{
+		AfxMessageBox(_T("Argument 생성(ExportDB2ODFile) 중 오류가 발생하였습니다. !!!"));
+		return false;
+	}
+
+	if (QBicListSimpleProgressThread::IsUserStopped() == true)
+	{
+		AddStatusMessage(_T("> Multimodal Assignment Stopped..."));
+		return false;
+	}
+
+	//line Binary
+	CString strLineInfoLocation = ConvertSavePath(_T("line_info.dat"));
+	CString strLIneLocation		= ConvertSavePath(_T("line.dat"));
+
+	if ( !KBulkDBase2File::ExportDB2LineFile(m_pTarget->GetDBaseConnection(), strLineInfoLocation, strLIneLocation))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2LineFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	//turn Binary
+	CString strTurnLocation	= ConvertSavePath(_T("turn.dat"));
+	if ( !KBulkDBase2File::ExportDB2TurnFile(m_pTarget->GetDBaseConnection(), strTurnLocation))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2TurnFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	if ( !KBulkDBase2File::ExportDB2AccessStopNodeFile(m_pTarget->GetDBaseConnection(), ConvertSavePath(T_DAT_OUT_ACC_BUSSUBWAYSTOP_ATZONE) ))
+	{
+		ThrowException(_T("Dat 생성(ExportDB2AccessNodeStopFile) 중 오류가 발생하였습니다. !!!"));
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::ClearFiles()
+{
+	int nResult = -1;
+
+	try
+	{   
+		nResult = remove("FMultiModalTa.arg");
+		nResult = remove((CStringA)ConvertSavePath(_T("node.dat")));
+		nResult = remove((CStringA)ConvertSavePath(_T("link.dat")));
+		nResult = remove((CStringA)ConvertSavePath(_T("turn.dat")));
+		nResult = remove((CStringA)ConvertSavePath(_T("line.dat")));
+		nResult = remove((CStringA)ConvertSavePath(_T("line_info.dat")));
+		nResult = remove((CStringA)ConvertSavePath(_T("mode_od.dat")));
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		return false;
+	}    
+
+	return true;
+	TxLogDebugEndMsg();
+}
+
+
+bool KMultiModalMainDlg::WriteInfoArgument( CStdioFileEx& of )
+{
+	CString strOut;
+
+	KProject* pProject = (KProject*)( (CKmzApp*)AfxGetApp() )->GetProject();
+
+	try
+	{
+		strOut.Format(_T("%s_%s_%s\r\n"), pProject->GetName(), m_pTarget->CaptionScenario(), m_pTarget->CaptionTargetYear());
+		of.WriteString(strOut);
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteWithOBAssignArgument( CStdioFileEx& of )
+{
+	int nOption;
+	CString strOut;
+	try
+	{
+		if (m_nModelOption == MODELOPTION_WITHHIGHWAY)
+		{
+			nOption = 1;
+		}
+		else
+		{
+			nOption = 0;
+		}
+
+
+		strOut.Format(_T("withOBAssign\t%d\r\n"),nOption);
+		of.WriteString(strOut);
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+
+	return true;
+
+}
+
+
+bool KMultiModalMainDlg::WriteInputArgument( CStdioFileEx& of, KIOColumns& a_oSelectModeColumn )
+{
+	CString strOut;
+
+	int nCount = m_lstMultiInfo.size();
+
+	try
+	{
+	
+		strOut.Format(_T("input\t%d\r\n"),nCount + 1);
+		of.WriteString(strOut);
+		if (m_nModelOption == MODELOPTION_WOHIGHWAY)
+		{
+			strOut.Format(_T("timeMethod\t%d\r\n"), m_nUsingLInkTime);
+			of.WriteString(strOut);
+		}
+		else
+		{
+			strOut.Format(_T("AnalysisTime\t%f\r\n"), m_dAnalysisTime);
+			of.WriteString(strOut);
+		}
+		std::list<KMultiModalInfo>::iterator iter = m_lstMultiInfo.begin();
+		std::list<KMultiModalInfo>::iterator end  = m_lstMultiInfo.end();
+		int nODIndex = 1;
+
+		while(iter != end)
+		{
+			KMultiModalInfo oInfo = *iter;
+			if (oInfo.TransitHighwayType() == 1)
+			{
+				strOut.Format(_T("%s\t%f\t%f\t%d\t%d\t%d\t%d\r\n"), _T("Bus"), oInfo.Occupancy(),oInfo.PCU(),oInfo.NetworkType(),oInfo.PreLoad(),nODIndex,oInfo.Exclusive());
+				a_oSelectModeColumn.AddNewColumn(oInfo.ModeColumn());
+				of.WriteString(strOut);
+			}
+			else if (oInfo.TransitHighwayType() == 2)
+			{
+				strOut.Format(_T("%s\t%f\t%f\t%d\t%d\t%d\t%d\r\n"), _T("Subway"), oInfo.Occupancy(),oInfo.PCU(),oInfo.NetworkType(),oInfo.PreLoad(),nODIndex,oInfo.Exclusive());
+				a_oSelectModeColumn.AddNewColumn(oInfo.ModeColumn());
+				of.WriteString(strOut);
+			}
+			else if (oInfo.TransitHighwayType() == 3)
+			{
+				strOut.Format(_T("%s\t%f\t%f\t%d\t%d\t%d\t%d\r\n"), _T("Bus+Subway"), oInfo.Occupancy(),oInfo.PCU(),oInfo.NetworkType(),oInfo.PreLoad(),nODIndex,oInfo.Exclusive());
+				a_oSelectModeColumn.AddNewColumn(oInfo.ModeColumn());
+				of.WriteString(strOut);
+			}
+			else if (oInfo.TransitHighwayType() == 0)
+			{
+				KMode* pMode = oInfo.Mode();
+				strOut.Format(_T("%s\t%f\t%f\t%d\t%d\t%d\t%d\r\n"), pMode->ModeName(), oInfo.Occupancy(),oInfo.PCU(),oInfo.NetworkType(),oInfo.PreLoad(),nODIndex,oInfo.Exclusive());
+				a_oSelectModeColumn.AddNewColumn(oInfo.ModeColumn());
+				of.WriteString(strOut);
+			}
+			nODIndex++;
+			++iter;
+		}
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+	return true;
+
+}
+
+
+bool KMultiModalMainDlg::WriteTransitoptionArgument( CStdioFileEx& of )
+{
+	CString		strOut;
+
+	bool bBus			= false;
+	bool bSubway		= false;
+	bool bBusSubway		= false;
+	bool bExclusive     = true;
+
+	UsedBusSubway(bBus, bSubway, bBusSubway, bExclusive);
+	
+	int nUseCount = 3;
+    if (bExclusive == false) {
+        nUseCount = 6;
+    }
+
+    //★ 줄갯수 - nUseCount + 1
+	strOut.Format(_T("transit_option\t%d\r\n"), nUseCount + 1); {
+        of.WriteString(strOut);
+    }	
+    
+	strOut.Format(_T("%d\r\n"), m_oOptionBaseInfo.TnMaxofNo); {
+        of.WriteString(strOut);
+    }	
+
+	int nCount = m_vecFnCofficient.size();
+    for (int i=0; i<nUseCount; i++) {
+        TMAFnCoefficient& oInfo = m_vecFnCofficient[i];
+        strOut.Format(_T("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n"), 
+            oInfo.TdInVehcle,       oInfo.TdWaitingTime,
+            oInfo.TdTransferTime,   oInfo.TdAccessWalkTime, 
+            oInfo.TdEgressWalkTime, oInfo.TdNoOfTransfer,
+            oInfo.TdCost,           0.0,
+            0.0,                    oInfo.TdNoOfStop);
+        of.WriteString(strOut);
+    }
+    
+	strOut.Format(_T("dwellTime_bus\t%.1f\r\n"),m_oOptionBaseInfo.TdDWTimeInBus); {
+	    of.WriteString(strOut);
+    }
+
+	strOut.Format(_T("dwellTime_subway\t%.1f\r\n"), m_oOptionBaseInfo.TdDWTimeInRail); {
+        of.WriteString(strOut);
+    }	
+
+	strOut.Format(_T("waitingVDF\t%f\t%f\r\n"), m_oOptionBaseInfo.TdAlpha, m_oOptionBaseInfo.TdBeta); {
+        of.WriteString(strOut);
+    }	
+
+	int nBusIndex	 = 0;
+	int nSubwayIndex = 0;
+
+	int nCountCost = m_vecTransitCost.size();
+	for (int i = 0; i < nCountCost; i++)
+	{
+		TMATransitCostInfo oTCost = m_vecTransitCost[i];
+
+		if (oTCost.TnMode == TRANSIT_TYPE_BUS)
+		{
+			if (bBus == true|| bBusSubway == true)
+				nBusIndex = nBusIndex + 1;
+		}
+		else if (oTCost.TnMode == TRANSIT_TYPE_SUBWAY)
+		{
+			if(bSubway == true || bBusSubway == true)
+				nSubwayIndex = nSubwayIndex + 1;
+		}
+	}
+
+	strOut.Format(_T("detailedLineType\t%d\t%d\r\n"), nBusIndex, nSubwayIndex);
+	of.WriteString(strOut);
+	
+	for (int i = 0; i < nCountCost; i++)
+	{
+		TMATransitCostInfo oTCost = m_vecTransitCost[i];
+
+		if (oTCost.TnMode == TRANSIT_TYPE_BUS)
+		{
+			if (bBus == true || bBusSubway == true)
+			{
+				strOut.Format(_T("buscost\t%d\t%f\t%f\t%f\t%f\t%d\r\n"), oTCost.TnType, oTCost.TdBasicRate, oTCost.TdBasicDistance,
+					oTCost.TdAddRate, oTCost.TdAddDistance, oTCost.TnMergeRate);
+				of.WriteString(strOut);
+
+			}
+		}
+		else if (oTCost.TnMode == TRANSIT_TYPE_SUBWAY)
+		{
+			if(bSubway == true || bBusSubway == true)
+			{
+				strOut.Format(_T("railcost\t%d\t%f\t%f\t%f\t%f\t%d\r\n"), oTCost.TnType, oTCost.TdBasicRate, oTCost.TdBasicDistance,
+					oTCost.TdAddRate, oTCost.TdAddDistance, oTCost.TnMergeRate);
+				of.WriteString(strOut);
+			}
+		}
+
+	}
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteRunOption( CStdioFileEx& of )
+{
+	CString strOut;
+	try
+	{
+		strOut.Format(_T("run_options\t1\r\n"));
+		of.WriteString(strOut);
+		strOut.Format(_T("%d\r\n"),m_nChkRunOption);
+		of.WriteString(strOut);
+
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteVDFArgument( CStdioFileEx& of )
+{
+
+	bool bResult = false;
+
+	try
+	{
+		bResult = m_oBPRFnDlg.WriteInputArgument(of);
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return bResult;
+}
+
+
+bool KMultiModalMainDlg::WriteStoppingWithHighway( CStdioFileEx& of )
+{
+
+	bool bBus(false);
+	bool bRail(false);
+	bool bBusRail(false);
+	bool bExclusive(false);
+
+	UsedBusSubway(bBus, bRail, bBusRail, bExclusive);
+	CString strOut;
+
+	try
+	{
+		if (bExclusive == false)
+		{
+			strOut.Format(_T("stopping_criteria\t2\r\n"));
+			of.WriteString(strOut);
+			if (m_nScaleFactorCursor == 0)
+			{
+				strOut.Format(_T("%d\t%g\t0\t%f\r\n"), m_nUEIteration, m_dRelativeGap, m_dScaleFactor);
+			}
+			else
+			{
+				strOut.Format(_T("%d\t%g\t0\t%d\r\n"), m_nUEIteration, m_dRelativeGap, m_nScaleFactorCursor);
+			}
+			of.WriteString(strOut);
+			strOut.Format(_T("%d\t%f\t%d\t%f\r\n"), m_nOutterTAIteration, m_dOutterL2Norm, m_nInnerTAIteation, m_dInnerL2Norm);
+			of.WriteString(strOut);
+		}
+		else
+		{
+			strOut.Format(_T("stopping_criteria\t2\r\n"));
+			of.WriteString(strOut);
+			if (m_nScaleFactorCursor == 0)
+			{
+				strOut.Format(_T("%d\t%g\t0\t%f\r\n"), m_nUEIteration, m_dRelativeGap, m_dScaleFactor);
+			}
+			else
+			{
+				strOut.Format(_T("%d\t%g\t0\t%d\r\n"), m_nUEIteration, m_dRelativeGap, m_nScaleFactorCursor);
+			}
+			of.WriteString(strOut);
+			strOut.Format(_T("%d\t%f\r\n"), m_nInnerTAIteation, m_dInnerL2Norm);
+			of.WriteString(strOut);
+		}
+		
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+
+}
+
+
+bool KMultiModalMainDlg::WriteStoppingWithOutHighway( CStdioFileEx& of )
+{
+	CString strOut;
+	bool bBus(false);
+	bool bRail(false);
+	bool bBusRail(false);
+	bool bExclusive(false);
+
+	UsedBusSubway(bBus, bRail, bBusRail, bExclusive);
+
+	try
+	{
+		if (bExclusive == false)
+		{
+			strOut.Format(_T("stopping_criteria\t1\r\n"));
+			of.WriteString(strOut);
+			strOut.Format(_T("%d\t%f\t%d\t%f\r\n"), m_nOutterTAIteration, m_dOutterL2Norm, m_nInnerTAIteation, m_dInnerL2Norm);
+			of.WriteString(strOut);
+		}
+		else
+		{
+			strOut.Format(_T("stopping_criteria\t1\r\n"));
+			of.WriteString(strOut);
+			strOut.Format(_T("%d\t%f\r\n"), m_nInnerTAIteation, m_dInnerL2Norm);
+			of.WriteString(strOut);
+		}
+		
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteNoClassArguemnt( CStdioFileEx& of )
+{
+	CString strOut;
+	std::map<CString, double> mapNoofClass;
+
+	try
+	{
+		KDBaseAssignment::GetNoClass(m_pTarget, mapNoofClass);
+
+		int nCount = mapNoofClass.size();
+
+		strOut.Format(_T("noClass\t%d\r\n"), nCount);
+		of.WriteString(strOut);
+
+		std::map<CString, double>::iterator iter = mapNoofClass.begin();
+		std::map<CString, double>::iterator end  = mapNoofClass.end();
+
+		while(iter != end)
+		{
+			strOut.Format(_T("%s\t%f\r\n"), iter->first, iter->second);
+			of.WriteString(strOut);
+			++iter;
+		}
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteConstraintArgument( CStdioFileEx& of )
+{
+	try
+	{
+		CString strOut;
+		strOut.Format(_T("Constraint Condition\t2\r\n"));
+		of.WriteString(strOut);
+
+		strOut.Format(_T("time\t%.1f\t%d\t%d\t%d\t%d\r\n"), m_oOptionBaseInfo.TdPathTime , 
+			m_oOptionBaseInfo.TnInvehicleTime, m_oOptionBaseInfo.TnWatingTime, m_oOptionBaseInfo.TnTransferTime, m_oOptionBaseInfo.TnAETime );
+		of.WriteString(strOut);
+
+		strOut.Format(_T("length\t%.1f\r\n"), m_oOptionBaseInfo.TdPathLength);
+		of.WriteString(strOut);
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+		return false;
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteMEUArgument( CStdioFileEx& of )
+{
+	try
+	{
+		CString strOUt;
+		strOUt.Format(_T("MEU\t%.6f\r\n"), m_oOptionBaseInfo.TdMEU);
+		of.WriteString(strOUt);
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+		return false;
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+		return false;
+	}
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteFolderArguemnt( CStdioFileEx& of )
+{
+	CString strFolder;
+	try
+	{
+		strFolder.Format(_T("%s"),m_strTargetLocation);
+		strFolder = strFolder + DLL_READ_WRITE_PATH + DLL_MULTIMODAL_FOLDER_NAME;
+		strFolder = strFolder + _T("\r\n");
+		of.WriteString(strFolder);
+	}
+	catch(...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WritePathFolderArgument( CStdioFileEx& of )
+{
+	CString strFolder;
+	try
+	{
+		strFolder.Format(_T("%s"),m_strTargetLocation);
+		strFolder = strFolder + DLL_READ_WRITE_PATH + MULTIMODAL_GENERATOR_PATH +_T("TransitPath") + _T("\\");
+		strFolder = strFolder + _T("\r\n");
+		of.WriteString(strFolder);
+	}
+	catch(...)
+
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool KMultiModalMainDlg::WriteModelTitle(CStdioFileEx& of)
+{
+	CString strOut(_T(""));
+	try
+	{
+		strOut.Format(_T("%s\r\n"), m_oTMAOutputDesignInfo.TstrDescription);
+		of.WriteString(strOut);
+	}
+	catch (...)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+CString KMultiModalMainDlg::ConvertSavePath( CString a_strFileName )
+{
+	CString strSavePath(_T(""));
+	strSavePath.Format(_T("%s%s%s\\%s"), m_pTarget->GetLocation(), DLL_READ_WRITE_PATH, DLL_MULTIMODAL_FOLDER_NAME,a_strFileName);
+
+	return strSavePath;
+}
+
+
+void KMultiModalMainDlg::AddWithOutMultiModalResultColumn( int nRunSeq, KIOColumns& rLinkColumnCollecion, KIOColumns& rODColumnCollection, KIOColumns& rLineColumnCollection, KIOColumns& rLineInfoColumnCollection, KIOColumns& rNodeColumnCollection, KIOColumns& rParameterODCollection, TAssignResultColumnName& a_oResultColumnName, CString a_strDescription )
+{
+	TxLogDebugStartMsg();
+	CString strErrMsg = _T("컬럼 추가에 실패하였습니다.");
+
+	rLinkColumnCollecion.Clear();
+	rODColumnCollection.Clear();
+
+	rLineColumnCollection.Clear();
+	rLineInfoColumnCollection.Clear();
+	rNodeColumnCollection.Clear();
+	rParameterODCollection.Clear();
+
+	KIOTables* pTableManger	     = m_pTarget->Tables();
+	KIOTable*  pLinkTable	     = pTableManger->FindTable(TABLE_LINK);
+	KIOTable*  pODTable		     = pTableManger->FindTable(TABLE_MODE_OD);
+	KIOTable*  pTransitTable     = pTableManger->FindTable(TABLE_TRANSIT);
+	KIOTable*  pTransitNodeTable = pTableManger->FindTable(TABLE_TRANSITNODES);
+	KIOTable*  pNodeTable		 = pTableManger->FindTable(TABLE_NODE);
+	KIOTable*  pODParameterTable = pTableManger->FindTable(TABLE_PARAMETER_OD);
+
+	CString strRunSeq = _T("");
+	strRunSeq.Format(_T("(%d)"), nRunSeq);
+
+	CString strColumnName = _T("");
+	CString strDescription(_T(""));
+	bool bUsedBus		= false;
+	bool bUsedSubway	= false;
+	bool bUsedBusSubway = false;
+	bool bUseExcluve	= false;
+
+	UsedBusSubway(bUsedBus, bUsedSubway, bUsedBusSubway, bUseExcluve);
+
+	//Link Table
+	strColumnName.Format(_T("Trip%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("대중교통 노선승객 통행량(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Trip_%s"), a_strDescription);
+	}
+
+	KIOColumn* pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLinkColumnCollecion.AddNewColumn(pColumn);
+	a_oResultColumnName.Trip = pColumn->Name();
+
+	//OD Paramter Talbe
+	if (bUsedBus == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("AvgBusTime%s"), strRunSeq);        
+		strDescription.Format(_T("AverageBusTime_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("버스 평균통행시간(분)_%s"), a_strDescription);
+        }
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr) {
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAvgBusTime = pColumn->Name();
+	}
+	
+	if(bUsedSubway == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("AvgSubwayTime%s"), strRunSeq);
+		strDescription.Format(_T("AverageSubwayTime_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("도시철도 평균통행시간(분)_%s"), a_strDescription);
+        }
+
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAvgSubwayTime = pColumn->Name();
+	}
+
+	if(bUsedBusSubway == true )
+	{
+		strColumnName.Format(_T("AvgBus_SubwayTime%s"), strRunSeq);
+		strDescription.Format(_T("AverageBus_SubwayTime_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("버스+도시철도 평균통행시간(분)_%s"), a_strDescription);
+        }
+
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAVgBusSubwayTime = pColumn->Name();
+	}
+	
+	
+	if (bUsedBus == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("Bus0T%s"), strRunSeq);
+		strDescription.Format(_T("Bus0Transfer_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("버스 직승 통행량_%s"), a_strDescription);
+        }
+
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODBusDirect = pColumn->Name();
+
+
+		strColumnName.Format(_T("Bus1T%s"), strRunSeq);
+		strDescription.Format(_T("Bus1Transfer_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("버스 1회 환승 통행량_%s"), a_strDescription);
+        }
+
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODBusOneTransfer = pColumn->Name();
+        
+		strColumnName.Format(_T("Bus2T%s"), strRunSeq);
+		strDescription.Format(_T("Bus2Transfer_%s"), a_strDescription);
+        if (KmzSystem::GetLanguage() == KEMKorea) {
+            strDescription.Format(_T("버스 2회 환승 통행량_%s"), a_strDescription);
+        }
+
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODBustwoTransfer = pColumn->Name();
+	}
+
+	//od Parameter
+	if (false == bUsedBus && false == bUsedSubway && true == bUsedBusSubway)
+	{
+		strColumnName.Format(_T("Bus%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Bus_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODTable, strDescription);
+
+		if (pColumn == nullptr) {
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMBus = pColumn->Name();
+
+		strColumnName.Format(_T("Rail%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("도시철도(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Rail_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName,pODTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMRail = pColumn->Name();
+
+		strColumnName.Format(_T("BusRail%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스+도시철도(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("BusRail_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMBusRail = pColumn->Name();
+
+	}
+
+	//Transit Info
+	strColumnName.Format(_T("Trip%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("대중교통 노선승객 통행량(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Trip_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Route_Len%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총 VKT(인·Km)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Route Length_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoTotalLength = pColumn->Name();
+
+	strColumnName.Format(_T("Route_Len_PT%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균 VKT(인·Km)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Route Length per Trip_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgLength = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Brd_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대승차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Board Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Brd_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균승차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Board Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvePassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Max_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대재차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Passenger%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxSecond = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균재차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgSecond = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Std_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대입석인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Standing Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxStanding = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Std_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균입석인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Standing Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgStanding = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Crowd%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대혼잡도_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Crowdedness_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxCongestion = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Crowd%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균혼잡도_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Crowdedness_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgCongestion = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Km%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("노선Km당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Km_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoKMPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Freq%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("운행횟수당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Frequency_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoOncePassenger = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Km_Freq%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("Km당운행횟수당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Km Frequency_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoKMOncePassenger = pColumn->Name();
+
+
+	//Transit line
+	strColumnName.Format(_T("BoardNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("BoardNet_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("순승차(인)_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardNet = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTransfere%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardTransfer = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardTotal = pColumn->Name();
+
+
+	strColumnName.Format(_T("AlightNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightNet = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightTransfer = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightTotal = pColumn->Name();
+
+
+	strColumnName.Format(_T("Passenger%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("구간 재차인원(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinePassenger = pColumn->Name();
+    
+	//Node
+	strColumnName.Format(_T("BoardNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusNetBorad = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusTransferBoard = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusSumBoard = pColumn->Name();
+
+
+	strColumnName.Format(_T("AlightNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusNetAlight = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusTransferAlight = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusSumAlight = pColumn->Name();
+
+	TxLogDebugEndMsg();
+
+}
+
+void KMultiModalMainDlg::AddWithMultiModalResultColumn( int nRunSeq, KIOColumns& rLinkColumnCollecion, KIOColumns& rODColumnCollection, KIOColumns& rLineColumnCollection, KIOColumns& rLineInfoColumnCollection, KIOColumns& rNodeColumnCollection,KIOColumns& rParameterODCollection, TAssignResultColumnName& a_oResultColumnName, CString a_strDescription )
+{
+	TxLogDebugStartMsg();
+	CString strErrMsg = _T("컬럼 추가에 실패하였습니다.");
+
+	rLinkColumnCollecion.Clear();
+	rODColumnCollection.Clear();
+	rLineColumnCollection.Clear();
+	rLineInfoColumnCollection.Clear();
+	rNodeColumnCollection.Clear();
+	rParameterODCollection.Clear();
+
+	KIOTables* pTableManger		 = m_pTarget->Tables();
+	KIOTable*  pLinkTable		 = pTableManger->FindTable(TABLE_LINK);
+	KIOTable*  pODTable			 = pTableManger->FindTable(TABLE_MODE_OD);
+	KIOTable*  pTransitTable	 = pTableManger->FindTable(TABLE_TRANSIT);
+	KIOTable*  pTransitNodeTable = pTableManger->FindTable(TABLE_TRANSITNODES);
+	KIOTable*  pNodeTable		 = pTableManger->FindTable(TABLE_NODE);
+	KIOTable*  pODParameterTable = pTableManger->FindTable(TABLE_PARAMETER_OD);
+
+	CString strRunSeq = _T("");
+	strRunSeq.Format(_T("(%d)"), nRunSeq);
+
+	CString strColumnName = _T("");
+	CString strDescription = _T("");
+
+	bool bUsedBus		= false;
+	bool bUsedSubway	= false;
+	bool bUsedBusSubway = false;
+	bool bUseExclusive  = false;
+
+	UsedBusSubway(bUsedBus, bUsedSubway, bUsedBusSubway, bUseExclusive);
+	KIOColumns modeColumnCollection;
+	GetInputModeColumns(modeColumnCollection);
+
+	//Link Table
+	strColumnName.Format(_T("AvgTime%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("통행시간(분)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average_Time_%s"), a_strDescription);
+	}
+	KIOColumn* pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLinkColumnCollecion.AddNewColumn(pColumn);
+	a_oResultColumnName.AverageTime = pColumn->Name();
+    
+	strColumnName.Format(_T("V/C%s"), strRunSeq);
+	strDescription.Format(_T("V/C_%s"), a_strDescription);
+	pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLinkColumnCollecion.AddNewColumn(pColumn);
+	a_oResultColumnName.VC = pColumn->Name();
+
+	strColumnName.Format(_T("TotVol%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총교통량(PCU)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("TotVol_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+
+	rLinkColumnCollecion.AddNewColumn(pColumn);
+	a_oResultColumnName.SumVolume = pColumn->Name();
+
+	strColumnName.Format(_T("Trip%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("대중교통 노선승객 통행량(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Trip_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLinkColumnCollecion.AddNewColumn(pColumn);
+	a_oResultColumnName.Trip = pColumn->Name();
+
+    //★ 
+    if (bUsedBus == true || bUsedBusSubway == true) {
+        strColumnName.Format(_T("BusInitVol%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("노선버스 교통량(PCU)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("BusInitVolume_%s"), a_strDescription);
+		}
+        pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+        if (pColumn == nullptr) {
+            ThrowException(strErrMsg);
+        }
+        rLinkColumnCollecion.AddNewColumn(pColumn);
+        a_oResultColumnName.BusInitialVolumn = pColumn->Name();
+    }	
+    
+	std::vector<CString> vecModeVolume;
+	for (int i = 0; i <modeColumnCollection.ColumnCount(); i++)
+	{
+		CString strColumnCaption = modeColumnCollection.GetColumn(i)->Caption();
+
+		strColumnName.Format(_T("%s%s"),strColumnCaption, strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("%s(PCU)_%s"),strColumnCaption, a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("%s_%s"),strColumnCaption, a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pLinkTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rLinkColumnCollecion.AddNewColumn(pColumn);
+		vecModeVolume.push_back(pColumn->Name());
+	}
+	a_oResultColumnName.ModeVolumn = vecModeVolume;
+    
+	//OD Talbe
+	if (bUsedBus == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("AvgBusTime%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스 평균통행시간(분)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("AverageBusTime_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAvgBusTime = pColumn->Name();
+	}
+
+	if(bUsedSubway == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("AvgSubwayTime%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("도시철도 평균통행시간(분)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("AverageSubwayTime_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAvgSubwayTime = pColumn->Name();
+	}
+
+	if(bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("AvgBus_SubwayTime%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스+도시철도 평균통행시간(분)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("AverageBus_SubwyaTime_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODAVgBusSubwayTime = pColumn->Name();
+	}
+
+	if (bUsedBus == true || bUsedBusSubway == true)
+	{
+		strColumnName.Format(_T("Bus0T%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스 직승 통행량_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Bus0Transfer_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn); 
+		a_oResultColumnName.ODBusDirect = pColumn->Name();
+
+
+		strColumnName.Format(_T("Bus1T%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스 1회 환승 통행량_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Bus1Transfer_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODBusOneTransfer = pColumn->Name();
+
+
+		strColumnName.Format(_T("Bus2T%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스 2회 환승 통행량_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Bus2Transfer_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODParameterTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rParameterODCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODBustwoTransfer = pColumn->Name();
+	}
+
+	//od Mode
+	if (false == bUsedBus && false == bUsedSubway && true == bUsedBusSubway)
+	{
+		strColumnName.Format(_T("Bus%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Bus_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODTable, strDescription);
+
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMBus = pColumn->Name();
+
+		strColumnName.Format(_T("Rail%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("도시철도(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("Rail_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMRail = pColumn->Name();
+
+		strColumnName.Format(_T("BusRail%s"), strRunSeq);
+		if (KmzSystem::GetLanguage()==KEMKorea) {
+			strDescription.Format(_T("버스+도시철도(통행)_%s"), a_strDescription);
+		}
+		else {
+			strDescription.Format(_T("BusRail_%s"), a_strDescription);
+		}
+		pColumn = CreateResultColumn(strColumnName, pODTable, strDescription);
+		if (pColumn == nullptr)
+		{
+			ThrowException(strErrMsg);
+		}
+		rODColumnCollection.AddNewColumn(pColumn);
+		a_oResultColumnName.ODMBusRail = pColumn->Name();
+	}
+
+	//Transit
+	strColumnName.Format(_T("Trip%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("대중교통 노선승객 통행량(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Trip_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Route_Len%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총 VKT(인·Km)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Route Length_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoTotalLength = pColumn->Name();
+
+	strColumnName.Format(_T("Route_Len_PT%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균 VKT(인·Km)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Route Length per Trip_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgLength = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Brd_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대승차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Board Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Brd_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균승차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Board Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvePassenger = pColumn->Name();
+
+	strColumnName.Format(_T("Max_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대재차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Passenger%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxSecond = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균재차인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgSecond = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Std_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대입석인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Standing Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxStanding = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Std_PSG%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균입석인원_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Standing Passenger_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgStanding = pColumn->Name();
+
+	strColumnName.Format(_T("Max_Crowd%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("최대혼잡도_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Max Crowdedness_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoMaxCongestion = pColumn->Name();
+
+	strColumnName.Format(_T("Avg_Crowd%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("평균혼잡도_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Average Crowdedness_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoAvgCongestion = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Km%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("노선Km당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Km_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoKMPassenger = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Freq%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("운행횟수당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Frequency_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoOncePassenger = pColumn->Name();
+
+	strColumnName.Format(_T("PSG_per_Km_Freq%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("Km당운행횟수당 평균이용객수_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger per Km Frequency_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineInfoColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinfoKMOncePassenger = pColumn->Name();
+
+	//Transit line
+	strColumnName.Format(_T("BoardNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+    
+	if (pColumn == nullptr) {
+		ThrowException(strErrMsg);
+	}
+
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardNet = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+	if (pColumn == nullptr) {
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardTransfer = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTotal_%s"), a_strDescription);
+	}
+
+	
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineBoardTotal = pColumn->Name();
+
+
+	strColumnName.Format(_T("AlightNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightNet = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightTransfer = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LineAlightTotal = pColumn->Name();
+
+	strColumnName.Format(_T("Passenger%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("구간 재차인원(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("Passenger_%s"), a_strDescription);
+	}
+
+	pColumn = CreateResultColumn(strColumnName, pTransitNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rLineColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.LinePassenger = pColumn->Name();
+
+	//Node
+	strColumnName.Format(_T("BoardNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusNetBorad = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusTransferBoard = pColumn->Name();
+
+	strColumnName.Format(_T("BoardTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총승차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("BoardTotal_%s"), a_strDescription);
+	}
+
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusSumBoard = pColumn->Name();
+    
+	strColumnName.Format(_T("AlightNet%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("순하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightNet_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusNetAlight = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTransfer%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("동일 수단간 환승하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTransfer_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusTransferAlight = pColumn->Name();
+
+	strColumnName.Format(_T("AlightTot%s"), strRunSeq);
+	if (KmzSystem::GetLanguage()==KEMKorea) {
+		strDescription.Format(_T("총하차(인)_%s"), a_strDescription);
+	}
+	else {
+		strDescription.Format(_T("AlightTotal_%s"), a_strDescription);
+	}
+	pColumn = CreateResultColumn(strColumnName, pNodeTable, strDescription);
+
+	if (pColumn == nullptr)
+	{
+		ThrowException(strErrMsg);
+	}
+	rNodeColumnCollection.AddNewColumn(pColumn);
+	a_oResultColumnName.NodeBusSumAlight = pColumn->Name();
+	
+	TxLogDebugEndMsg();
+}
+
+
+KIOColumn* KMultiModalMainDlg::CreateResultColumn( CString a_strColumnName, KIOTable* a_pTable, CString a_strDescription )
+{
+	const KIOColumns* pColumCollection = a_pTable->Columns();
+    
+	int nMaxDisplayCount(0);
+	int nCount = pColumCollection->ColumnCount();
+
+	if (0 == nCount)
+	{
+		nMaxDisplayCount = 1;
+	}
+	else
+	{
+		for (int i = 0; i < nCount; i++)
+		{
+			KIOColumn* pColumn = pColumCollection->GetColumn(i);
+			int nDisplayCount = pColumn->DisplayOrder();
+			if (nMaxDisplayCount < nDisplayCount)
+			{
+				nMaxDisplayCount = nDisplayCount;
+			}
+		}
+	}
+
+	KIOColumn oColumn; {
+        oColumn.Name(a_pTable->GetUsableColumnName());
+        oColumn.Caption(a_strColumnName);
+        oColumn.CodeType(KEMIOCodeTypeIsNothing);
+        oColumn.ColumnType(KEMIOColumnTypeUserDefine);
+        oColumn.DataType(KEMIODataTypeDouble);
+        oColumn.DisplayOrder(nMaxDisplayCount+1);
+        oColumn.ColumnInfo(a_strDescription);
+        oColumn.PrimaryKey(false);
+        oColumn.Visible(true);
+    }
+
+	KIOColumn* pColumn = a_pTable->AddColumn(oColumn);
+	return pColumn;
+}
+
+
+void KMultiModalMainDlg::GetInputModeColumns( KIOColumns& a_oModeColumnCollection )
+{
+	a_oModeColumnCollection.Clear();
+
+	std::list<KMultiModalInfo>:: iterator iter = m_lstMultiInfo.begin();
+	std::list<KMultiModalInfo>:: iterator end  = m_lstMultiInfo.end();
+
+	while (iter != end)
+	{
+		KMultiModalInfo oModalInfo = *iter;
+		if (oModalInfo.TransitHighwayType() == 0)
+		{ 
+			KIOColumn* pColumn = oModalInfo.ModeColumn();
+			if (pColumn != nullptr)
+			{
+				int nColumnIndex = a_oModeColumnCollection.AddNewColumn(pColumn);
+			}
+
+		}
+		++iter;
+	}
+}
+
+
+void KMultiModalMainDlg::UsedBusSubway( bool& a_bbus, bool& a_bSubway, bool& a_bBusSubway, bool& a_bExclusive )
+{
+	a_bbus			= false;
+	a_bSubway		= false;
+	a_bBusSubway	= false;
+	a_bExclusive    = true;
+
+	std::list<KMultiModalInfo>:: iterator iter = m_lstMultiInfo.begin();
+	std::list<KMultiModalInfo>:: iterator end  = m_lstMultiInfo.end();
+
+	while (iter != end)
+	{
+		KMultiModalInfo oModalInfo = *iter;
+		if (oModalInfo.TransitHighwayType() == 1) {
+			a_bbus = true;
+		}
+		else if (oModalInfo.TransitHighwayType() == 2)
+		{
+			a_bSubway = true;
+		}
+		else if (oModalInfo.TransitHighwayType()== 3)
+		{
+			a_bBusSubway = true;			
+		}
+
+        if (oModalInfo.TransitHighwayType() != 0) {
+            if (0 == oModalInfo.Exclusive()) {
+                a_bExclusive = false;
+            }
+        }
+
+		++iter;
+	}
+}
+
+
+void KMultiModalMainDlg::UpdateNodeFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rNodeColumnCollection )
+{
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable*		 pNodeTalbe	   = pIOTables->FindTable(TABLE_NODE);
+	int nColumnCount = rNodeColumnCollection.ColumnCount();
+	if (nColumnCount == 0)
+	{
+		ThrowException(_T("적용 컬럼 정보가 없습니다."));
+	}
+
+	CString strOutLinkFile = ConvertSavePath(_T("Out_Node.dat"));
+	std::ifstream ifs( strOutLinkFile, std::ios::binary );    
+
+	try
+	{
+		if (!ifs)
+		{
+			ThrowException(_T("File Not Found"));
+		}
+
+		
+		KIDKeyDoubleRecords records(nColumnCount);
+
+		while (!ifs.eof())
+		{
+			Integer nxNodeID(0);
+			double dNetBoardValue(0.0);
+			double dTransferBoardValue(0.0);
+			double dSumBoardValue(0.0);
+			double dNetAlightValue(0.0);
+			double dTransferAlightValue(0.0);
+			double dSumAlightValue(0.0);
+
+			CString strOut(_T(""));
+			int nIndex = 0;
+
+			ifs.read( reinterpret_cast<char*>(&nxNodeID), sizeof(Integer) );
+			KSDoubleRecord* pRecord = records.AddRecord(nxNodeID);
+			strOut.Format(_T("%I64d"), nxNodeID);
+
+			if (nxNodeID == 253125)
+			{
+				int a = 0;
+				a++;
+			}
+
+			ifs.read( reinterpret_cast<char*>(&dNetBoardValue), sizeof(double)); 
+			pRecord->SetAt(0, dNetBoardValue);
+			strOut.Format(_T("%f"), dNetBoardValue);
+			
+			ifs.read( reinterpret_cast<char*>(&dTransferBoardValue), sizeof(double)); 
+			pRecord->SetAt(1, dTransferBoardValue);
+			strOut.Format(_T("%f"), dTransferBoardValue);
+
+			ifs.read( reinterpret_cast<char*>(&dSumBoardValue), sizeof(double)); 
+			pRecord->SetAt(2, dSumBoardValue);
+
+			ifs.read( reinterpret_cast<char*>(&dNetAlightValue), sizeof(double)); 
+			pRecord->SetAt(3, dNetAlightValue);
+			strOut.Format(_T("%f"), dNetAlightValue);
+			
+
+			ifs.read( reinterpret_cast<char*>(&dTransferAlightValue), sizeof(double));
+			pRecord->SetAt(4, dTransferAlightValue);
+			strOut.Format(_T("%f"), dTransferAlightValue);
+
+			ifs.read( reinterpret_cast<char*>(&dSumAlightValue), sizeof(double));
+			pRecord->SetAt(5, dSumAlightValue);
+			strOut.Format(_T("%f"), dSumAlightValue);
+
+			if(ifs.eof())
+				break;
+		}
+		ifs.close();
+
+		KBulkDBase::BulkNodeUpdata(spDBaseConnection, pNodeTalbe, rNodeColumnCollection, records);
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+		ifs.close();
+		throw ex;
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+		ifs.close();
+		throw 1;
+	}
+}
+
+
+void KMultiModalMainDlg::UpdateWithOutLinkFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rLinkColumnCollection )
+{
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable*		 pLinkTalbe	   = pIOTables->FindTable(TABLE_LINK);
+	int nColumnCount = rLinkColumnCollection.ColumnCount();
+
+	if (nColumnCount == 0)
+	{
+		ThrowException(_T("적용 컬럼 정보가 없습니다."));
+	}
+
+	CString strOutLinkFile = ConvertSavePath(_T("out_link.dat"));
+	std::ifstream ifs( strOutLinkFile, std::ios::binary );    
+
+	try
+	{
+		if (!ifs)
+		{
+			ThrowException(_T("File Not Found"));
+		}
+
+		KIDKeyDoubleRecords records(nColumnCount);
+
+		while (!ifs.eof())
+		{
+			Integer nxLinkID(0);
+			double dValue(0);
+
+			int nIndex = 0;
+
+			ifs.read( reinterpret_cast<char*>(&nxLinkID), sizeof(Integer) );
+            if (ifs.eof())
+                break;
+
+			KSDoubleRecord* pRecord = records.AddRecord(nxLinkID);            
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //avgtime
+            if (ifs.eof())
+                break;
+			
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //vc
+            if (ifs.eof())
+                break;
+			
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //sumvolume
+            if (ifs.eof())
+                break;
+			
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //trip
+            if (ifs.eof())
+                break;
+
+			pRecord->SetAt(0,dValue);
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //bus_init
+			if(ifs.eof())
+				break;
+		}
+
+		ifs.close();
+		KBulkDBase::BulkLinkUpdate(spDBaseConnection, pLinkTalbe, rLinkColumnCollection, records);
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+
+void KMultiModalMainDlg::UpdateWithLinkFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rLinkColumnCollection )
+{
+	bool bUseBus		= false;
+	bool bUseSubway		= false;
+	bool bUseBusSubway	= false;
+	bool bUseExclusve   = false;
+	UsedBusSubway(bUseBus, bUseSubway, bUseBusSubway, bUseExclusve);
+    
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable*  pLinkTalbe = pIOTables->FindTable(TABLE_LINK);
+	int nColumnCount = rLinkColumnCollection.ColumnCount();
+
+	if (nColumnCount == 0)
+	{
+		ThrowException(_T("적용 컬럼 정보가 없습니다."));
+	}
+
+	CString strOutLinkFile = ConvertSavePath(_T("out_link.dat"));
+	std::ifstream ifs( strOutLinkFile, std::ios::binary );  
+
+	try
+	{
+		if (!ifs)
+		{
+			ThrowException(_T("File Not Found"));
+		}
+		 
+		KIDKeyDoubleRecords records(nColumnCount);
+
+		__int64 nxLinkID;
+		double dValue;
+
+		while (!ifs.eof())
+		{
+			int nIndex = 0;
+			ifs.read( reinterpret_cast<char*>(&nxLinkID), sizeof(Integer) );
+			KSDoubleRecord* pRecord = records.AddRecord(nxLinkID);
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Average_Time
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //V/C
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //SumVolumne
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			if (bUseBus == true || bUseBusSubway == true) {
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Bus_Initial_Volumne
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //trip
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			KIOColumns modeColumnCollection;
+			GetInputModeColumns(modeColumnCollection);
+
+			for (int i = 0; i < modeColumnCollection.ColumnCount(); i++) {
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); // 수단별 volume
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+
+			if(ifs.eof())
+				break;
+		}
+		ifs.close();
+
+		KBulkDBase::BulkLinkUpdate(spDBaseConnection, pLinkTalbe, rLinkColumnCollection, records);
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+void KMultiModalMainDlg::UpdateODFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rODColumnCollection )
+{
+	bool bUseBus		= false;
+	bool bUseSubway		= false;
+	bool bUseBusSubway	= false;
+	bool bUseExclusive	= false; 
+
+    //★ 이해가 ?? 
+	UsedBusSubway(bUseBus, bUseSubway, bUseBusSubway, bUseExclusive);
+
+	if (true == bUseExclusive) {
+		return;
+	}
+
+	KIOTables* pIOTables    = m_pTarget->Tables();
+	KIOTable*  pModeODTable = pIOTables->FindTable(TABLE_MODE_OD);
+	int nColumnCount = rODColumnCollection.ColumnCount();
+
+	if (nColumnCount == 0) {
+		return;
+	}
+
+	CString strOutLinkFile = ConvertSavePath(_T("out_ModeOd.dat"));
+	std::ifstream ifs(strOutLinkFile, std::ios::binary );  
+
+	try
+	{		  
+		if( !ifs )
+			ThrowException(_T("File Not Found"));
+
+		KSDoubleRecord* pRecord = new KSDoubleRecord(nColumnCount);
+		__int64 nxOZoneID, nxDZoneID;
+		double dValue;
+
+		KxBulkDbase oBulkDBase(spDBaseConnection, pModeODTable, &rODColumnCollection);
+		TxLogDebug(_T("import loop start!"));
+		while (!ifs.eof()) 
+		{
+			int nIndex = 0;
+
+			ifs.read( reinterpret_cast<char*>(&nxOZoneID), sizeof(Integer) );
+			ifs.read( reinterpret_cast<char*>(&nxDZoneID), sizeof(Integer) );
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //bus
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //rail
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //bus_rail
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			if(ifs.eof())
+				break;
+			oBulkDBase.ImportData(nxOZoneID, nxDZoneID, pRecord);
+		}
+		TxLogDebug(_T("import loop end!"));
+		oBulkDBase.ExecuteFullOuterJoin();
+		ifs.close();
+		delete pRecord;
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+
+void KMultiModalMainDlg::UpdateWithOutParaODFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rParaODColumnCollection )
+{
+	bool bUseBus		= false;
+	bool bUseSubway		= false;
+	bool bUseBusSubway	= false;
+	bool bUseExcluseve	= false; 
+
+	UsedBusSubway(bUseBus, bUseSubway, bUseBusSubway, bUseExcluseve);
+
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable*		 pParaODTable	   = pIOTables->FindTable(TABLE_PARAMETER_OD);
+	int nColumnCount = rParaODColumnCollection.ColumnCount();
+
+	if (nColumnCount == 0)
+	{
+		ThrowException(_T("적용 컬럼 정보가 없습니다."));
+	}
+	CString strOutLinkFile = ConvertSavePath(_T("out_od.dat"));
+	std::ifstream ifs(strOutLinkFile, std::ios::binary );  
+
+	try
+	{
+		  
+		if( !ifs )
+			ThrowException(_T("File Not Found"));
+		KSDoubleRecord* pRecord = new KSDoubleRecord(nColumnCount);
+		__int64 nxOZoneID, nxDZoneID;
+		double dValue;
+
+		KxBulkDbase oBulkDBase(spDBaseConnection, pParaODTable, &rParaODColumnCollection);
+		TxLogDebug(_T("import loop start!"));
+		while (!ifs.eof()) 
+		{
+			int nIndex = 0;
+
+			ifs.read( reinterpret_cast<char*>(&nxOZoneID), sizeof(Integer) );
+			ifs.read( reinterpret_cast<char*>(&nxDZoneID), sizeof(Integer) );
+			
+			if (bUseBus == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgBusTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			if (bUseSubway == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgSubwayTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			if (bUseBusSubway == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgBusSubwayTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //BusDirect
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Bus_OneTransfer
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Bus_TwoTransfer
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			if(ifs.eof())
+				break;
+			oBulkDBase.ImportData(nxOZoneID, nxDZoneID, pRecord);
+		}
+		ifs.close();
+
+		TxLogDebug(_T("import loop end!"));
+		oBulkDBase.ExecuteFullOuterJoin();
+
+		delete pRecord;
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+
+
+}
+
+
+void KMultiModalMainDlg::UpdateWithParaODFile2DB( KDBaseConPtr spDBaseConnection, KIOColumns& rParaODColumnCollection )
+{
+	bool bUseBus		= false;
+	bool bUseSubway		= false;
+	bool bUseBusSubway	= false;
+	bool bUseExcluseve	= false; 
+
+	UsedBusSubway(bUseBus, bUseSubway, bUseBusSubway, bUseExcluseve);
+
+	KIOTables* pIOTables = m_pTarget->Tables();
+	KIOTable*		 pParaODTable	   = pIOTables->FindTable(TABLE_PARAMETER_OD);
+	int nColumnCount = rParaODColumnCollection.ColumnCount();
+
+	if (nColumnCount == 0)
+	{
+		ThrowException(_T("적용 컬럼 정보가 없습니다."));
+	}
+
+	CString strOutLinkFile = ConvertSavePath(_T("out_od.dat"));
+	std::ifstream ifs(strOutLinkFile, std::ios::binary );    
+
+	try
+	{
+		
+		if( !ifs )
+			ThrowException(_T("File Not Found"));
+		KSDoubleRecord* pRecord = new KSDoubleRecord(nColumnCount);
+		__int64 nxOZoneID, nxDZoneID;
+		double dValue;
+
+		KxBulkDbase oBulkDBase(spDBaseConnection, pParaODTable, &rParaODColumnCollection);
+		TxLogDebug(_T("import loop start!"));
+		while (!ifs.eof()) 
+		{
+			int nIndex = 0;
+
+			ifs.read( reinterpret_cast<char*>(&nxOZoneID), sizeof(Integer) );
+			ifs.read( reinterpret_cast<char*>(&nxDZoneID), sizeof(Integer) );
+
+			if (bUseBus == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgBusTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			if (bUseSubway == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgSubwayTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			if (bUseBusSubway == true)
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //AvgBusSubwayTime
+				pRecord->SetAt(nIndex,dValue);
+				nIndex++;
+			}
+			else
+			{
+				ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double));
+			}
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //BusDirect
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Bus_OneTransfer
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			ifs.read( reinterpret_cast<char*>(&dValue), sizeof(double)); //Bus_TwoTransfer
+			pRecord->SetAt(nIndex,dValue);
+			nIndex++;
+
+			if(ifs.eof())
+				break;
+			oBulkDBase.ImportData(nxOZoneID, nxDZoneID, pRecord);
+
+		}
+		TxLogDebug(_T("import loop end!"));
+		oBulkDBase.ExecuteFullOuterJoin();
+		ifs.close();
+
+		delete pRecord;
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+
+void KMultiModalMainDlg::DeleteOverWriteAssignModel( KDBaseConPtr spDBaseConnection )
+{
+	int nRunSeq = m_oTMAOutputDesignInfo.TnRunSeq;
+	
+	CString strSQL = _T("");
+	
+	strSQL.Format(_T("Delete from assign_model where run_seq = %d"), nRunSeq);
+	
+	spDBaseConnection->ExecuteUpdate(strSQL);
+}
+
+
+void KMultiModalMainDlg::DeleteOverWriteColumn()
+{
+	TxLogDebug(_T("Delete OverWrite Column"));
+
+	try
+	{
+		KIOTable* pLinkTable	= m_pTarget->Tables()->FindTable(TABLE_LINK);
+
+		KIOTable* pModeTable	= m_pTarget->Tables()->FindTable(TABLE_MODE_OD);
+
+		KIOTable* pTransitinfo	= m_pTarget->Tables()->FindTable(TABLE_TRANSIT);
+
+		KIOTable* pTransitLine	= m_pTarget->Tables()->FindTable(TABLE_TRANSITNODES);
+
+		KIOTable* pNodeTable	= m_pTarget->Tables()->FindTable(TABLE_NODE);
+
+		KIOTable* pParameterTable = m_pTarget->Tables()->FindTable(TABLE_PARAMETER_OD);	
+
+		std::vector<CString> vecParse;
+		int nCount = 0;
+
+		TxLogDebug(_T("Delete 시작"));
+
+		//link
+		CString strAveTime = m_oTMAOutputDesignInfo.TstrAverageTime;
+		if (strAveTime != _T(""))
+		{
+			pLinkTable->RemoveColumn(strAveTime);
+		}
+		
+		CString strVC = m_oTMAOutputDesignInfo.TstrVC;
+		if (strVC != _T(""))
+		{
+			pLinkTable->RemoveColumn(strVC);
+		}
+		
+		CString strSumVolumn = m_oTMAOutputDesignInfo.TstrSumVolumn;
+		if (strSumVolumn != _T(""))
+		{
+			pLinkTable->RemoveColumn(strSumVolumn);
+		}
+		
+		CString strTrip = m_oTMAOutputDesignInfo.TstrTrip;
+		if (strTrip != _T(""))
+		{
+			pLinkTable->RemoveColumn(strTrip);
+		}
+		
+		vecParse.clear();
+		nCount = ParseStringArr(m_oTMAOutputDesignInfo.TstrModeVolume, vecParse);
+		for (int i = 0; i < nCount; i++)
+		{
+			CString strColumnName = vecParse[i];
+			pLinkTable->RemoveColumn(strColumnName);
+			
+		}
+		
+		vecParse.clear();
+		nCount = ParseStringArr(m_oTMAOutputDesignInfo.TstrVDFTime, vecParse);
+		for (int i = 0; i < nCount; i++)
+		{
+			CString strColumnName = vecParse[i];
+			pLinkTable->RemoveColumn(strColumnName);
+			
+		}
+
+		CString strAveTimeToll = m_oTMAOutputDesignInfo.TstrAVETimeToll;
+		if (strAveTimeToll != _T(""))
+		{
+			pLinkTable->RemoveColumn(strAveTimeToll);
+		}
+
+		vecParse.clear();
+		nCount = ParseStringArr(m_oTMAOutputDesignInfo.TstrVDFTimeToll, vecParse);
+		for (int i = 0; i < nCount; i++)
+		{
+			CString strColumnName = vecParse[i];
+			pLinkTable->RemoveColumn(strColumnName);
+			
+		}
+
+		CString strBusInit = m_oTMAOutputDesignInfo.TstrBusInitVolume;
+		if (strBusInit != _T(""))
+		{
+			pLinkTable->RemoveColumn(strBusInit);
+		}
+
+
+		//OD Paramter
+		CString strODAverageTime = m_oTMAOutputDesignInfo.TstrODAveTime;
+		if (strODAverageTime != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODAverageTime);
+		} 
+		
+		vecParse.clear();
+		nCount = ParseStringArr(m_oTMAOutputDesignInfo.TstrODVDFTime, vecParse);
+		for (int i = 0; i < nCount; i++)
+		{
+			CString strColumnName = vecParse[i];
+			pParameterTable->RemoveColumn(strColumnName);
+		}
+		
+		CString strODAveBus = m_oTMAOutputDesignInfo.TstrODAveBus;
+		if (strODAveBus != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODAveBus);
+		}
+		
+		CString strODAveSubway = m_oTMAOutputDesignInfo.TstrODAveSubway;
+		if (strODAveSubway != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODAveSubway);
+		}
+	
+		CString strODAveBusSubway = m_oTMAOutputDesignInfo.TstrODAveBusSubway;
+		if (strODAveBusSubway != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODAveBusSubway);
+		}
+		
+		CString strODBusDir = m_oTMAOutputDesignInfo.TstrODBusDirect;
+		if (strODBusDir != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODBusDir);
+		}
+			
+		CString strODBusOne = m_oTMAOutputDesignInfo.TstrODBusOneTrans;
+		if (strODBusOne != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODBusOne);
+		}
+	
+		CString strODBusTwo = m_oTMAOutputDesignInfo.TstrODBusTwoTrans;
+		if (strODBusTwo != _T(""))
+		{
+			pParameterTable->RemoveColumn(strODBusTwo);
+		}
+		
+		//Mode OD 
+		CString strODMBus = m_oTMAOutputDesignInfo.TstrODMBus;
+		if (strODMBus != _T(""))
+		{
+			pModeTable->RemoveColumn(strODMBus);
+		}
+
+		CString strODMRail = m_oTMAOutputDesignInfo.TstrODMRail;
+		if (strODMRail != _T(""))
+		{
+			pModeTable->RemoveColumn(strODMRail);
+		}
+
+		CString strODMBusRail = m_oTMAOutputDesignInfo.TstrODMBusRail;
+		if (strODMBusRail != _T(""))
+		{
+			pModeTable->RemoveColumn(strODMBusRail);
+		}
+
+		//line info
+
+		CString strLinfoPassenger = m_oTMAOutputDesignInfo.TstrLInfoPassengernum;
+		if (strLinfoPassenger != _T(""))
+		{
+			pTransitinfo->RemoveColumn(strLinfoPassenger);
+		}
+	
+		//line
+		
+		CString strLineBorad = m_oTMAOutputDesignInfo.TstrLineBoradNet;
+		if (strLineBorad != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineBorad);
+		}
+
+		CString strLineBoradTransfer = m_oTMAOutputDesignInfo.TstrLineBoradTransfer;
+		if (strLineBoradTransfer != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineBoradTransfer);
+		}
+
+		CString strLineBoradTotal = m_oTMAOutputDesignInfo.TstrLineBoradTotal;
+		if (strLineBoradTotal != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineBoradTotal);
+		}
+		
+		CString strLineAlight = m_oTMAOutputDesignInfo.TstrLineAlightNet;
+		if (strLineAlight != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineAlight);
+		}
+
+		CString strLineAlightTransfer = m_oTMAOutputDesignInfo.TstrLineAlightTransfer;
+		if (strLineAlightTransfer != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineAlightTransfer);
+		}
+
+		CString strLineAlightTotal = m_oTMAOutputDesignInfo.TstrLineAlightTotal;
+		if (strLineAlightTotal != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineAlightTotal);
+		}
+
+		CString strLineSecond = m_oTMAOutputDesignInfo.TstrLinePassenger;
+		if (strLineSecond != _T(""))
+		{
+			pTransitLine->RemoveColumn(strLineSecond);
+		}
+	
+		//node
+		CString strNodeBusNetBoard = m_oTMAOutputDesignInfo.TstrNodeBusNetBorad;
+		if (strNodeBusNetBoard != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusNetBoard);
+		}
+		
+		CString strNodeBusTransferBoard = m_oTMAOutputDesignInfo.TstrNodeBusTransferBoard;
+		if (strNodeBusTransferBoard != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusTransferBoard);
+		}
+		
+		CString strNodeBusSumBoard = m_oTMAOutputDesignInfo.TstrNodeBusSumBoard;
+		if (strNodeBusSumBoard != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusSumBoard);
+		}
+	
+		CString strNodeBusNetAlight = m_oTMAOutputDesignInfo.TstrNodeBusNetAlight;
+		if (strNodeBusNetAlight != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusNetAlight);
+		}
+	
+		CString strNodeBusTransferAlight = m_oTMAOutputDesignInfo.TstrNodeBusTransferAlight;
+		if (strNodeBusTransferAlight != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusTransferAlight);
+		}
+		
+		CString strNodeBusSumAlight = m_oTMAOutputDesignInfo.TstrNodeBusSumAlight;
+		if (strNodeBusSumAlight != _T(""))
+		{
+			pNodeTable->RemoveColumn(strNodeBusSumAlight);
+		}
+
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+		throw 1;
+	}
+	TxLogDebug(_T("Delete 완료"));
+}
+
+
+bool KMultiModalMainDlg::DeleteCreateColumn( KIOColumns& rLinkColumnCollecion, KIOColumns& rODColumnCollection, KIOColumns& rLineColumnCollection, KIOColumns& rLineInfoColumnCollection, KIOColumns& rNodeColumnCollection, KIOColumns& rParameterODCollection )
+{
+	TxLogDebugStartMsg();
+
+	int nLinkAddColumnCollections	= rLinkColumnCollecion.ColumnCount();
+	int nModeODAddColumnCollections = rODColumnCollection.ColumnCount();
+	int nLineInfoColumnCollenctions = rLineInfoColumnCollection.ColumnCount();
+	int nLineColumnCollenctions		= rLineColumnCollection.ColumnCount();
+	int nNodeColumnCollections		= rNodeColumnCollection.ColumnCount();
+	int nParameterColumnCollections = rParameterODCollection.ColumnCount();
+
+	if( 0 != nLinkAddColumnCollections ||  0 != nModeODAddColumnCollections || 0 != nLineInfoColumnCollenctions || 0 != nLineColumnCollenctions || 0 != nNodeColumnCollections || 0 != nParameterColumnCollections)
+	{
+		TxLogDebug(_T("Delete Added Column"));
+
+		KIOTable* pLinkTable = m_pTarget->Tables()->FindTable(TABLE_LINK);
+		for (int i = 0; i < nLinkAddColumnCollections; ++i)
+		{
+			pLinkTable->RemoveColumn(rLinkColumnCollecion.GetColumn(i)->Name());
+		}
+
+		KIOTable* pModeODTable = m_pTarget->Tables()->FindTable(TABLE_MODE_OD);
+		for (int i = 0; i < nModeODAddColumnCollections; ++i)
+		{
+			pModeODTable->RemoveColumn(rODColumnCollection.GetColumn(i)->Name());
+		}
+
+		KIOTable* pLineinfoTable = m_pTarget->Tables()->FindTable(TABLE_TRANSIT);
+		for (int i = 0; i < nLineInfoColumnCollenctions; ++i)
+		{
+			pLineinfoTable->RemoveColumn(rLineInfoColumnCollection.GetColumn(i)->Name());
+		}
+
+		KIOTable* pLineTable = m_pTarget->Tables()->FindTable(TABLE_TRANSITNODES);
+		for (int i = 0; i < nLineColumnCollenctions; ++i)
+		{
+			pLineTable->RemoveColumn(rLineColumnCollection.GetColumn(i)->Name());
+		}
+
+		KIOTable* pNodeTable = m_pTarget->Tables()->FindTable(TABLE_NODE);
+		for (int i = 0; i < nNodeColumnCollections; ++i)
+		{
+			pNodeTable->RemoveColumn(rNodeColumnCollection.GetColumn(i)->Name());
+		}
+
+		KIOTable* pParamterTable = m_pTarget->Tables()->FindTable(TABLE_PARAMETER_OD);
+		for (int i = 0; i < nParameterColumnCollections; ++i)
+		{
+			pParamterTable->RemoveColumn(rParameterODCollection.GetColumn(i)->Name());
+		}
+
+		return false;
+	}
+
+	TxLogDebugEndMsg();
+	return true;	
+}
+
+
+void KMultiModalMainDlg::DisplayOffExceptResult( KIOColumns& rLinkColumnCollection, KIOColumns& rODColumnCollection, KIOColumns& rTransitCollection, KIOColumns& rTransitLineCollection, KIOColumns& rNodeColumnCollection, KIOColumns& rParameterODCollection )
+{
+	return;
+
+	KIOTables* pIOTables		= m_pTarget->Tables();
+	KIOTable*        pLinkTable			= pIOTables->FindTable(TABLE_LINK);
+	KIOTable*        pODTable			= pIOTables->FindTable(TABLE_MODE_OD);
+	KIOTable*		 pTransitTable		= pIOTables->FindTable(TABLE_TRANSIT);
+	KIOTable*        pTransitLineTable	= pIOTables->FindTable(TABLE_TRANSITNODES);
+	KIOTable*		 pNodeTable			= pIOTables->FindTable(TABLE_NODE);
+
+	const KIOColumns* pLinkIOColumnCollection = pLinkTable->Columns();
+
+	int nColumnCount = pLinkIOColumnCollection->ColumnCount();
+
+	for (int i=0; i<nColumnCount; i++)
+	{
+		KIOColumn* pColumn = pLinkIOColumnCollection->GetColumn(i);
+		// Freeze 컬럼은 항상 Display On
+		if (pColumn->FreezeColumn() != true)
+		{
+			// Display Off 항목 중 현재 생성된 항목은 제외
+			if ( rLinkColumnCollection.GetColumnIndex(pColumn) < 0 )
+			{
+                KIOColumn oUpdateColumn = *pColumn;
+                oUpdateColumn.Visible(false);
+                pLinkTable->UpdateColumn(oUpdateColumn);
+			}
+		}
+	}
+
+	const KIOColumns* pODIOColumnCollection = pODTable->Columns();
+
+	nColumnCount = pODIOColumnCollection->ColumnCount();
+
+	for (int i=0; i<nColumnCount; i++)
+	{
+		KIOColumn* pColumn = pODIOColumnCollection->GetColumn(i);
+		// Freeze 컬럼은 항상 Display On
+		if (pColumn->FreezeColumn() != true)
+		{
+			// Display Off 항목 중 현재 생성된 항목은 제외
+			if ( rODColumnCollection.GetColumnIndex(pColumn) < 0 )
+			{
+                KIOColumn oUpdateColumn = *pColumn;
+                oUpdateColumn.Visible(false);
+				pODTable->UpdateColumn(oUpdateColumn);
+			}
+		}
+	}
+
+	const KIOColumns* pTransitIOColumnCollection = pTransitTable->Columns();
+
+	nColumnCount = pTransitIOColumnCollection->ColumnCount();
+
+	for (int i=0; i<nColumnCount; i++)
+	{
+		KIOColumn* pColumn = pTransitIOColumnCollection->GetColumn(i);
+		// Freeze 컬럼은 항상 Display On
+		if (pColumn->FreezeColumn() != true)
+		{
+			// Display Off 항목 중 현재 생성된 항목은 제외
+			if ( rTransitCollection.GetColumnIndex(pColumn) < 0 )
+			{
+                KIOColumn oUpdateColumn = *pColumn;
+                oUpdateColumn.Visible(false);
+				pTransitTable->UpdateColumn(*pColumn);
+			}
+		}
+	}
+
+	const KIOColumns* pTransitLineIOColumnCollection = pTransitLineTable->Columns();
+
+	nColumnCount = pTransitLineIOColumnCollection->ColumnCount();
+
+	for (int i=0; i<nColumnCount; i++)
+	{
+		KIOColumn* pColumn = pTransitLineIOColumnCollection->GetColumn(i);
+		// Freeze 컬럼은 항상 Display On
+		if (pColumn->FreezeColumn() != true)
+		{
+			// Display Off 항목 중 현재 생성된 항목은 제외
+			if ( rTransitLineCollection.GetColumnIndex(pColumn) < 0 )
+			{
+                KIOColumn oUpdateColumn = *pColumn;
+                oUpdateColumn.Visible(false);
+				pTransitLineTable->UpdateColumn(oUpdateColumn);
+			}
+		}
+	}
+    
+	const KIOColumns* pNodeIOColumnCollection = pNodeTable->Columns();
+
+	nColumnCount = pNodeIOColumnCollection->ColumnCount();
+
+	for (int i=0; i<nColumnCount; i++)
+	{
+		KIOColumn* pColumn = pNodeIOColumnCollection->GetColumn(i);
+		// Freeze 컬럼은 항상 Display On
+		if (pColumn->FreezeColumn() != true)
+		{
+			// Display Off 항목 중 현재 생성된 항목은 제외
+			if ( rNodeColumnCollection.GetColumnIndex(pColumn) < 0 )
+			{
+                KIOColumn oUpdateColumn = *pColumn;
+                oUpdateColumn.Visible(false);
+				pNodeTable->UpdateColumn(oUpdateColumn);
+			}
+		}
+	}
+}
+
+
+void KMultiModalMainDlg::DeleteAFolderFile( CString a_strLocation )
+{
+	CFileFind finder;
+	BOOL bContinue = TRUE;
+
+	if(a_strLocation.Right(1) != _T("\\"))
+		a_strLocation += _T("\\");
+
+	a_strLocation += _T("*.*");
+	bContinue = finder.FindFile(a_strLocation);
+	while(bContinue)
+	{
+		bContinue = finder.FindNextFile();
+		if(finder.IsDots()) // Ignore this item.
+		{
+			continue;
+		}
+		else if(finder.IsDirectory()) // Delete all sub item.
+		{
+			DeleteAFolderFile(finder.GetFilePath());
+			::RemoveDirectory((LPCTSTR)finder.GetFilePath());
+		}
+		else // Delete file.
+		{
+			::DeleteFile((LPCTSTR)finder.GetFilePath());
+		}
+	}
+
+}
+
+
+BOOL KMultiModalMainDlg::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
+{
+	try
+	{
+		int     nMsgCode = pCopyDataStruct->dwData;
+		CString strMsg((LPCTSTR)pCopyDataStruct->lpData);
+
+		m_nResultCode = nMsgCode;
+		AddStatusMessage(strMsg);
+
+		if (m_nResultCode == KLAUNCHER_USER_FORCE_STOP)
+			theApp.KillKlauncher();
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxExceptionPrint(ex);
+	}
+	catch (...)
+	{
+		TxLogDebugException();
+	}   
+
+	return KDialogEx::OnCopyData(pWnd, pCopyDataStruct);
+}
+
+
+void KMultiModalMainDlg::InitializationModelData()
+{
+	m_oTMAOutputDesignInfo.TbUseData = false;
+	InitButtonControl();
+
+	m_oBPRFnDlg.InitButtonContol();
+	m_dAnalysisTime  = 10;
+	m_nChkRunOption  = 0;
+	m_nOutterTAIteration = 20;
+	m_dOutterL2Norm = 100.0;
+	m_nUEIteration = 100;
+	m_dRelativeGap = 1e-012;
+	m_dScaleFactor = 0.5;
+	m_nScaleFactorCursor = 0;
+	m_nHighwayRelativeGapExp = 12;
+	m_pLinkTimeColumn = nullptr;
+	m_nUsingLInkTime = 1;
+}
+
+
+void KMultiModalMainDlg::UtilityFnCoefficient(std::vector<TMAFnCoefficient>& vecFnCofficient)
+{
+	vecFnCofficient.clear();
+
+    //★ Step 1 : KDBaseDefaultParaTransitRouteChoice - Loading
+	try
+	{
+		//★ Highway(Bus) Transit
+		std::map<int, TMAFnCoefficient> mapBusFnVarInfo; {
+            KDBaseDefaultParaTransitRouteChoice::LoadDefaultTransitRouteChoiceParaBus(mapBusFnVarInfo);
+        }
+
+        if (true /*Bus*/) {
+		    auto iterBusUser   = mapBusFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+		    auto iterBusSystem = mapBusFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+		    auto endBus	       = mapBusFnVarInfo.end();
+
+		    TMAFnCoefficient oHighwayFnCoffInfo = {3 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+		    if (iterBusUser != endBus) {
+			    oHighwayFnCoffInfo = iterBusUser->second;
+		    }
+		    else if (iterBusSystem != endBus) {
+			    oHighwayFnCoffInfo	= iterBusSystem->second;			
+		    }
+
+            //★ 변경
+            oHighwayFnCoffInfo.TnMode = TRANSIT_TYPE_BUS;
+		    vecFnCofficient.push_back(oHighwayFnCoffInfo);
+        }
+
+		//★ Rail Transit
+		std::map<int, TMAFnCoefficient> mapRailFnVarInfo; {
+            KDBaseDefaultParaTransitRouteChoice::LoadDefaultTransitRouteChoiceParaRail(mapRailFnVarInfo);
+        }
+		if (true /*Rail*/) {
+            auto iterRailUser	= mapRailFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+            auto iterRailSystem	= mapRailFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+            auto endRail		= mapRailFnVarInfo.end();
+
+            TMAFnCoefficient oSubwayTFnCoffInfo			 = {4 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+            if (iterRailUser != endRail) {
+                oSubwayTFnCoffInfo = iterRailUser->second;
+            }
+            else if (iterRailSystem != endRail) {
+                oSubwayTFnCoffInfo	= iterRailSystem->second;
+            }
+
+            oSubwayTFnCoffInfo.TnMode = TRANSIT_TYPE_SUBWAY;
+            vecFnCofficient.push_back(oSubwayTFnCoffInfo);
+        }		
+
+		//★ Composite
+		std::map<int, TMAFnCoefficient> mapCompFnVarInfo; {
+            KDBaseDefaultParaTransitRouteChoice::LoadDefaultTransitRouteChoiceParaComposite(mapCompFnVarInfo);
+        }
+		
+        if (true) {
+            auto iterCompUser	= mapCompFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+            auto iterCompSystem	= mapCompFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+            auto endComp		= mapCompFnVarInfo.end();
+
+            TMAFnCoefficient oBusSubwyaSubwayTFnCoffInfo  = {5 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+            if (iterCompUser != endComp)
+            {
+                oBusSubwyaSubwayTFnCoffInfo = iterCompUser->second;
+                oBusSubwyaSubwayTFnCoffInfo.TnMode = 5;
+            }
+            else if (iterCompSystem != endComp)
+            {
+                oBusSubwyaSubwayTFnCoffInfo	= iterCompSystem->second;
+                oBusSubwyaSubwayTFnCoffInfo.TnMode = 5;
+            }
+            vecFnCofficient.push_back(oBusSubwyaSubwayTFnCoffInfo);
+        }
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+
+    //★ Step 2 : KDBaseDefaultParaMultimodalModeChoice Loading
+    try
+    {
+        //★ Highway(Bus) Transit
+        std::map<int, TMAFnCoefficient> mapBusFnVarInfo; {
+            KDBaseDefaultParaMultimodalModeChoice::LoadDefaultTransitRouteChoiceParaBus(mapBusFnVarInfo);
+        }
+
+        if (true /*Bus*/) {
+            auto iterBusUser   = mapBusFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+            auto iterBusSystem = mapBusFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+            auto endBus	       = mapBusFnVarInfo.end();
+
+            TMAFnCoefficient oHighwayFnCoffInfo = {3 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+            if (iterBusUser != endBus) {
+                oHighwayFnCoffInfo = iterBusUser->second;
+            }
+            else if (iterBusSystem != endBus) {
+                oHighwayFnCoffInfo	= iterBusSystem->second;			
+            }
+
+            //★ 변경
+            oHighwayFnCoffInfo.TnMode = TRANSIT_TYPE_BUS;
+            vecFnCofficient.push_back(oHighwayFnCoffInfo);
+        }
+
+        //★ Rail Transit
+        std::map<int, TMAFnCoefficient> mapRailFnVarInfo; {
+            KDBaseDefaultParaMultimodalModeChoice::LoadDefaultTransitRouteChoiceParaRail(mapRailFnVarInfo);
+        }
+        if (true /*Rail*/) {
+            auto iterRailUser	= mapRailFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+            auto iterRailSystem	= mapRailFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+            auto endRail		= mapRailFnVarInfo.end();
+
+            TMAFnCoefficient oSubwayTFnCoffInfo			 = {4 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+            if (iterRailUser != endRail) {
+                oSubwayTFnCoffInfo = iterRailUser->second;
+            }
+            else if (iterRailSystem != endRail) {
+                oSubwayTFnCoffInfo	= iterRailSystem->second;
+            }
+
+            oSubwayTFnCoffInfo.TnMode = TRANSIT_TYPE_SUBWAY;
+            vecFnCofficient.push_back(oSubwayTFnCoffInfo);
+        }		
+
+        //★ Composite
+        std::map<int, TMAFnCoefficient> mapCompFnVarInfo; {
+            KDBaseDefaultParaMultimodalModeChoice::LoadDefaultTransitRouteChoiceParaComposite(mapCompFnVarInfo);
+        }
+
+        if (true) {
+            auto iterCompUser	= mapCompFnVarInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+            auto iterCompSystem	= mapCompFnVarInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+            auto endComp		= mapCompFnVarInfo.end();
+
+            TMAFnCoefficient oBusSubwyaSubwayTFnCoffInfo  = {5 , -0.02139, -0.006191, -0.006191, -0.02139, -0.02139, -2.74639, -0.00088, 0.006457};
+            if (iterCompUser != endComp)
+            {
+                oBusSubwyaSubwayTFnCoffInfo = iterCompUser->second;
+                oBusSubwyaSubwayTFnCoffInfo.TnMode = 5;
+            }
+            else if (iterCompSystem != endComp)
+            {
+                oBusSubwyaSubwayTFnCoffInfo	= iterCompSystem->second;
+                oBusSubwyaSubwayTFnCoffInfo.TnMode = 5;
+            }
+            vecFnCofficient.push_back(oBusSubwyaSubwayTFnCoffInfo);
+        }
+    }
+    catch (KExceptionPtr ex)
+    {
+        TxLogDebug(ex->GetErrorMessage());
+    }
+    catch(...)
+    {
+        TxLogDebugException();
+    }
+}
+
+bool KMultiModalMainDlg::FindLogFile()
+{
+	CFileFind   cFileFinder;
+	CString strFileName = ConvertSavePath(ASSIGN_LOGFILE_NAME);
+	if(FALSE == cFileFinder.FindFile(strFileName) )
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+void KMultiModalMainDlg::TransitInfoSetting(TMATransitOptionsBaseInfo& oOptionInfo)
+{
+    //★ meu 값은 항상 KDBaseDefaultParaMultimodalModeChoice 에서 가져온다.
+    LoadMeuSetting(oOptionInfo);
+
+    //★ Boarding Time, Dwell Time 값은 KDBaseDefaultParaTransitRouteChoice에서 가져온다.
+	try
+	{
+		std::map<int, KTransitRouteChoiceSetting> mapModeChoiceSetting;
+		KDBaseDefaultParaTransitRouteChoice::LoadDefaultTransitRouteChoiceSetting(mapModeChoiceSetting);
+
+		auto findUser	 = mapModeChoiceSetting.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+		auto findSystem	 = mapModeChoiceSetting.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+		auto findend	 = mapModeChoiceSetting.end();
+
+		if(findUser != findend)
+		{
+			KTransitRouteChoiceSetting& oInfo = findUser->second; {
+                oOptionInfo.TdDWTimeInBus	 = oInfo.dBoardingTime;
+                oOptionInfo.TdDWTimeInRail	 = oInfo.dDwellTime;
+            }			
+		}
+		else if (findSystem != findend) {
+            KTransitRouteChoiceSetting& oInfo = findSystem->second; {
+                oOptionInfo.TdDWTimeInBus	 = oInfo.dBoardingTime;
+                oOptionInfo.TdDWTimeInRail	 = oInfo.dDwellTime;
+            }	
+		}
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+}
+
+void KMultiModalMainDlg::LoadMeuSetting(TMATransitOptionsBaseInfo& oOptionInfo)
+{
+	try
+	{
+		std::map<int, KModeChoiceSetting> mapModeChoiceSetting;
+		KDBaseDefaultParaMultimodalModeChoice::LoadDefaultModeChoiceSetting(mapModeChoiceSetting);
+
+		AutoType findUser		= mapModeChoiceSetting.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+		AutoType findSystem		= mapModeChoiceSetting.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+		AutoType findend		= mapModeChoiceSetting.end();
+		if(findUser != findend)
+		{
+			KModeChoiceSetting oInfo = findUser->second; {
+                oOptionInfo.TdMEU = oInfo.dMEU;
+            }			
+		}
+		else if (findSystem != findend)
+		{
+			KModeChoiceSetting oInfo = findSystem->second; {
+                oOptionInfo.TdMEU = oInfo.dMEU;
+            }			
+		}
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+}
+
+void KMultiModalMainDlg::WatingVDFSetting()
+{
+	try
+	{
+		std::map<int, KPathGenerateInvehicle > mapWatingVDFInfo;
+		KDBaseDefaultParaPathGenerateConstraint::LoadDefaultPathGenerateInvehicle(mapWatingVDFInfo);
+
+		AutoType findUser		= mapWatingVDFInfo.find(KDefaultParameterMasterCode::USER_MASETER_CODE);
+		AutoType findSystem		= mapWatingVDFInfo.find(KDefaultParameterMasterCode::SYSTEM_MASTER_CODE);
+		AutoType findend		= mapWatingVDFInfo.end();
+
+		if (findUser != findend)
+		{
+			KPathGenerateInvehicle oInfo = findUser->second;
+			m_oOptionBaseInfo.TdAlpha = oInfo.dAlpha;
+			m_oOptionBaseInfo.TdBeta  = oInfo.dBeta;
+		}
+		else if (findSystem != findend)
+		{
+			KPathGenerateInvehicle oInfo = findSystem->second;
+			m_oOptionBaseInfo.TdAlpha = oInfo.dAlpha;
+			m_oOptionBaseInfo.TdBeta  = oInfo.dBeta;
+		}
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxLogDebug(ex->GetErrorMessage());
+	}
+	catch(...)
+	{
+		TxLogDebugException();
+	}
+}

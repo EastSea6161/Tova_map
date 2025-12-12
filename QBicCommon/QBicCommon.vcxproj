@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Unicode Debug|Win32">
+      <Configuration>Unicode Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Debug|x64">
+      <Configuration>Unicode Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Release|Win32">
+      <Configuration>Unicode Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Unicode Release|x64">
+      <Configuration>Unicode Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{76690305-B1E8-43C4-B56F-5DC00F2852BC}</ProjectGuid>
+    <RootNamespace>QBicCommon</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
+    <ProjectName>QBicCommon</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='릴리즈|Win32'">
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='릴리즈|x64'">
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">..\..\Build\$(Configuration)($(PlatformName))\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">..\..\.obj\$(Configuration)($(PlatformName))\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" />
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">$(ProjectName)UD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">$(ProjectName)UD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">$(ProjectName)U</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">$(ProjectName)U</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
+    <IncludePath>$(BoostLib)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">
+    <IncludePath>$(BoostLib)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <IncludePath>$(BoostLib)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <IncludePath>$(BoostLib)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BoostLib)\lib\$(PlatformToolset)\$(PlatformName);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/Zm512</AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0412</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>..\..\Build\common\libs($(PlatformName))\$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WIN64;_WINDOWS;_DEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <AdditionalOptions>/Zm500 </AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0412</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>..\..\Build\common\libs($(PlatformName))\$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/Zm512</AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0412</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\..\Build\common\libs($(PlatformName))\$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_WIN64;_WINDOWS;NDEBUG;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <AdditionalOptions>/Zm500</AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0412</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>..\..\Build\common\libs($(PlatformName))\$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AdoConnection.cpp" />
+    <ClCompile Include="AdoPreparedStatement.cpp" />
+    <ClCompile Include="AdoResultSet.cpp" />
+    <ClCompile Include="CodeGroup.cpp" />
+    <ClCompile Include="CodeManager.cpp" />
+    <ClCompile Include="ColorRangeGen.cpp" />
+    <ClCompile Include="CString2MBString.cpp" />
+    <ClCompile Include="LinkBaseShortPath.cpp" />
+    <ClCompile Include="QBicDevideData.cpp" />
+    <ClCompile Include="IOColumn.cpp" />
+    <ClCompile Include="IOColumns.cpp" />
+    <ClCompile Include="IODynamicrecordset.cpp" />
+    <ClCompile Include="IOItem.cpp" />
+    <ClCompile Include="IOQueryBuilder.cpp" />
+    <ClCompile Include="IORecordset.cpp" />
+    <ClCompile Include="IORow.cpp" />
+    <ClCompile Include="IORowCollection.cpp" />
+    <ClCompile Include="IOStaticRecordset.cpp" />
+    <ClCompile Include="IOTable.cpp" />
+    <ClCompile Include="IOTables.cpp" />
+    <ClCompile Include="QBicBinary.cpp" />
+    <ClCompile Include="QBicComFunction.cpp" />
+    <ClCompile Include="QBicFile.cpp" />
+    <ClCompile Include="QBicFileIni.cpp" />
+    <ClCompile Include="QBicFlashIni.cpp" />
+    <ClCompile Include="QBicIPAddress.cpp" />
+    <ClCompile Include="QBicMd5.cpp" />
+    <ClCompile Include="NodeBaseShortPath.cpp" />
+    <ClCompile Include="QBicTime.cpp" />
+    <ClCompile Include="QBicDir.cpp" />
+    <ClCompile Include="QBicStringFormat.cpp" />
+    <ClCompile Include="QBicTxtReader.cpp" />
+    <ClCompile Include="QBicTxtWriter.cpp" />
+    <ClCompile Include="QBicWindowSystem.cpp" />
+    <ClCompile Include="QBicWinOsVersion.cpp" />
+    <ClCompile Include="SQLiteConnection.cpp" />
+    <ClCompile Include="DevideDataInterval.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="MunsellColor.cpp" />
+    <ClCompile Include="ParseString.cpp" />
+    <ClCompile Include="QBicCommonTest.cpp" />
+    <ClCompile Include="QBicLogger.cpp" />
+    <ClCompile Include="QBicStringChecker.cpp" />
+    <ClCompile Include="SqliteConnector.cpp" />
+    <ClCompile Include="SQLitePreparedStatement.cpp" />
+    <ClCompile Include="SQLiteResultSet.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Unicode Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="QBicCommon.cpp" />
+    <ClCompile Include="StdioFileEx.cpp" />
+    <ClCompile Include="TableSubject.cpp" />
+    <ClCompile Include="TableOwner.cpp" />
+    <ClCompile Include="TxLogger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QBicCommon.def" />
+    <None Include="res\QBicCommon.rc2" />
+    <None Include="ReadMe.txt" />
+    <None Include="경로탐색설명.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AdoConnection.h" />
+    <ClInclude Include="AdoPreparedStatement.h" />
+    <ClInclude Include="AdoResultSet.h" />
+    <ClInclude Include="CodeGroup.h" />
+    <ClInclude Include="CodeManager.h" />
+    <ClInclude Include="ColorRangeGen.h" />
+    <ClInclude Include="CString2MBString.h" />
+    <ClInclude Include="DBaseConnection.h" />
+    <ClInclude Include="LinkBaseShortPath.h" />
+    <ClInclude Include="QBicDevideData.h" />
+    <ClInclude Include="IncludeAdo.h" />
+    <ClInclude Include="IOColumn.h" />
+    <ClInclude Include="IOColumns.h" />
+    <ClInclude Include="IOCommons.h" />
+    <ClInclude Include="IODynamicrecordset.h" />
+    <ClInclude Include="IOItem.h" />
+    <ClInclude Include="IOQueryBuilder.h" />
+    <ClInclude Include="IORecordset.h" />
+    <ClInclude Include="IORow.h" />
+    <ClInclude Include="IORowCollection.h" />
+    <ClInclude Include="IOStaticRecordset.h" />
+    <ClInclude Include="IOTable.h" />
+    <ClInclude Include="IOTables.h" />
+    <ClInclude Include="QBicBinary.h" />
+    <ClInclude Include="QBicComFunction.h" />
+    <ClInclude Include="QBicFormat.h" />
+    <ClInclude Include="QBicFile.h" />
+    <ClInclude Include="QBicFileIni.h" />
+    <ClInclude Include="QBicFlashIni.h" />
+    <ClInclude Include="QBicIPAddress.h" />
+    <ClInclude Include="QBicMd5.h" />
+    <ClInclude Include="NodeBaseShortPath.h" />
+    <ClInclude Include="QBicTextEncoding.h" />
+    <ClInclude Include="QBicTime.h" />
+    <ClInclude Include="QBicDir.h" />
+    <ClInclude Include="QBicSpeed.h" />
+    <ClInclude Include="QBicStringFormat.h" />
+    <ClInclude Include="QBicTxtReader.h" />
+    <ClInclude Include="QBicTxtWriter.h" />
+    <ClInclude Include="QBicWindowSystem.h" />
+    <ClInclude Include="QBicWinOsVersion.h" />
+    <ClInclude Include="ShortestPathInfo.h" />
+    <ClInclude Include="SQLitePreparedStatement.h" />
+    <ClInclude Include="SQLiteResultSet.h" />
+    <ClInclude Include="TableObserver.h" />
+    <ClInclude Include="QBicCommonDefine.h" />
+    <ClInclude Include="SQLiteConnection.h" />
+    <ClInclude Include="DevideDataInterval.h" />
+    <ClInclude Include="ExceptionDefine.h" />
+    <ClInclude Include="IncludeQBicCommon.h" />
+    <ClInclude Include="IncludeSqlite.h" />
+    <ClInclude Include="KException.h" />
+    <ClInclude Include="KExceptionMap.h" />
+    <ClInclude Include="KExceptionSqlite.h" />
+    <ClInclude Include="MunsellColor.h" />
+    <ClInclude Include="ParseString.h" />
+    <ClInclude Include="PreparedStatement.h" />
+    <ClInclude Include="QBicCommonTest.h" />
+    <ClInclude Include="QBicLogger.h" />
+    <ClInclude Include="QBicStringChecker.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResultSet.h" />
+    <ClInclude Include="SqliteConnector.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StdioFileEx.h" />
+    <ClInclude Include="TableSubject.h" />
+    <ClInclude Include="TableOwner.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TxLogger.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QBicCommon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QBicExtStaticCLib\QBicExtStaticCLib.vcxproj">
+      <Project>{f4c0d998-7d51-4ce6-816a-a1de8b7801dc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\QBicExtStaticCppLib\QBicExtStaticCppLib.vcxproj">
+      <Project>{14fc6bf5-8a7e-44c1-b87f-1409bc79695a}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="QBicCommon.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

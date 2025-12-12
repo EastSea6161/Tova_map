@@ -1,0 +1,147 @@
+#pragma once
+
+namespace KDefaultParaTable
+{
+	extern const TCHAR* TABLE_DEFAULT_ACCESS_CLASSINFO;
+	extern const TCHAR* TABLE_DEFAULT_ACCESS_CLASSINFO_SETTING;
+	extern const TCHAR* TABLE_DEFAULT_PATH_GENERATE_CONSTRAINT;
+	extern const TCHAR* TABLE_DEFAULT_PATH_GENERATE_INVEHICLE;
+	extern const TCHAR* TABLE_DEFAULT_MULTIMODAL_PATH_GENERATION;
+	extern const TCHAR* TABLE_DEFAULT_MULTIMODAL_MODECHOICE_PARA;
+	extern const TCHAR* TABLE_DEFAULT_MULTIMODAL_MODECHOICE_SETTING;
+	extern const TCHAR* TABLE_DEFAULT_TRANSIT_ROUTECHOICE_PARA;
+	extern const TCHAR* TABLE_DEFAULT_TRANSIT_ROUTECHOICE_SETTING;
+	extern const TCHAR* TABLE_DEFAULT_HIGHWAY_ASSIGN_PCE_MODE;
+	extern const TCHAR* TABLE_DEFAULT_HIGHWAY_ASSIGN_OD_TIME;
+	extern const TCHAR* TABLE_DEFAULT_HIGHWAY_ASSIGN_TRAVELTIME;
+	extern const TCHAR* TABLE_DEFAULT_HIGHWAY_ASSIGN_VDF_PARA;
+	extern const TCHAR* TABLE_DEFAULT_HIGHWAY_ASSIGN_VDF_PARA_SET;
+	extern const TCHAR* TABLE_DEFAULT_FUNCTION;
+	extern const TCHAR* TABLE_DEFAULT_FUNCTION_GROUP;
+	extern const TCHAR* TABLE_DEFAULT_ACCESS_TERMINAL_SETTING;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_URBAN_PATH_INFO;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_URBAN_AUTO_COST;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_URBAN_TRANSIT_COST;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_REGIONAL_PATH_INFO;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_REGIONAL_AUTO_COST;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_REGIONAL_TERMINAL_TIME;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_REGIONAL_PATH_SETTING;
+	extern const TCHAR* TABLE_DEFAULT_INTERMODAL_PCE_MODE;
+	extern const TCHAR* TABLE_DEFAULT_REGIONAL_MODECHOICE_MEU;
+	extern const TCHAR* TABLE_DEFAULT_REGIONAL_MODECHOICE_PARA;
+	extern const TCHAR* TABLE_DEFAULT_TRIP_DESTRIBUTION;
+
+	extern const TCHAR* TABLE_DEFAULT_FMODECHOICE_VARIABLE;
+	extern const TCHAR* TABLE_DEFAULT_FGENERATIONPARA;
+	extern const TCHAR* TABLE_DEFAULT_LOGISTICPARA;
+	extern const TCHAR* TABLE_DEFAULT_POLICY_CONTANIER;
+
+	//화물차 전환
+	extern const TCHAR* TABLE_DEFAULT_AVGCAGOVOLUMNE;
+	extern const TCHAR* TABLE_DEFAULT_FORMULACAGOVOLUMNE;
+	extern const TCHAR* TABLE_DEFAULT_AVGCAGOCAPA;
+	extern const TCHAR* TABLE_DEFAULT_AVGEMPTYVEHICLE;
+	extern const TCHAR* TABLE_DEFAULT_CALTIMECOST;
+	extern const TCHAR* TABLE_DEFAUlT_VEHICEL_CONTAINER;
+
+	//ModeChoiceModel
+	extern const TCHAR* TABLE_DEFAULT_MODECHOICE_DEFINE_VALUE;
+	extern const TCHAR* TABLE_DEFAULT_MODECHOICE_DEFINEVAL_INFO;
+
+}
+
+namespace KAccessStationDefine
+{
+	extern const int ACCESS_DEFAULT_DISTANCE;
+	extern const int ACCESS_ALL_CLASS_COUNT;
+	extern const int ACCESS_INCREASE_TIME;
+	extern const int ACCESS_INIT_TIME;
+	extern const TCHAR ACCESS_CLASS_INIT_CHAR;
+}
+
+namespace KVariableNameDefine
+{
+	extern const int V_INVEHICLE_TIME;
+	extern const int V_WAITING_TIME;
+	extern const int V_TRANSFER_TIME;
+	extern const int V_ACCESSWALK_TIME;
+	extern const int V_EGRESSWALK_TIME;
+	extern const int V_NO_TRANSFER;
+	extern const int V_COST;
+	extern const int V_NO_STOP_ZONE;
+	extern const int V_DUMMY;
+
+	extern const TCHAR* V_INVEHICLE_TIME_NAME;
+	extern const TCHAR* V_WAITING_TIME_NAME;
+	extern const TCHAR* V_TRANSFER_TIME_NAME;
+	extern const TCHAR* V_ACCESSWALK_TIME_NAME;
+	extern const TCHAR* V_EGRESSWALK_TIME_NAME;
+	extern const TCHAR* V_NO_TRANSFER_NAME;
+	extern const TCHAR* V_COST_NAME;
+	extern const TCHAR* V_NO_STOP_ZONE_NAME;
+	extern const TCHAR* V_DUMMY_NAME;
+
+	extern const TCHAR* V_INVEHICLE_TIME_NAME_K;
+	extern const TCHAR* V_WAITING_TIME_NAME_K;
+	extern const TCHAR* V_TRANSFER_TIME_NAME_K;
+	extern const TCHAR* V_ACCESSWALK_TIME_NAME_K;
+	extern const TCHAR* V_EGRESSWALK_TIME_NAME_K;
+	extern const TCHAR* V_NO_TRANSFER_NAME_K;
+	extern const TCHAR* V_COST_NAME_K;
+	extern const TCHAR* V_NO_STOP_ZONE_NAME_K;
+	extern const TCHAR* V_DUMMY_NAME_K;
+}
+
+namespace KDefaultParameterMasterCode
+{
+	extern const int NEW_MASTER_CODE;
+	extern const int SYSTEM_MASTER_CODE;
+	extern const int USER_MASETER_CODE;
+}
+
+namespace KDefaultParaPCEOccupancy
+{
+	extern const double DEFAULT_OCCUPANCY_AUTO;
+	extern const double DEFAULT_OCCUPANCY_TAXI;
+	extern const double DEFAULT_OCCUPANCY_BUS;
+	extern const double DEFAULT_OCCUPANCY_OTHER;
+
+	extern const double DEFAULT_PCE_AUTO;
+	extern const double DEFAULT_PCE_TAXI;
+	extern const double DEFAULT_PCE_BUS;
+	extern const double DEFAULT_PCE_OTHER;
+
+	extern const int DEFAULT_AUTO;
+	extern const int DEFAULT_TAXI;
+	extern const int DEFAULT_BUS;
+}
+
+namespace KDefaultVehicleFormula
+{
+	extern const int SERVISE_BUSINESS_CODE;
+	extern const int SERVISE_NONBUSINESS_CODE;
+
+	extern const TCHAR* SERVISE_BUSINESS_NAME;
+	extern const TCHAR* SERVISE_NONBUSINESS_NAME;
+
+	extern const int VEHICLE_SMALL_CODE;
+	extern const int VEHICLE_MIDDLE_CODE;
+	extern const int VEHICLE_LARGE_CODE;
+
+	extern const TCHAR* VEHICLE_SMALL_NAME;
+	extern const TCHAR* VEHICLE_MIDDLE_NAME;
+	extern const TCHAR* VEHICEL_LARGE_NAME;
+}
+
+
+namespace KDefaultParaFolder
+{
+	extern const TCHAR* FOLDER_PARAMETER;
+}
+
+namespace KDefaultParaFile
+{
+	extern const TCHAR* FILE_GENERATION;
+	extern const TCHAR* FILE_GENERATION_TEMP;
+	extern const TCHAR* FILE_MODECHOICE_VAR;
+}

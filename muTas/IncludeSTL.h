@@ -1,0 +1,18 @@
+#pragma once
+
+#define _USE_MATH_DEFINES
+#include <cmath>
+// STL collections
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <vector>
+#include <string>
+#include <bitset>
+#include <tuple>
+
+namespace std 
+{
+    typedef basic_string<TCHAR> tstring;
+}

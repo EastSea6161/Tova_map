@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup Label="UserMarcos">
+		<RootPath>$(MSBuildThisFileDirectory)..\..\</RootPath>
+		
+        <ExLibRoot>$(RootPath)Library\External</ExLibRoot>
+  	    <BoostLib>$(ExLibRoot)\boost_1.87</BoostLib>
+  	    <LibxlLib>$(ExLibRoot)\libxl_3.6.5</LibxlLib>
+     	<XtremeToolkitProLib>$(ExLibRoot)\XtremeToolkitPro_19.1.0</XtremeToolkitProLib>
+		
+		<ProductPath>$(RootPath)Product</ProductPath>
+		<ResourcePath>$(ProductPath)\Resources</ResourcePath>
+    </PropertyGroup>
+	
+</Project>

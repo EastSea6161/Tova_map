@@ -1,0 +1,3406 @@
+// DlgImportLink.cpp : 구현 파일입니다.
+//
+
+#include "stdafx.h"
+#include "KmzApp.h"
+#include "DlgImportLink.h"
+#include "afxdialogex.h"
+#include "DefineNames.h"
+#include "..\QBicCommon\QBicTxtReader.h"
+#include "..\QBicCommon\QBicTxtWriter.h"
+#include "DBaseImportTable.h"
+#include "ImportCommon.h"
+#include "DefineSystemCodeDlg.h"
+#include "NetworkEditLog.h"
+#include "Target.h"
+#include "ImChampFrameWindow.h"
+
+#include "KDlgLinkZoneTypeEdit.h"
+
+enum
+{
+	_0_COLUMN_DEFFILED_NAME = 0,
+	_1_COLUMN_DEFFILED_TYPE,
+	//_2_COLUMN_DEFFILED_PK_YN,
+	_2_COLUMN_IMPORTFIELD_NAME
+};
+
+// KDlgImportLink 대화 상자입니다.
+
+IMPLEMENT_DYNAMIC(KDlgImportLink, KWhiteDlgEx)
+
+KDlgImportLink::KDlgImportLink(KTarget* a_pTarget, KIOTable* a_pTable, CWnd* pParent /*=NULL*/)
+	: KWhiteDlgEx(KDlgImportLink::IDD, pParent)
+	, m_pTarget(a_pTarget)
+	, m_pTable(a_pTable)
+	, m_strTableName(_T(""))
+	, m_nStartNum(1)
+	, m_bAutoGenerateKey(FALSE)
+{
+	if (nullptr != m_pTable) {
+		m_strTableName = m_pTable->Name();
+	}
+
+	CString strTargetLocation = m_pTarget->GetLocation();
+
+	m_strErrFile.Format   (_T("%s\\%s"), strTargetLocation, IMPORT_ERROR_FILE_NAME);
+	m_strMiddleFile.Format(_T("%s\\%s"), strTargetLocation, IMPORT_FILE_NAME);
+
+	m_mapSeparator.clear(); {
+		TSeparator oTSeparator;
+		oTSeparator.nCode = 0;
+		oTSeparator.tcSeparator = _T(',');
+		oTSeparator.strDispName = _T("Comma(,)");
+		m_mapSeparator.insert(std::make_pair(oTSeparator.nCode, oTSeparator));
+
+		oTSeparator.nCode = 1;
+		oTSeparator.tcSeparator = _T(';');
+		oTSeparator.strDispName = _T("Semicolon(;)");
+		m_mapSeparator.insert(std::make_pair(oTSeparator.nCode, oTSeparator));
+
+		oTSeparator.nCode = 2;
+		oTSeparator.tcSeparator = _T('|');
+		oTSeparator.strDispName = _T("Pipe(|)");
+		m_mapSeparator.insert(std::make_pair(oTSeparator.nCode, oTSeparator));
+
+		oTSeparator.nCode = 3;
+		oTSeparator.tcSeparator = _T('	');
+		oTSeparator.strDispName = _T("Tab");
+		m_mapSeparator.insert(std::make_pair(oTSeparator.nCode, oTSeparator));
+	}
+}
+
+KDlgImportLink::~KDlgImportLink()
+{
+}
+
+void KDlgImportLink::DoDataExchange(CDataExchange* pDX)
+{
+	KWhiteDlgEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_REPORT1,    m_ctrlReportColumn);
+	DDX_Control(pDX, IDC_REPORT2,    m_ctrlReportPreview);
+	DDX_Control(pDX, IDC_REPORT7,    m_ctrlReportSampleColumn);
+
+	DDX_Control(pDX, IDC_COMBO3,     m_cboBaseDataType);
+
+	DDX_Control(pDX, IDC_FILENAME2, m_editFile);
+	DDX_Control(pDX, IDC_COMBO5, m_cboSeparator);
+	DDX_Control(pDX, IDC_COMBO4, m_cboEncoding);
+}
+
+
+BEGIN_MESSAGE_MAP(KDlgImportLink, KWhiteDlgEx)
+	ON_BN_CLICKED(IDOK,       &KDlgImportLink::OnBnClickedOk)
+
+	ON_BN_CLICKED(IDC_CHECK3, &KDlgImportLink::OnBnClickedCheckAuto)
+	ON_CBN_SELCHANGE(IDC_COMBO3, &KDlgImportLink::OnSelchangeComboBaseDataType)
+
+	ON_NOTIFY(XTP_NM_REPORT_RECORDS_DROPPED,      IDC_REPORT1,     &KDlgImportLink::OnReportRecordsDropped)
+	ON_NOTIFY(XTP_NM_REPORT_DROP,                 IDC_REPORT7,     &KDlgImportLink::OnReportDropSampleColumn)
+	ON_BN_CLICKED(IDC_CHECK4, &KDlgImportLink::OnBnClickedCheckDefault)
+	ON_BN_CLICKED(IDCANCEL, &KDlgImportLink::OnBnClickedCancel)
+	ON_CONTROL_RANGE(BN_CLICKED,IDC_RADIO4, IDC_RADIO6, &KDlgImportLink::OnBnClickedRadioImportType)
+
+	ON_EN_CHANGE(IDC_FILENAME2, &KDlgImportLink::OnEnChangeFilename)
+	ON_CBN_SELCHANGE(IDC_COMBO4, &KDlgImportLink::OnCbnSelchangeCombo4)
+	ON_CBN_SELCHANGE(IDC_COMBO5, &KDlgImportLink::OnCbnSelchangeCombo5)
+	ON_BN_CLICKED(IDC_CHECK1, &KDlgImportLink::OnBnClickedCheck1)
+END_MESSAGE_MAP()
+
+
+// KDlgImportLink 메시지 처리기입니다.
+void KDlgImportLink::ResizeComponent()
+{
+	try 
+	{
+		SetResize(IDC_FILENAME2,    SZ_TOP_LEFT,	SZ_TOP_RIGHT);
+		SetResize(IDC_STATIC7,		SZ_TOP_LEFT,	SZ_TOP_RIGHT);
+
+		SetResize(IDC_STATIC1,		SZ_TOP_LEFT,	SZ_TOP_RIGHT);
+		SetResize(IDC_STATIC8,		SZ_TOP_LEFT,	SZ_TOP_RIGHT);
+
+		SetResize(IDC_REPORT1,	    SZ_TOP_LEFT,	CXTPResizePoint(.8f, .5));
+		SetResize(IDC_REPORT7,		CXTPResizePoint(.8f, 0),	SZ_MIDDLE_RIGHT);
+		SetResize(IDC_STATIC5,		SZ_MIDDLE_LEFT,	SZ_MIDDLE_RIGHT);
+
+		SetResize(IDC_STATIC3,		SZ_MIDDLE_LEFT,	SZ_MIDDLE_LEFT);
+
+		SetResize(IDC_REPORT2,		SZ_MIDDLE_LEFT,	SZ_BOTTOM_RIGHT);
+		SetResize(IDC_STATIC2,		SZ_BOTTOM_LEFT,	SZ_BOTTOM_RIGHT);
+
+		SetResize(IDC_STATIC_SEP,	SZ_BOTTOM_LEFT,	SZ_BOTTOM_LEFT);
+		SetResize(IDC_COMBO5,		SZ_BOTTOM_LEFT,	SZ_BOTTOM_LEFT);
+		SetResize(IDC_STATIC_ENC,	SZ_BOTTOM_LEFT,	SZ_BOTTOM_LEFT);
+		SetResize(IDC_COMBO4,		SZ_BOTTOM_LEFT,	SZ_BOTTOM_LEFT);
+		SetResize(IDC_CHECK1,		SZ_BOTTOM_LEFT,	SZ_BOTTOM_LEFT);
+		
+		SetResize(IDOK,				SZ_BOTTOM_RIGHT,SZ_BOTTOM_RIGHT);
+		SetResize(IDCANCEL,			SZ_BOTTOM_RIGHT,SZ_BOTTOM_RIGHT);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::InitComboBaseDataType()
+{
+	m_cboBaseDataType.ResetContent();
+
+	int nCurSel = m_cboBaseDataType.AddString(_T("NodeBase"));
+	m_cboBaseDataType.SetItemData(nCurSel, KEMBaseNode);
+	nCurSel     = m_cboBaseDataType.AddString(_T("LinkBase"));
+	m_cboBaseDataType.SetItemData(nCurSel, KEMBaseLink);
+
+	m_cboBaseDataType.SetCurSel(0);
+}
+
+void KDlgImportLink::InitBaseDataTypeUI()
+{
+	UpdateData(TRUE);
+
+	BOOL bShow = FALSE;
+
+	KEMImportType emImportType = GetSelectedImportType();
+
+	if(KEMImportInsert == emImportType) {
+		bShow = FALSE;
+	} else if (KEMImportUpdate == emImportType) {
+		bShow = TRUE;
+	} else if (KEMImportAdd == emImportType) {
+		bShow = FALSE;
+	}
+
+	GetDlgItem(IDC_STATIC_DATABASE)->ShowWindow(bShow);
+	GetDlgItem(IDC_COMBO3)->ShowWindow(bShow);
+}
+
+void KDlgImportLink::InitAutoGenerateUI( void )
+{
+	UpdateData(TRUE);
+
+	CString strDlgText  (_T(""));
+	BOOL    bShowEdit   (TRUE);
+	BOOL    bShowAuto   (TRUE);
+	BOOL    bEnableAuto (TRUE);
+
+	KEMImportType emImportType = GetSelectedImportType();
+
+	if(KEMImportInsert == emImportType) {
+		strDlgText.Format(_T("Auto Generate %s   From :"), _T("ID"));
+	} else if (KEMImportUpdate == emImportType) {
+		bShowEdit   = FALSE;
+		bEnableAuto = FALSE;
+		bShowAuto   = FALSE;
+		strDlgText.Format(_T("Auto Generate ID"));
+	} else if (KEMImportAdd == emImportType) {
+		bShowEdit = FALSE;
+		strDlgText.Format(_T("Auto Generate ID"));
+	}
+	strDlgText.Format(_T("Generate Link ID : from"));
+	if (KmzSystem::GetLanguage() == KEMKorea) {
+        strDlgText.Format(_T("ID 자동 생성 :"));
+    }
+
+	SetDlgItemText(IDC_CHECK3, strDlgText);
+	GetDlgItem(IDC_CHECK3)->EnableWindow(bEnableAuto);
+	GetDlgItem(IDC_CHECK3)->ShowWindow(bShowAuto);
+	GetDlgItem(IDC_EDIT1)->ShowWindow(bShowEdit);
+
+	if (TRUE == bEnableAuto) {
+		CheckDlgButton(IDC_CHECK3, BST_CHECKED);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+	} else {
+		CheckDlgButton(IDC_CHECK3, BST_UNCHECKED);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
+	}
+}
+
+KEMImportType KDlgImportLink::GetSelectedImportType()
+{
+	int nID = GetCheckedRadioButton(IDC_RADIO4, IDC_RADIO6);
+
+	KEMImportType emImportType;
+
+	if (IDC_RADIO4 == nID)
+		emImportType = KEMImportInsert;
+	else if (IDC_RADIO5 == nID)
+		emImportType = KEMImportUpdate;
+	else 
+		emImportType = KEMImportAdd;
+
+	return emImportType;
+}
+
+
+BOOL KDlgImportLink::OnInitDialog()
+{
+	KWhiteDlgEx::OnInitDialog();
+	KWhiteDlgEx::UseKeyEscEnter(true, true);
+
+	HICON hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_DLG_ICO) );
+	SetIcon( hIcon, TRUE );
+	SetIcon( hIcon, FALSE );
+
+ 	ResizeComponent();
+ 	CheckRadioButton(IDC_RADIO4, IDC_RADIO6, IDC_RADIO4);
+
+	InitComboSeparator();
+	InitComboEncoding();
+
+	if (true) { // 입력창 설정
+		TCHAR szFilter[] = _T("Txt Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+		m_editFile.Initialize( this, BES_XT_CHOOSEFILE );
+		m_editFile.SetDlgOpenFile( TRUE );
+		m_editFile.SetReadOnly( TRUE );
+		m_editFile.SetDlgTitle( _T("Select file") );
+		m_editFile.SetDlgFilter( szFilter );
+
+		m_editFile.SetDlgInitialDir(m_pTarget->GetLocation());
+	}
+ 
+	SetDlgItemInt(IDC_EDIT1, 1);
+	InitAutoGenerateUI();
+ 	InitBaseDataTypeUI();
+	InitComboBaseDataType();
+ 
+	QBicReportCtrlSetting::Default(m_ctrlReportColumn, TRUE, FALSE, FALSE);
+	QBicReportCtrlSetting::Default(m_ctrlReportSampleColumn, TRUE);
+	QBicReportCtrlSetting::Default(m_ctrlReportPreview, FALSE, FALSE, FALSE);
+
+	CheckDlgButton(IDC_CHECK4, BST_CHECKED);
+
+	InitializeSampleColumnReport();
+	InitializeColumnField();
+
+	m_ctrlReportColumn.EnableDragDrop      (_T("TestDragDrop"), xtpReportAllowDrop, xtpReportDropSelect);
+	m_ctrlReportSampleColumn.EnableDragDrop(_T("TestDragDrop"), xtpReportAllowDragCopy | xtpReportAllowDrop, xtpReportDropSelect);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
+}
+
+void KDlgImportLink::OnEnChangeFilename()
+{
+	UpdateData( TRUE );
+
+	CString strFile(_T("")); {
+		m_editFile.GetWindowText( strFile );
+		if (strFile.IsEmpty())
+			return;
+	}
+
+	// 디폴트 구분자 설정
+	CheckDefaultSeperator(strFile);
+
+	// 디폴트 인코딩 설정
+	int nEncoding = CheckEncoding(strFile);
+	if (KEMCSVEncodingUTF8 == nEncoding)
+		m_cboEncoding.SetCurSel(1);
+	else // 
+		m_cboEncoding.SetCurSel(0);
+
+	if (CheckImportHeader(strFile)) {
+		CheckDlgButton(IDC_CHECK1, BST_CHECKED);
+	} else {
+		CheckDlgButton(IDC_CHECK1, BST_UNCHECKED);
+	}
+
+	if( PriviewLoadCSV() ) {
+		InitializeColumnField();
+		UpdateColumnRecord();
+		InitializePreview();
+
+		ControlDefaultCheck();
+	} 
+}
+
+void KDlgImportLink::CheckDefaultSeperator(CString a_strFile)
+{
+	try
+	{
+		QBicTxtReader oReader; {
+			if (oReader.Open(a_strFile) == false) {
+				throw 1;
+			}
+		}
+
+		CString strLine(_T(""));
+		oReader.ReadLine(strLine);
+
+		int nSeparator(0);
+		int nMax = -9; // 하나씩 파싱을 해보고 파싱된 결과가 가장 많은 개수인 구분자를 디폴트 구분자로.. 
+
+		auto iter  = m_mapSeparator.begin();
+		auto itEnd = m_mapSeparator.end();
+
+		for (; iter != itEnd; ++iter) {
+			const int  &nCode       = iter->first;
+			TSeparator &oTSeparator = iter->second;
+
+			std::vector<CString> vecSelect = QBicSplit::Split(strLine, oTSeparator.tcSeparator);
+
+			int nSizeVec = (int)vecSelect.size();
+			if (nSizeVec > nMax) {
+				nMax = nSizeVec;
+				nSeparator = nCode;
+			}
+		}
+
+		m_cboSeparator.SetCurSel(nSeparator);
+
+		oReader.Close();
+	} catch (int& ex) {
+		CString strMsg(_T(""));
+		if (1 == ex)
+			strMsg = _T("Fail - Read TextFile");
+		else
+			strMsg.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strMsg);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	UpdateData(FALSE);
+}
+
+bool KDlgImportLink::CheckImportHeader(CString a_strFile)
+{
+	try
+	{
+		QBicTxtReader oReader; {
+			if (oReader.Open(a_strFile) == false) {
+				throw 1;
+			}
+		}
+
+		TCHAR tcSeparator; {
+			int nCurSel = m_cboSeparator.GetCurSel();
+			int nCode   = (int)m_cboSeparator.GetItemData(nCurSel);
+
+			auto itFind = m_mapSeparator.find(nCode);
+			if (itFind != m_mapSeparator.end()) {
+				TSeparator &oTSeparator = itFind->second;
+				tcSeparator = oTSeparator.tcSeparator;
+			}
+		}
+
+		std::vector<CString> vecSelect;
+		oReader.ReadLine(tcSeparator, vecSelect);
+		oReader.Close();
+
+		bool bFirstColumnHeader(false);
+		CString strSample = vecSelect[0]; // 한줄을 읽고, 맨앞 데이터 하나를 Sample로..
+		if (QBicStringChecker::IsNumeric(strSample)) { // 숫자라면, 일반 데이터
+			bFirstColumnHeader = false;
+		} else { // 문자라면, Header일 것이다.
+			bFirstColumnHeader = true;
+		}
+
+		return bFirstColumnHeader;
+
+	} catch (int& ex) {
+		CString strMsg(_T(""));
+		if (1 == ex)
+			strMsg = _T("Fail - Read TextFile");
+		else
+			strMsg.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strMsg);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	UpdateData(FALSE);
+
+	return false;
+}
+
+int KDlgImportLink::CheckEncoding(CString a_strFile, bool a_bAlarmErr)
+{
+	try
+	{
+		int nEncoding = KEMCSVEncodingUnknown; {
+			QBicTxtReader oReader;
+			nEncoding = oReader.GetTxtFileEncoding(a_strFile);
+
+			if (nEncoding != KEMCSVEncodingUTF8 && nEncoding != KEMCSVEncodingANSI)	
+				throw 9;
+		}
+
+		return nEncoding; // 성공
+	} catch (int& ex) {
+		CString strMsg(_T(""));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			if (1 == ex)
+				strMsg = _T("인코딩 인식에 실패하였습니다.");
+			else if (9 == ex)
+				strMsg = _T("ANSI와 UTF-8 인코딩 파일만 인식 가능합니다.");
+			else
+				strMsg.Format(_T("오류 : %d"), ex);
+		}
+		else {
+			if (1 == ex)
+				strMsg = _T("Encoding recognition failed.");
+			else if (9 == ex)
+				strMsg = _T("Only ANSI and UTF-8 encoded files are available.");
+			else
+				strMsg.Format(_T("Error : %d"), ex);
+		}
+
+		TxLogDebug((LPCTSTR)strMsg);
+		if (a_bAlarmErr)
+			AfxMessageBox(strMsg);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		if (a_bAlarmErr)
+			AfxMessageBox(ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+		if (a_bAlarmErr) {
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				AfxMessageBox(_T("인코딩 인식에 실패하였습니다."));
+			}
+			else {
+				AfxMessageBox(_T("Encoding recognition failed."));
+			}
+		}
+	}
+
+	return KEMCSVEncodingUnknown;
+}
+
+void KDlgImportLink::InitComboSeparator()
+{
+	try
+	{
+		m_cboSeparator.ResetContent();
+
+		auto iter  = m_mapSeparator.begin();
+		auto itEnd = m_mapSeparator.end();
+
+		for (; iter != itEnd; ++iter)
+		{
+			const int  &nCode       = iter->first;
+			TSeparator &oTSeparator = iter->second;
+
+			int nCur = m_cboSeparator.AddString(oTSeparator.strDispName);
+			m_cboSeparator.SetItemData(nCur, (DWORD_PTR)oTSeparator.nCode);
+		}
+
+		m_cboSeparator.SetCurSel(3);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::InitComboEncoding()
+{
+	try
+	{
+		m_cboEncoding.ResetContent();
+		int nCur = m_cboEncoding.AddString(_T("ANSI"));
+		m_cboEncoding.SetItemData(nCur, (DWORD_PTR)1);
+
+		nCur = m_cboEncoding.AddString(_T("UTF-8"));
+		m_cboEncoding.SetItemData(nCur, (DWORD_PTR)2);
+
+		m_cboEncoding.SetCurSel(0);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::InitializeColumnField( void )
+{
+	TxLogDebugStartMsg();
+
+	try 
+	{
+		m_ctrlReportColumn.ResetContent();
+		m_ctrlReportColumn.GetColumns()->Clear();
+		m_ctrlReportColumn.Populate();
+
+		// Field
+		CXTPReportColumn* pColumn = m_ctrlReportColumn.AddColumn( new CXTPReportColumn( _0_COLUMN_DEFFILED_NAME, _T("System Column"), 30 ) );
+		pColumn->GetEditOptions()->m_bAllowEdit = FALSE;
+		pColumn->SetHeaderAlignment(DT_CENTER);
+		pColumn->SetAlignment( DT_CENTER );
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("시스템 컬럼"));
+		}
+
+		// type
+		pColumn = m_ctrlReportColumn.AddColumn( new CXTPReportColumn( _1_COLUMN_DEFFILED_TYPE, _T("Type"), 16 ) );
+		pColumn->GetEditOptions()->m_bAllowEdit = FALSE;
+		pColumn->SetHeaderAlignment(DT_CENTER);
+		pColumn->SetAlignment( DT_CENTER );
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("데이터 유형"));
+		}
+
+		// Primary key
+// 		pColumn = m_ctrlReportColumn.AddColumn( new CXTPReportColumn( _2_COLUMN_DEFFILED_PK_YN, _T("Primary Key"), 25 ) );
+// 		pColumn->GetEditOptions()->m_bAllowEdit = FALSE;
+// 		pColumn->SetHeaderAlignment(DT_CENTER);
+// 		pColumn->SetAlignment( DT_CENTER );
+
+		// column
+		CXTPReportColumn* pImport = m_ctrlReportColumn.AddColumn( new CXTPReportColumn( _2_COLUMN_IMPORTFIELD_NAME, _T("File Column"), 33 ) );
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pImport->SetCaption(_T("파일 컬럼"));
+		}
+
+		m_ctrlReportSampleColumn.ResetContent();
+
+		/// csv 파일의 컬럼을 combo에 추가, 0 = NULL, 1~... = Column Name
+		if (m_ColumnRow.size() > 0) {
+			int nColumnIndex(0);
+
+			CString strNull(_T("Null"));
+			pImport->GetEditOptions()->AddConstraint( strNull, nColumnIndex);
+			UpdateReportDataSampleColumn(strNull, nColumnIndex);
+			nColumnIndex++; 
+
+			auto itColumnArray  = m_ColumnRow.begin();
+			auto itEnd          = m_ColumnRow.end();
+			for (; itColumnArray != itEnd; ++itColumnArray, nColumnIndex++) {
+				pImport->GetEditOptions()->AddConstraint( *itColumnArray, nColumnIndex );
+				UpdateReportDataSampleColumn(*itColumnArray, nColumnIndex);
+			}
+
+			m_ctrlReportSampleColumn.Populate();
+		}
+
+		pImport->SetHeaderAlignment(DT_CENTER);
+		pImport->SetAlignment( DT_CENTER );
+		pImport->GetEditOptions()->m_bAllowEdit = TRUE;
+		pImport->GetEditOptions()->m_bExpandOnSelect = TRUE;
+		pImport->GetEditOptions()->AddComboButton( TRUE );	
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::UpdateReportDataSampleColumn(CString a_strColName, int a_nIndex)
+{
+	try 
+	{
+		CXTPReportRecord*     pRecord = m_ctrlReportSampleColumn.AddRecord(new CXTPReportRecord);
+		CXTPReportRecordItem* pItem   = pRecord->AddItem(new CXTPReportRecordItemText(a_strColName));
+		pItem->SetAlignment(DT_CENTER);
+		pItem->SetItemData(a_nIndex);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::InitializeSampleColumnReport()
+{
+	try 
+	{
+		CXTPReportColumn* pColumn = m_ctrlReportSampleColumn.AddColumn( new CXTPReportColumn( 0, _T("Drag & Drop"), 100 ) );
+		pColumn->SetHeaderAlignment(DT_CENTER);
+		pColumn->SetSortable(FALSE);
+		pColumn->SetEditable(FALSE);
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			pColumn->SetCaption(_T("끌어 놓기"));
+		}
+
+		m_ctrlReportSampleColumn.Populate();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::UpdateColumnRecord( void )
+{
+	TxLogDebugStartMsg();
+	UpdateData(TRUE);
+
+	CheckDlgButton(IDC_CHECK4, BST_CHECKED);
+	BOOL        bAutoGenerateKey = IsAutoGenerateKey();
+	int         nBaseType        = GetBaseDataType();
+
+	m_ctrlReportColumn.ResetContent();
+	if (m_ColumnRow.size() < 1) {
+		return;
+	}
+
+	try
+	{
+		int nCSVIndex(0);
+		auto itCSVColumn = m_ColumnRow.begin();
+
+		const KIOColumns* pColumns = m_pTable->Columns();
+		int nColumnCount           = pColumns->ColumnCount();
+		KEMImportType emImportType = GetSelectedImportType();
+
+		for (int i= 0; i< nColumnCount; i++) {
+			KIOColumn*            pColumn  = pColumns->GetColumn(i);
+
+			CString               strColNm = pColumn->Name();
+			CXTPReportRecord*     pRecord  = m_ctrlReportColumn.AddRecord(new CXTPReportRecord);
+			CXTPReportRecordItem* pItem    = nullptr;
+
+			// field
+            bool bRed(false);
+            CString strField(_T("")); {
+                if (strColNm.CompareNoCase(COLUMN_LINK_ID)   == 0  ||
+                    strColNm.CompareNoCase(COLUMN_LINK_TYPE) == 0  ||
+                    strColNm.CompareNoCase(COLUMN_FNODE_ID)  == 0  ||
+                    strColNm.CompareNoCase(COLUMN_TNODE_ID)  == 0   ) 
+                {
+                    strField.Format(_T("* %s"), pColumn->Caption());
+                    bRed = true;
+                }
+                else {
+                    strField.Format(_T("%s"), pColumn->Caption());
+                }
+            }
+
+            pItem = pRecord->AddItem(new CXTPReportRecordItemText(strField)); {
+                pItem->SetItemData((DWORD_PTR)pColumn);
+                if (bRed) {
+                    pItem->SetTextColor(RGB(255,0,0));
+                }
+            }			
+
+			// type
+			CString strDataType(_T(""));
+			switch(pColumn->DataType())
+			{
+			case KEMIODataTypeInteger : strDataType = DATATYPESTRING_INTEGER; break;
+			case KEMIODataTypeDouble  : strDataType = DATATYPESTRING_DOUBLE;  break;
+			case KEMIODataTypeString  : strDataType = DATATYPESTRING_STRING;  break;
+			}
+			pRecord->AddItem(new CXTPReportRecordItemText(strDataType));
+			if (TRUE == bAutoGenerateKey) {
+				if (strColNm.CompareNoCase(COLUMN_LINK_ID) == 0) {
+					pRecord->AddItem(new KColumnReportRecordItem(1));
+					pRecord->SetVisible(FALSE);
+					continue;
+				}
+			}
+
+			if(KEMImportUpdate == emImportType) {
+				// TABLE_LINK
+#pragma region Field Visible 설정 - link
+				if(KEMBaseNode == nBaseType) {
+					if (strColNm.CompareNoCase(COLUMN_LINK_ID)   == 0  ||
+						strColNm.CompareNoCase(COLUMN_LINK_TYPE) == 0   ) {
+						pRecord->AddItem(new KColumnReportRecordItem(1));
+						pRecord->SetVisible(FALSE);
+						continue;
+					}
+				} else if(KEMBaseLink == nBaseType) {
+					if (strColNm.CompareNoCase(COLUMN_FNODE_ID)  == 0  ||
+						strColNm.CompareNoCase(COLUMN_TNODE_ID)  == 0  ||
+						strColNm.CompareNoCase(COLUMN_LINK_TYPE) == 0   ) {
+						pRecord->AddItem(new KColumnReportRecordItem(1));
+						pRecord->SetVisible(FALSE);
+						continue;
+					}
+				}
+#pragma endregion Field Visible 설정 - link
+			}
+
+			// column
+			if(m_ColumnRow.end() == itCSVColumn) {
+				pRecord->AddItem(new KColumnReportRecordItem(0));
+			} else {
+				pRecord->AddItem(new KColumnReportRecordItem(MatchingColumnIndex(pColumn->Caption())));
+				++itCSVColumn;
+			}
+		}
+
+		m_ctrlReportColumn.GetReportHeader()->AllowColumnRemove( FALSE );
+		m_ctrlReportColumn.FocusSubItems( TRUE );
+		m_ctrlReportColumn.Populate();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	TxLogDebugEndMsg();
+}
+
+int KDlgImportLink::MatchingColumnIndex(CString strColumnCaption)
+{
+	int nIndex = 0;
+
+	for (int i = 0; i < m_ColumnRow.size(); i++)
+	{
+		if (strColumnCaption.CompareNoCase(m_ColumnRow[i]) == 0)
+		{
+			nIndex = i + 1; // 0은 Null로 처리
+			break;
+		}
+	}
+
+	return nIndex;
+}
+
+void KDlgImportLink::InitializePreview( void )
+{
+	TxLogDebugStartMsg();
+
+	try
+	{
+		m_ctrlReportPreview.ResetContent();
+		m_ctrlReportPreview.GetColumns()->Clear();
+		m_ctrlReportPreview.Populate();
+
+		bool bAutoSize(false); {
+			if (m_ColumnRow.size() < 10)
+				bAutoSize = true;
+		}
+
+		if (!bAutoSize) {
+			QBicReportCtrlSetting::AutoColumnSizeFalse(m_ctrlReportPreview);
+		} else {
+			m_ctrlReportPreview.GetReportHeader()->SetAutoColumnSizing(TRUE);
+		}
+
+		CXTPReportColumn* pColumn = NULL;	
+
+		int nColumnIndex(0);
+		std::vector< CString >::iterator itColumnArray = m_ColumnRow.begin();
+		while( m_ColumnRow.end() != itColumnArray )	{
+			pColumn = m_ctrlReportPreview.AddColumn(new CXTPReportColumn(nColumnIndex,      (*itColumnArray), 100));
+			pColumn->SetHeaderAlignment(DT_CENTER);
+			if (!bAutoSize)
+				pColumn->SetBestFitMode(xtpColumnBestFitModeAllData);
+
+			++nColumnIndex;
+			++itColumnArray;
+		}
+
+		CXTPReportRecord*      pRecord = nullptr;
+		CXTPReportRecordItem*  pItem   = nullptr;
+
+		int nRow(0);
+		std::vector<CSVRow>::iterator itRows, itRowsEnd = m_Rows.end();
+		for(itRows = m_Rows.begin(); itRows != itRowsEnd; ++itRows) {
+			pRecord = m_ctrlReportPreview.AddRecord(new CXTPReportRecord());
+
+			CSVRow& row = (*itRows);
+			CSVRow::iterator itrow, itrowEnd = row.end();
+			for(itrow = row.begin(); itrow != itrowEnd; ++itrow) {
+				pItem   = pRecord->AddItem(new CXTPReportRecordItemText(*itrow));
+				pItem->SetAlignment(DT_CENTER);
+			}
+
+			int nSizeRowData = (int)row.size();
+			if (nColumnIndex > nSizeRowData) {
+				for (int i= 0; i< (nColumnIndex - nSizeRowData); i++) {
+					pItem   = pRecord->AddItem(new CXTPReportRecordItem);
+				}
+			}
+
+			++nRow;
+		}
+
+		m_ctrlReportPreview.Populate();
+
+		CXTPReportHeader*  pHeader        = m_ctrlReportPreview.GetReportHeader();
+		CXTPReportColumns* pReportColumns = m_ctrlReportPreview.GetColumns();
+		int                nReportColumns = pReportColumns->GetCount();
+		for (int i= 0; i< nReportColumns; i++) {
+			CXTPReportColumn* pReportColumn = pReportColumns->GetAt(i);
+			if (!bAutoSize)
+				pHeader->BestFit(pReportColumn);
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	TxLogDebugEndMsg();
+}
+
+int KDlgImportLink::GetSelectedEncoding()
+{
+	int nEncoding; {
+		if (m_cboEncoding.GetCurSel() == 1)
+			nEncoding = KEMCSVEncodingUTF8;
+		else 
+			nEncoding = KEMCSVEncodingANSI;
+	}
+
+	return nEncoding;
+}
+
+TCHAR KDlgImportLink::GetSelectedSeparator()
+{
+	TCHAR tcSeparator; {
+		int nCurSel = m_cboSeparator.GetCurSel();
+		int nCode   = (int)m_cboSeparator.GetItemData(nCurSel);
+
+		auto itFind = m_mapSeparator.find(nCode);
+		if (itFind != m_mapSeparator.end()) {
+			TSeparator &oTSeparator = itFind->second;
+			tcSeparator = oTSeparator.tcSeparator;
+		}
+	}	
+
+	return tcSeparator;
+}
+
+bool KDlgImportLink::PriviewLoadCSV( void )
+{
+	TxLogDebugStartMsg();
+	m_Rows.clear();
+
+	m_ColumnRow.clear();
+
+	TCHAR tcSeparator = GetSelectedSeparator();
+	int   nEncoding   = GetSelectedEncoding();
+	bool  bContainsColumn(false); {
+		if (IsDlgButtonChecked(IDC_CHECK1) == BST_CHECKED)
+			bContainsColumn = true;
+	}
+	CString strFile(_T("")); {
+		m_editFile.GetWindowText( strFile );
+	}
+
+	try
+	{
+		QBicTxtReader oReader; {
+			oReader.SetEncoding(nEncoding);
+			if (oReader.Open(strFile) == false) {
+				throw 2;
+			}
+		}
+
+		CString strLine(_T(""));
+		oReader.ReadLine(strLine);
+		if( true == bContainsColumn ) {
+			ParseCSVLineString( strLine, tcSeparator, m_ColumnRow );
+		} else {
+			int nIndex(1);
+			CSVRow row;
+
+			ParseCSVLineString( strLine, tcSeparator, row );
+
+			CString strColumnName(_T(""));
+			CSVRow::iterator itRow = row.begin(); 
+			while( row.end() != itRow )	{
+				strColumnName.Format( _T("Column %d"), nIndex++ );
+				m_ColumnRow.push_back( strColumnName );
+				++itRow;
+			}
+
+			m_Rows.push_back( row );
+		}
+ 
+		int nLoopCount = 0;
+
+		while(oReader.ReadLine(strLine) && nLoopCount < 5000) {
+			++nLoopCount;
+
+			if ((strLine.Trim()).CompareNoCase(_T("")) == 0)
+				continue;
+
+			if (nLoopCount < 100 || nLoopCount % 5 == 0) {
+				CSVRow row;
+				ParseCSVLineString( strLine, tcSeparator, row );
+				m_Rows.push_back( row );
+			}		
+		}
+
+		oReader.Close();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		if (ex == 2)
+			strError.Format(_T("Error - Open File: %s"), strFile);
+		else
+			strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		return false;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		return false;
+	} catch (...) {
+		TxLogDebugException();
+		return false;
+	}
+
+	return true;
+
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::ParseCSVLineString( CString& strLine, TCHAR tcSeparator, CSVRow& row )
+{
+	bool bQuote(false);
+	int  nSub(0);
+	CString strRow, strQuote;
+
+	while( AfxExtractSubString( strRow, strLine, nSub++, tcSeparator ) == TRUE )
+	{
+		if( true == bQuote ) {
+			strQuote += strRow;
+			if( strRow.GetAt( strRow.GetLength() - 1 ) == _T('"') ) {
+				strQuote.Remove( _T('"') );
+				strRow   = strQuote;
+				bQuote   = false;
+				strQuote = _T("");
+				row.push_back(strRow);
+			}
+		} else {
+			TCHAR chFirst, chLast;
+			if( strRow.IsEmpty() == TRUE ) {
+				row.push_back( strRow );
+			} else if( strRow.GetLength() == 1 ) {
+				chFirst = strRow.GetAt( 0 );
+				if( chFirst == _T('"') ) {
+					bQuote = true;
+				} else {
+					row.push_back(strRow);
+				}
+			} else {
+				chFirst = strRow.GetAt( 0 );
+				chLast  = strRow.GetAt( strRow.GetLength() - 1 );
+
+				if( (chFirst == _T('"')) && (chLast == _T('"')) ) {
+					strRow.Remove( _T('"') );
+					row.push_back( strRow );
+				} else if( chFirst == _T('"') ) {
+					bQuote = true;
+					strQuote = strRow;
+				} else {
+					row.push_back( strRow );
+				}
+			}
+		}
+	}
+}
+
+void KDlgImportLink::OnBnClickedCancel()
+{
+	KWhiteDlgEx::OnCancel();
+}
+
+void KDlgImportLink::OnReportRecordsDropped(NMHDR *pNotifyStruct, LRESULT *pResult)
+{
+	XTP_NM_REPORTDRAGDROP *pItemNotify = reinterpret_cast<XTP_NM_REPORTDRAGDROP *>(pNotifyStruct);
+	try
+	{
+		CXTPReportRecords* pRecords = pItemNotify->pRecords;
+		int nCount = pRecords->GetCount();
+		if (nCount < 1)	{
+			return;
+		}
+
+		CXTPReportRecord*  pDropRecord    = pRecords->GetAt(0);
+		CXTPReportRecords* pTargetRecords = m_ctrlReportColumn.GetRecords();
+
+		if (nullptr != pDropRecord)	{
+			int                   nRowIndex = pDropRecord->GetIndex(); // will be Drop Row's Index
+			CXTPReportRecordItem* pItem2    = pDropRecord->GetItem(0);
+			int nComboIndex                 = (int)pItem2->GetItemData();
+
+			pTargetRecords->RemoveRecord(pDropRecord);
+			m_ctrlReportColumn.Populate();
+
+			pTargetRecords = m_ctrlReportColumn.GetRecords();
+			CXTPReportRecord* pTargetRecord = pTargetRecords->GetAt(nRowIndex); // pItemNotify->pTargetRecord 사용 불가
+
+			if (nullptr != pTargetRecord) {
+				KColumnReportRecordItem* pItem = (KColumnReportRecordItem*)pTargetRecord->GetItem(_2_COLUMN_IMPORTFIELD_NAME);
+				pItem->m_nIndex = nComboIndex;
+				//m_ctrlReportColumn.RedrawControl();
+
+				CXTPReportRow* pRow = m_ctrlReportColumn.GetRows()->Find(pTargetRecord);
+				m_ctrlReportColumn.SetFocusedRow(pRow);
+			}
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::OnReportDropSampleColumn(NMHDR *pNotifyStruct, LRESULT *pResult)
+{
+	try
+	{
+		XTP_NM_REPORTDRAGDROP *pItemNotify = reinterpret_cast<XTP_NM_REPORTDRAGDROP *>(pNotifyStruct);
+
+		CXTPReportRecords* pRecords = pItemNotify->pRecords;
+		int nCount       = pRecords->GetCount();
+
+		for (int i= 0; i< nCount; i++) {
+			CXTPReportRecord* pRecord = pRecords->GetAt(i);
+			m_ctrlReportSampleColumn.RemoveRecordEx(pRecord);
+		}
+		m_ctrlReportSampleColumn.Populate();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::OnBnClickedCheckDefault()
+{
+	ControlDefaultCheck();
+}
+
+void KDlgImportLink::ControlDefaultCheck()
+{
+	try 
+	{
+		if (IsDlgButtonChecked(IDC_CHECK4) == BST_CHECKED)
+			UpdateColumnRecord();
+		else
+			AllNullCheck();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::AllNullCheck()
+{
+	try 
+	{
+		CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+		int nRecordCount = pRecords->GetCount();
+
+		for (int i = 0; i < nRecordCount; ++i) {
+			CXTPReportRecord* pRecord = pRecords->GetAt(i);
+			if (FALSE == pRecord->IsVisible())
+				continue;
+
+			KColumnReportRecordItem* pItem   = (KColumnReportRecordItem*)pRecord->GetItem(_2_COLUMN_IMPORTFIELD_NAME);
+			pItem->m_nIndex = 0;
+		}
+
+		m_ctrlReportColumn.RedrawControl();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::OnBnClickedOk()
+{
+	UpdateData( TRUE );
+	
+	KEMImportType emImportType = GetSelectedImportType();
+
+	try
+	{
+		m_nStartNum        = GetDlgItemInt(IDC_EDIT1);
+		m_bAutoGenerateKey = IsAutoGenerateKey();
+
+		if(KEMImportInsert == emImportType) {
+			ValidateImport();
+		} else if (KEMImportUpdate == emImportType)	{
+			ValidateUpdateMode();
+		} else if (KEMImportAdd == emImportType) {
+			ValidateImport();
+		}
+
+		if( false == AlertTableChange() ) 
+			return;
+
+		ThreadPara oPara(this);
+
+		// 2019.06.11 Progress 다이얼로그 언어설정 관련 수정
+		int nLang = 1;
+		if (KmzSystem::GetLanguage() == KEMKorea)
+		{
+			nLang = 0;
+		}
+
+		if (true) { // 데이터 검증 및 중간 바이너리 작성
+			oPara.TBusiness = 0;
+			oPara.TKeyInt32[0] = 0;      // 레코드 개수 저장
+			oPara.TKeyInt32[1] = 0;      // Success 개수 저장
+			oPara.TKeyInt32[2] = 0;      // 실패 개수 저장
+
+			RThreadInfo.Init();
+
+
+			QBicSimpleProgressThread::ExecuteThread(ThreadRun, &oPara, false, nLang); 
+
+			if (RThreadInfo.IsOK() == false) {
+				ThrowException(RThreadInfo.ErrorMsg());
+			} else {
+				CString strMsg(_T(""));
+				GetStatisticsMsg(emImportType, &oPara, strMsg);
+				if (AfxMessageBox(strMsg, MB_YESNO) == IDNO)
+					return;
+			}
+		}
+
+		if (true) { // Read 중간바이너리 & DB Import
+			oPara.TBusiness = 1; // oPara.TKeyInt[0]에 레코드 개수가 저장된 상태에서 넘어감
+
+			RThreadInfo.Init();
+			QBicSimpleProgressThread::ExecuteThread(ThreadRun, &oPara, false, nLang); 
+
+			if (RThreadInfo.IsOK() == false) {
+				ThrowException(RThreadInfo.ErrorMsg());
+			}
+		}
+
+		/* TODO: 노드테이블 이나 링크테이블의 Insert, Add 인경우 
+		   MapView에 대한 처리가 필요하다면, 하단에 */
+	} catch (int& ex) {
+		CString strError(_T(""));
+		//strError.Format(_T("오류 : %d"), ex);
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			strError.Format(_T("오류 : %d"), ex);
+		}
+		else {
+			strError.Format(_T("Error : %d"), ex);
+		}
+		TxLogDebug((LPCTSTR)strError);
+		AfxMessageBox(strError);
+
+		return;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		AfxMessageBox(ex->GetErrorMessage());
+
+		return;
+	} catch (...) {
+		TxLogDebugException();
+		//AfxMessageBox(_T("예상치 못한 오류가 발생하였습니다.\n관리자에게 문의하여 주십시오."));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			AfxMessageBox(_T("예상치 못한 오류가 발생하였습니다.\n관리자에게 문의하여 주십시오."));
+		}
+		else {
+			AfxMessageBox(_T("An unexpected error has occurred. \ nPlease contact the administrator."));
+		}
+		return;
+	}
+
+    if (true) {
+        KDlgLinkZoneTypeEdit oDlg(m_pTarget);
+        oDlg.DoModal();
+    }
+     
+	KDefineSystemCodeDlg oDlg(m_pTarget, true);
+	oDlg.DoModal();
+
+	KNetworkEditLog::SetImportNetworkLog(m_pTarget); 
+ 	RelationTableNotify();
+
+	/* TODO: 노드테이블 이나 링크테이블의 Insert, Add 인경우 
+	MapView에 대한 처리가 필요하다면, 하단에 */
+	if(KEMImportInsert == emImportType || KEMImportAdd == emImportType) {
+		KMapView* pCreatedMapView = ImChampFrameWindow::GetCreatedMapView(m_pTarget);
+		if (nullptr != pCreatedMapView) {
+			pCreatedMapView->ReloadRender(false, 2);
+			pCreatedMapView->FullExtentMap();
+		}
+	}
+
+	OnOK();
+}
+
+unsigned __stdcall KDlgImportLink::ThreadRun( void* p )
+{
+	QBicSimpleProgressParameter* pParameter = (QBicSimpleProgressParameter*)p;
+	if (pParameter != nullptr) {
+		ThreadPara* pPara = (ThreadPara*)pParameter->GetParameter(); {
+			KDlgImportLink* pDlg = (KDlgImportLink*)pPara->TWindow;
+
+			if (0 == pPara->TBusiness)
+				pDlg->Execute(pPara);
+			else
+				pDlg->ExecuteImport(pPara);
+		}
+	}
+
+	return 1;
+}
+
+void KDlgImportLink::Execute(ThreadPara* pPara)
+{
+	try 
+	{
+		KDBaseImportTable::LinkRecord(m_pTable, m_setLinkID, m_mapLinkRecord);
+		KDBaseImportTable::NodeRecord(m_pTable, m_mapNodeRecord);
+		KDBaseImportTable::LinkDuplicateFTNode(m_pTable, m_setDuplicateFTNode);
+		KDBaseImportTable::NodeType  (m_pTable, m_mapNodeType);
+
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			AddStatusMessage(_T("파일을 불러오는 중..."));
+		}
+		else {
+			AddStatusMessage(_T("Reading File..."));
+		}
+		//Convert CSV to Binary
+		ReadCSVFile(pPara);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		RThreadInfo.SetErrorFlag(-1, strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		RThreadInfo.SetErrorFlag(-1, ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+		//RThreadInfo.SetErrorFlag(-1, _T("오류가 발생하였습니다."));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			RThreadInfo.SetErrorFlag(-1, _T("오류가 발생하였습니다."));
+		}
+		else {
+			RThreadInfo.SetErrorFlag(-1, _T("Error occured !"));
+		}
+	}
+}
+
+void KDlgImportLink::ExecuteImport(ThreadPara* pPara)
+{
+	try 
+	{
+		KEMImportType emImportType = GetSelectedImportType();
+		if (KEMImportInsert == emImportType)
+			ImportLinkData(pPara);
+		else if (KEMImportUpdate == emImportType)
+			UpdateUserData(pPara);
+		else if (KEMImportAdd == emImportType)
+			AddLinkData(pPara);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		RThreadInfo.SetErrorFlag(-1, strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		RThreadInfo.SetErrorFlag(-1, ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+		//RThreadInfo.SetErrorFlag(-1, _T("오류가 발생하였습니다."));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			RThreadInfo.SetErrorFlag(-1, _T("오류가 발생하였습니다."));
+		}
+		else {
+			RThreadInfo.SetErrorFlag(-1, _T("Error occured !"));
+		}
+	}
+}
+
+void KDlgImportLink::GetStatisticsMsg(KEMImportType a_emImportType, ThreadPara* pPara, CString &a_strMsg)
+{
+	a_strMsg = _T("");
+	try 
+	{
+		if (KEMImportInsert == a_emImportType) {
+			if (KImportCommon::IsEmptyTable(m_pTarget, TABLE_LINK) == false) { // false : 데이터 존재
+				//a_strMsg            = _T("Insert Link 수행시 관련된 테이블(Turn,Transit 포함)의\r\n");
+				//a_strMsg.Append      (_T("데이터가 삭제되며,\r\n"));
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					a_strMsg = _T("Insert link 수행시 관련된 테이블의 데이터가 삭제되며,\r\n");
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					a_strMsg = _T("WARNING : Existing data would be delete.\r\n");
+				}
+			} else {
+				a_strMsg            = _T("");
+			}
+
+			//a_strMsg.Append      (_T("입력된 데이터의 내역은 아래와 같습니다.\r\n"));
+			//a_strMsg.AppendFormat(_T("#1. 레코드 개수: %d 건\r\n"), pPara->TKeyInt32[0]);
+			//a_strMsg.Append      (_T("#2. Link Type 별 건수\r\n"));
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				a_strMsg.Append(_T("입력된 데이터의 내역은 아래와 같습니다.\r\n"));
+				a_strMsg.AppendFormat(_T("#1. 레코드 개수: %d 건\r\n"), pPara->TKeyInt32[0]);
+				a_strMsg.Append(_T("#2. Link Type 별 건수\r\n"));
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				a_strMsg.Append(_T("Imported data are as follows.\r\n"));
+				a_strMsg.AppendFormat(_T("#1. Total number of records : %d\r\n"), pPara->TKeyInt32[0]);
+				a_strMsg.Append(_T("#2. The number of records by link type :\r\n"));
+			}
+
+			auto iter  = m_mapReadLinkType.begin();
+			auto itEnd = m_mapReadLinkType.end();
+			for (; iter != itEnd; ++iter) {
+				const int &nLinkType = iter->first;
+				int       &nCount    = iter->second;
+
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					a_strMsg.AppendFormat(_T("- (%d): %d건\r\n"), nLinkType, nCount);
+				}
+				else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+					a_strMsg.AppendFormat(_T("- (%d): %d\r\n"), nLinkType, nCount);
+				}
+			}
+		} else if (KEMImportAdd == a_emImportType){
+			int nIdx(1);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				a_strMsg = _T("입력된 데이터의 내역은 아래와 같습니다.\r\n");
+				a_strMsg.AppendFormat(_T("#%d. 레코드 개수: %d 건\r\n"), nIdx++, pPara->TKeyInt32[0]);
+
+				if (pPara->TKeyInt32[2] > 0) { //실패 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. 양호: %d 건, 불량: %d 건\r\n"), nIdx++, pPara->TKeyInt32[1], pPara->TKeyInt32[2]);
+				}
+
+				if (pPara->TKeyInt32[1] > 0) { //성공 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. Link Type 별 건수\r\n"), nIdx++);
+
+					auto iter = m_mapReadLinkType.begin();
+					auto itEnd = m_mapReadLinkType.end();
+					for (; iter != itEnd; ++iter) {
+						const int &nLinkType = iter->first;
+						int       &nCount = iter->second;
+
+						a_strMsg.AppendFormat(_T("- (%d): %d건\r\n"), nLinkType, nCount);
+					}
+				}
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				a_strMsg = _T("Imported data are as follows.\r\n");
+				a_strMsg.AppendFormat(_T("#%d. Total number of records : %d\r\n"), nIdx++, pPara->TKeyInt32[0]);
+
+				if (pPara->TKeyInt32[2] > 0) { //실패 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. Imported : %d, Skipped : %d\r\n"), nIdx++, pPara->TKeyInt32[1], pPara->TKeyInt32[2]);
+				}
+
+				if (pPara->TKeyInt32[1] > 0) { //성공 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. The number of records by link type :\r\n"), nIdx++);
+
+					auto iter = m_mapReadLinkType.begin();
+					auto itEnd = m_mapReadLinkType.end();
+					for (; iter != itEnd; ++iter) {
+						const int &nLinkType = iter->first;
+						int       &nCount = iter->second;
+
+						a_strMsg.AppendFormat(_T("- (%d): %d\r\n"), nLinkType, nCount);
+					}
+				}
+			}
+		} else if (KEMImportUpdate == a_emImportType) {
+			int nIdx(1);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				a_strMsg = _T("입력된 데이터의 내역은 아래와 같습니다.\r\n");
+				a_strMsg.AppendFormat(_T("#%d. 레코드 개수: %d 건\r\n"), nIdx++, pPara->TKeyInt32[0]);
+
+				if (pPara->TKeyInt32[2] > 0) { //실패 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. 양호: %d 건, 불량: %d 건\r\n"), nIdx++, pPara->TKeyInt32[1], pPara->TKeyInt32[2]);
+				}
+			}
+			else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+				a_strMsg = _T("Imported data are as follows.\r\n");
+				a_strMsg.AppendFormat(_T("#%d. Total number of records : %d \r\n"), nIdx++, pPara->TKeyInt32[0]);
+
+				if (pPara->TKeyInt32[2] > 0) { //실패 건수가 있을 경우
+					a_strMsg.AppendFormat(_T("#%d. Imported : %d, Skipped : %d\r\n"), nIdx++, pPara->TKeyInt32[1], pPara->TKeyInt32[2]);
+				}
+			}
+		}
+
+		//a_strMsg.Append(_T("\n진행 하시겠습니까?\r\n"));
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			a_strMsg.Append(_T("\n진행 하시겠습니까?\r\n"));
+		}
+		else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+			a_strMsg.Append(_T("\nDo you want to continue?\r\n"));
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::ReadCSVFile(ThreadPara* pPara)
+{
+	TxLogDebugStartMsg();
+
+	TCHAR tcSeparator = GetSelectedSeparator();
+	int   nEncoding   = GetSelectedEncoding();
+	bool  bContainsColumn(false); {
+		if (IsDlgButtonChecked(IDC_CHECK1) == BST_CHECKED)
+			bContainsColumn = true;
+	}
+	CString strFile(_T("")); {
+		m_editFile.GetWindowText( strFile );
+	}
+	
+	QBicTxtReader oReader; {
+		oReader.SetEncoding(nEncoding);
+		if (oReader.Open(strFile) == false)
+			return;
+	}
+
+	QBicFile::DeleteFile(m_strMiddleFile);
+	std::ofstream ofs(m_strMiddleFile, std::ios::binary);
+	
+	QBicFile::DeleteFile(m_strErrFile);
+	QBicTxtWriter ofErr; {
+		if (ofErr.Open(m_strErrFile) == false)
+			return;
+	}
+
+	std::vector<TColMatch> vecColMatch; { // 저장필드와 입력파일의 필드idx 매칭정보 저장(Re)
+#pragma region Load vecColMatch
+		try 
+		{
+			CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+			int nRecordCount = pRecords->GetCount();
+			for (int i= 0; i< nRecordCount; i++) {
+				CXTPReportRecord* pRecord            = pRecords->GetAt(i);
+				int               nImportColumnIndex = GetImportColumnIndex(pRecord);
+				if (0 == nImportColumnIndex || pRecord->IsVisible() == FALSE)
+					continue;
+
+				KIOColumn*        pIOColumn	        = GetDefIOColumn(pRecord);
+
+				TColMatch oTColMatch;
+				oTColMatch.pIOColumn       = pIOColumn;
+				oTColMatch.nImportColIndex = nImportColumnIndex;
+
+				vecColMatch.push_back(oTColMatch);
+			}
+		} catch (int& ex) {
+			CString strError(_T(""));
+			strError.Format(_T("Error : %d"), ex);
+			TxLogDebug((LPCTSTR)strError);
+		} catch (KExceptionPtr ex) {
+			TxExceptionPrint(ex);
+		} catch (...) {
+			TxLogDebugException();
+        }
+#pragma endregion Load vecColMatch
+	}
+
+	int nSuccessCnt(0);
+	int nFailedCnt(0);
+	int nImportDataCount(0);
+	int nCurrentLine(0);
+	try
+	{
+		CString strReadLine(_T(""));
+		bool    bEverErrLine(false);
+
+		//CSV파일 헤더 존재 시 고의적으로 한줄 읽어서 버림.
+		if( true == bContainsColumn ) {
+			oReader.ReadLine(strReadLine);
+			++nCurrentLine;
+		}
+
+		KEMImportType emImportType = GetSelectedImportType();
+
+		m_setDuplicateSingleID.clear();
+		m_setDuplicateMultiID.clear();
+		m_mapDuplicateTripleID.clear();
+		m_mapReadLinkType.clear();
+
+		while( oReader.ReadLine(strReadLine) ) {
+			++nCurrentLine;
+
+			if ((strReadLine.Trim()).CompareNoCase(_T("")) == 0) {
+				CString strErrorMsg(_T("")); {
+					//strErrorMsg.Format(_T("Line : %d =>\t 데이터 없음\r\n"), nCurrentLine);
+					if (KmzSystem::GetLanguage() == KEMKorea) {
+						strErrorMsg.Format(_T("Line : %d =>\t 데이터 없음\r\n"), nCurrentLine);
+					}
+					else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+						strErrorMsg.Format(_T("Line : %d =>\t There is no any data\r\n"), nCurrentLine);
+					}
+				}
+				ofErr.Write(strErrorMsg);
+				continue;
+			}
+
+			CSVRow row;
+			ParseCSVLineString( strReadLine, tcSeparator, row );
+
+			if(KEMImportInsert == emImportType) {
+				CSV2BinaryNew(vecColMatch, nCurrentLine, bEverErrLine, row, ofs, ofErr);
+			} else if (KEMImportUpdate == emImportType) {
+				if (CSV2Binary_Update(vecColMatch, nCurrentLine, bEverErrLine, row, ofs, ofErr)) {
+					nSuccessCnt++;
+				} else {
+					nFailedCnt++;
+				}
+			} else if (KEMImportAdd == emImportType) {
+				if (CSV2BinaryAdd(vecColMatch, nCurrentLine, bEverErrLine, row, ofs, ofErr)) {
+					nSuccessCnt++;
+				} else {
+					nFailedCnt++;
+				}
+			}
+		}
+
+		if(bEverErrLine) {
+			if (KEMImportInsert == emImportType) {
+				CString strErrorMsg(_T(""));
+				//strErrorMsg.Format(_T("Import 실패\r\n %s 파일에서 내역을 확인 하세요."), IMPORT_ERROR_FILE_NAME);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Import 실패\r\n %s 파일에서 내역을 확인 하세요."), IMPORT_ERROR_FILE_NAME);
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Import failed !\r\n Check the details from the %s."), IMPORT_ERROR_FILE_NAME);
+				}
+				ErrorFileOpen();
+				ThrowException(strErrorMsg);
+			} else {
+				ErrorFileOpen();
+			}
+		}
+ 
+		nImportDataCount = nCurrentLine;
+		if( bContainsColumn )	{
+			--nImportDataCount;
+		}
+		pPara->TKeyInt32[0] = nImportDataCount;      // 레코드 개수 저장
+		pPara->TKeyInt32[1] = nSuccessCnt;           // Update/Add Mode일 경우 성공 데이터의 개수
+		pPara->TKeyInt32[2] = nFailedCnt;            // Update/Add Mode일 경우 실패 데이터의 개수
+
+		ofs.close();
+		oReader.Close();
+		ofErr.Close();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		ofs.close();
+		oReader.Close();
+		ofErr.Close();
+		throw ex;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		ofs.close();
+		oReader.Close();
+		ofErr.Close();
+		ThrowException(ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+		ofs.close();
+		oReader.Close();
+		ofErr.Close();
+		throw 9;
+	}
+	
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::CSV2BinaryNew(std::vector<TColMatch> &a_vecColMatch, int a_nCurrentLine, bool& a_bEverErrLine, CSVRow a_row,  std::ofstream& ofs,  QBicTxtWriter& ofErr )
+{
+	try
+	{
+		std::map<CString, Integer> mapFieldValue;
+		KODKey oODKeyLinkFTNode;
+		CString strErrorMsg(_T(""));
+
+		if( !ConfirmPrimaryKey(a_vecColMatch, a_row, mapFieldValue, oODKeyLinkFTNode, KEMImportInsert) ) {
+			a_bEverErrLine = true;
+			//strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			}
+			else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+				strErrorMsg.Format(_T("Line : %d =>\t Failed to read ID value"), a_nCurrentLine);
+			}
+			ofErr.Write(strErrorMsg);
+		} else 	{
+			if (CheckTableLinkSameFTNode(oODKeyLinkFTNode, KEMImportInsert)) {
+				a_bEverErrLine = true;
+				//strErrorMsg.Format(_T("Line : %d =>\t %s FNode ID와 TNode ID 값이 동일함"), a_nCurrentLine, m_strTableName);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Line : %d =>\t %s FNode ID와 TNode ID 값이 동일함"), a_nCurrentLine, m_strTableName);
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Line : %d =>\t FromNode ID and ToNode ID are same in %s"), a_nCurrentLine, m_strTableName);
+				}
+				ofErr.Write(strErrorMsg);
+			}
+
+			if( CheckDuplicateID(mapFieldValue, KEMImportInsert) ) {
+				a_bEverErrLine = true;
+				//strErrorMsg.Format(_T("Line : %d =>\t %s  파일 상에 중복 ID 체크됨"), a_nCurrentLine, m_strTableName);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Line : %d =>\t %s  파일 상에 중복 ID 체크됨"), a_nCurrentLine, m_strTableName);
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Line : %d =>\t Duplicated ID exist in %s"), a_nCurrentLine, m_strTableName);
+				}
+				ofErr.Write(strErrorMsg);
+			}
+
+			if (CheckZoneConnector(a_vecColMatch, a_row, strErrorMsg)) {
+				a_bEverErrLine = true;
+				CString strTempMsg(_T(""));
+				strTempMsg.Format(_T("Line : %d =>\t%s"), a_nCurrentLine, strErrorMsg);
+				ofErr.Write(strTempMsg);
+			}
+		}
+		
+		CString strImportValue(_T(""));
+		CString strColumnName (_T(""));
+		int     nLinkType(-1);
+
+		int nSizeVec = (int)a_vecColMatch.size();
+		for (int i= 0; i< nSizeVec; i++) {
+			TColMatch         &oTColMatch = a_vecColMatch[i];
+
+			const KIOColumn*  pIOColumn   = oTColMatch.pIOColumn;
+			KEMIODataType     emDataType  = pIOColumn->DataType();
+			strColumnName			      = pIOColumn->Name();
+
+			if( a_row.size() > (size_t)(oTColMatch.nImportColIndex -1) ) 
+				strImportValue = a_row[oTColMatch.nImportColIndex -1];
+			else
+				strImportValue = _T("");
+
+			if(false == a_bEverErrLine)
+				WriteOutputStream(strImportValue, emDataType, ofs);
+
+			if ( strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0 && emDataType == KEMIODataTypeInteger) {
+				nLinkType = _ttoi(strImportValue);
+
+				auto itFindLinkType = m_mapReadLinkType.find(nLinkType);
+				if (itFindLinkType != m_mapReadLinkType.end()) {
+					int &nTempCount = itFindLinkType->second;
+					nTempCount++;
+				} else {
+					m_mapReadLinkType.insert(std::make_pair(nLinkType, 1));
+				}
+			}
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		ThrowException(_T("Failed to Create Binary Data..."));
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		ThrowException(ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+		ThrowException(_T("Failed to Create Binary Data..."));
+	}
+}
+
+bool KDlgImportLink::CSV2Binary_Update(std::vector<TColMatch> &a_vecColMatch, int a_nCurrentLine,  bool& a_bEverErrLine, CSVRow a_row,  std::ofstream& ofs, QBicTxtWriter& ofErr )
+{
+	try
+	{
+		std::map<CString, Integer> mapFieldValue;
+		KODKey oODKeyLinkFTNode;
+		CString strErrorMsg(_T(""));
+
+		if( !ConfirmPrimaryKey(a_vecColMatch, a_row, mapFieldValue, oODKeyLinkFTNode, KEMImportUpdate) ) {
+			//strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			}
+			else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+				strErrorMsg.Format(_T("Line : %d =>\t Failed to read ID value"), a_nCurrentLine);
+			}
+			ThrowException(strErrorMsg);
+		}
+
+		if( false == IsFindTableData(mapFieldValue, KEMImportUpdate) ) {
+			//strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 ID 값에 대한 데이터 없음"), a_nCurrentLine, m_strTableName);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 ID 값에 대한 데이터 없음"), a_nCurrentLine, m_strTableName);
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				strErrorMsg.Format(_T("Line : %d =>\t There is no matching ID in %s Table"), a_nCurrentLine, m_strTableName);
+			}
+			ThrowException(strErrorMsg);
+		}
+
+		if ( IsLinkTableDuplicateFTNode(mapFieldValue) ) { // Node Base 일 경우 
+			//strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 동일한 (FNode, TNode)쌍이 존재 합니다."), a_nCurrentLine, m_strTableName);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 동일한 (FNode, TNode)쌍이 존재 합니다."), a_nCurrentLine, m_strTableName);
+			}
+			else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+				strErrorMsg.Format(_T("Line : %d =>\t There exist same (FromNode,ToNode) pair in %s Table"), a_nCurrentLine, m_strTableName);
+			}
+			ThrowException(strErrorMsg);
+		}
+
+		CString strImportValue(_T(""));
+
+		int nSizeVec = (int)a_vecColMatch.size();
+		for (int i= 0; i< nSizeVec; i++) {
+			TColMatch         &oTColMatch     = a_vecColMatch[i];
+
+			const KIOColumn*  pIOColumn       = oTColMatch.pIOColumn;
+			KEMIODataType     emDataType      = pIOColumn->DataType();
+			CString           strIOColumnName = pIOColumn->Name();
+
+			auto itFind = mapFieldValue.find(strIOColumnName);
+			if(itFind != mapFieldValue.end())
+				continue;
+
+			if( a_row.size() > (size_t)(oTColMatch.nImportColIndex -1) ) 
+				strImportValue = a_row[oTColMatch.nImportColIndex -1];
+			else
+				strImportValue = _T("");
+
+			WriteOutputStream(strImportValue, emDataType, ofs);
+		}
+
+		// where 조건에 쓰일
+		auto iter  = mapFieldValue.begin();
+		auto itEnd = mapFieldValue.end();
+
+		Integer nxValue(0);
+		for (; iter != itEnd; ++iter) {
+			nxValue = iter->second;
+			strImportValue.Format(_T("%I64d"), nxValue);
+			WriteOutputStream(strImportValue, KEMIODataTypeInteger, ofs);
+		}
+
+		return true;
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+
+		a_bEverErrLine = true;
+		CString strErrorMsg(_T(""));
+		strErrorMsg.Format(_T("Line : %d =>\t 알 수 없는 오류"), a_nCurrentLine);
+		ofErr.Write(strErrorMsg);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+
+		a_bEverErrLine = true;
+		ofErr.Write(ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+
+		a_bEverErrLine = true;
+		CString strErrorMsg(_T(""));
+		strErrorMsg.Format(_T("Line : %d =>\t 알 수 없는 오류"), a_nCurrentLine);
+		ofErr.Write(strErrorMsg);
+	}
+
+	return false;
+}
+
+bool KDlgImportLink::CSV2BinaryAdd(std::vector<TColMatch> &a_vecColMatch, int a_nCurrentLine, bool& a_bEverErrLine, CSVRow a_row,  std::ofstream& ofs,  QBicTxtWriter& ofErr )
+{
+	try
+	{
+		std::map<CString, Integer> mapFieldValue;
+		KODKey oODKeyLinkFTNode;
+		CString strErrorMsg(_T(""));
+
+		if( !ConfirmPrimaryKey(a_vecColMatch, a_row, mapFieldValue, oODKeyLinkFTNode, KEMImportAdd) )	{
+			//strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				strErrorMsg.Format(_T("Line : %d =>\t ID 값 추출 실패"), a_nCurrentLine);
+			}
+			else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+				strErrorMsg.Format(_T("Line : %d =>\t Failed to read ID value"), a_nCurrentLine);
+			}
+			ThrowException(strErrorMsg);
+		} else {
+			if (CheckTableLinkSameFTNode(oODKeyLinkFTNode, KEMImportAdd)) {
+				//strErrorMsg.Format(_T("Line : %d =>\t %s FNode ID와 TNode ID 값이 동일함"), a_nCurrentLine, m_strTableName);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Line : %d =>\t %s FNode ID와 TNode ID 값이 동일함"), a_nCurrentLine, m_strTableName);
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Line : %d =>\t FromNode ID and ToNode ID are same in %s"), a_nCurrentLine, m_strTableName);
+				}
+				ThrowException(strErrorMsg);
+			}
+
+			if( CheckDuplicateID(mapFieldValue, KEMImportAdd) ) {
+				//strErrorMsg.Format(_T("Line : %d =>\t %s  파일 상에 중복 ID 체크됨"), a_nCurrentLine, m_strTableName);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Line : %d =>\t %s  파일 상에 중복 ID 체크됨"), a_nCurrentLine, m_strTableName);
+				}
+				else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Line : %d =>\t Duplicated ID exist in %s"), a_nCurrentLine, m_strTableName);
+				}
+				ThrowException(strErrorMsg);
+			}
+
+			if( IsFindTableData(mapFieldValue, KEMImportAdd) ) {
+				//strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 ID 값에 대한 데이터 존재함"), a_nCurrentLine, m_strTableName);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strErrorMsg.Format(_T("Line : %d =>\t %s 테이블 상에 ID 값에 대한 데이터 존재함"), a_nCurrentLine, m_strTableName);
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strErrorMsg.Format(_T("Line : %d =>\t This ID already exist in %s Table"), a_nCurrentLine, m_strTableName);
+				}
+				ThrowException(strErrorMsg);
+			}
+
+			if (CheckZoneConnector(a_vecColMatch, a_row, strErrorMsg)) {
+				CString strTempMsg(_T(""));
+				strTempMsg.Format(_T("Line : %d =>\t%s"), a_nCurrentLine, strErrorMsg);
+				ThrowException(strTempMsg);
+			}
+		}
+
+		CString strIOColumnName(_T(""));
+		CString strImportValue(_T(""));
+		Integer nxValue(0);
+		int     nLinkType(-1);
+
+		int nSizeVec = (int)a_vecColMatch.size();
+		for (int i= 0; i< nSizeVec; i++) {
+			TColMatch         &oTColMatch = a_vecColMatch[i];
+
+			const KIOColumn*  pIOColumn   = oTColMatch.pIOColumn;
+			KEMIODataType     emDataType  = pIOColumn->DataType();
+			strIOColumnName               = pIOColumn->Name();
+
+			if( a_row.size() > (size_t)(oTColMatch.nImportColIndex -1) ) 
+				strImportValue = a_row[oTColMatch.nImportColIndex -1];
+			else
+				strImportValue = _T("");
+
+			WriteOutputStream(strImportValue, emDataType, ofs);
+
+			if ( strIOColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0 && emDataType == KEMIODataTypeInteger) {
+				nLinkType = _ttoi(strImportValue);
+
+				auto itFindLinkType = m_mapReadLinkType.find(nLinkType);
+				if (itFindLinkType != m_mapReadLinkType.end()) {
+					int &nTempCount = itFindLinkType->second;
+					nTempCount++;
+				} else {
+					m_mapReadLinkType.insert(std::make_pair(nLinkType, 1));
+				}
+			}
+		}
+
+		return true;
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+
+		a_bEverErrLine = true;
+		CString strErrorMsg(_T(""));
+		strErrorMsg.Format(_T("Line : %d =>\t 알 수 없는 오류"), a_nCurrentLine);
+		ofErr.Write(strErrorMsg);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+
+		a_bEverErrLine = true;
+		ofErr.Write(ex->GetErrorMessage());
+	} catch (...) {
+		TxLogDebugException();
+
+		a_bEverErrLine = true;
+		CString strErrorMsg(_T(""));
+		strErrorMsg.Format(_T("Line : %d =>\t 알 수 없는 오류"), a_nCurrentLine);
+		ofErr.Write(strErrorMsg);
+	}
+
+	return false;
+}
+
+bool KDlgImportLink::CheckTableLinkSameFTNode(KODKey &a_oODKeyLinkFTNode, KEMImportType a_emImportType)
+{
+	try 
+	{
+		if (KEMImportAdd == a_emImportType || KEMImportInsert == a_emImportType) {
+			if (a_oODKeyLinkFTNode.OriginID == a_oODKeyLinkFTNode.DestinationID) {
+				return true;
+			}
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		return true;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		return true;
+	} catch (...) {
+		TxLogDebugException();
+		return true;
+	}
+
+	return false;
+}
+
+bool KDlgImportLink::ConfirmPrimaryKey(std::vector<TColMatch> &a_vecColMatch, CSVRow &a_oImportRow, std::map<CString, Integer> &a_mapKeyFieldValue, KODKey &a_oODKeyLinkFTNode, KEMImportType a_emImportType)
+{
+	a_mapKeyFieldValue.clear();
+
+	CString strImportValue(_T(""));
+
+	int nSizeVec = (int)a_vecColMatch.size();
+	for (int i= 0; i< nSizeVec; i++) {
+		TColMatch         &oTColMatch = a_vecColMatch[i];
+
+		const KIOColumn*  pIOColumn       = oTColMatch.pIOColumn;
+		KEMIODataType     emDataType      = pIOColumn->DataType();
+		CString           strIOColumnName = pIOColumn->Name();
+
+		if( a_oImportRow.size() > (size_t)(oTColMatch.nImportColIndex -1) ) 
+			strImportValue = a_oImportRow[oTColMatch.nImportColIndex -1];
+		else
+			strImportValue = _T("");
+
+		bool bPK(false);
+		// 조회 key value 추출
+		if (KEMImportAdd == a_emImportType || KEMImportInsert == a_emImportType) {
+			if (m_bAutoGenerateKey)	{
+// 				if( strIOColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0 || 
+// 					strIOColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0  )
+// 					bPK = true;
+			} else {
+				if(strIOColumnName.CompareNoCase(COLUMN_LINK_ID) == 0)
+					bPK = true;
+			}
+
+			if (strIOColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0) {
+				a_oODKeyLinkFTNode.OriginID      = _ttoi64(strImportValue);
+			} else if (strIOColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0)	{
+				a_oODKeyLinkFTNode.DestinationID = _ttoi64(strImportValue);
+			}
+		} else {// KEMImportUpdate
+			if( GetBaseDataType() == KEMBaseLink ) {
+				if(strIOColumnName.CompareNoCase(COLUMN_LINK_ID) == 0)
+					bPK = true;
+			} else {
+				if( strIOColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0 || 
+					strIOColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0  )
+					bPK = true;
+			}
+		}
+
+		if( bPK ) {
+			if( emDataType != KEMIODataTypeInteger )
+				continue;
+
+			Integer nxValue = _ttoi64(strImportValue);
+			a_mapKeyFieldValue.insert(std::make_pair(strIOColumnName, nxValue));
+		}
+	}
+
+	if(IsWrongIDCount(a_mapKeyFieldValue, a_emImportType)) {
+		a_mapKeyFieldValue.clear();
+		return false;
+	}
+
+	return true;
+}
+
+bool KDlgImportLink::CheckZoneConnector(std::vector<TColMatch> &a_vecColMatch, CSVRow &a_oImportRow, CString &a_strErrMsg)
+{
+	CString strIOColumnName(_T(""));
+	CString strImportValue(_T(""));
+	Integer nxValue(0);
+	int     nLinkType(-1);
+	Integer nxFNodeID(0);
+	Integer nxTNodeID(0);
+
+	try 
+	{
+		int nSizeVec = (int)a_vecColMatch.size();
+		for (int i= 0; i< nSizeVec; i++) {
+			TColMatch         &oTColMatch = a_vecColMatch[i];
+
+			const KIOColumn*  pIOColumn   = oTColMatch.pIOColumn;
+			KEMIODataType     emDataType  = pIOColumn->DataType();
+			strIOColumnName               = pIOColumn->Name();
+
+			if( a_oImportRow.size() > (size_t)(oTColMatch.nImportColIndex -1) ) 
+				strImportValue = a_oImportRow[oTColMatch.nImportColIndex -1];
+			else
+				strImportValue = _T("");
+
+			if ( KImportCommon::IsNodeRelationColumn(strIOColumnName) )	{ // 데이터 체크 (TABLE_LINK)
+				if( emDataType != KEMIODataTypeInteger )
+					continue;
+
+				nxValue = _ttoi64(strImportValue);
+				if (IsNodeID(nxValue) == false)	{
+					CString strErr(_T(""));
+					//strErr.Format(_T("Node 테이블에 존재하지 않는 Node_ID : %I64d"), nxValue);
+					if (KmzSystem::GetLanguage() == KEMKorea) {
+						strErr.Format(_T("Node 테이블에 존재하지 않는 Node_ID : %I64d"), nxValue);
+					}
+					else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+						strErr.Format(_T("Node_ID : %I64d does not exist in Node Table"), nxValue);
+					}
+					ThrowException(strErr);
+				}
+			}
+
+			if ( strIOColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0 && emDataType == KEMIODataTypeInteger) {
+				nLinkType = _ttoi(strImportValue);
+			} else if (strIOColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0) {
+				nxFNodeID      = _ttoi64(strImportValue);
+			} else if (strIOColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0)	{
+				nxTNodeID = _ttoi64(strImportValue);
+			}
+		}
+
+// 		int nFNodeType(-1); { // From NodeType
+// 			auto    itFind    = m_mapNodeType.find(nxFNodeID); 
+// 			if (itFind != m_mapNodeType.end())
+// 				nFNodeType = itFind->second;
+// 		}
+// 		int nTNodeType(-1); { // To NodeType
+// 			auto    itFind    = m_mapNodeType.find(nxTNodeID); 
+// 			if (itFind != m_mapNodeType.end())
+// 				nTNodeType = itFind->second;
+// 		}
+// 
+// 		if (0 == nLinkType) { 
+// 			// 1. 존커넥터일 경우 F/T Node 중 하나이상은 존 노드여야 한다.
+// 			// 2. 또는 F/T Node 둘다 일반노드라면, 존커넥터가 아니라 일반링크여야한다.
+// 
+// 			// 둘다 일반노드라면 실패
+// 			if (0 != nFNodeType && 0 != nTNodeType) {
+// 				CString strErr(_T("해당 링크의 타입은 존커넥터 입니다. 하지만, From/To 노드의 타입이 존노드가 아닙니다."));
+// 				ThrowException(strErr);
+// 			}
+// 
+// 		} else { 
+// 			// 1. 일반링크일 경우 F/T Node 둘다 일반노드여야 하거나
+// 			// 2. 또는 두 노드중 하나가 존 노드라면, 일반링크가 아니라 존커넥터야 한다.
+// 
+// 			// 둘중 하나이상 존노드가 존재할 경우 실패
+// 			if (0 == nFNodeType || 0 == nTNodeType) {
+// 				if (0 == nFNodeType && 0 == nTNodeType) {
+// 					CString strErr(_T("From/To 노드의 타입은 둘다 존노드입니다. 하지만, 해당 링크의 타입은 존커넥터가 아닙니다."));
+// 					ThrowException(strErr);
+// 				} else if (0 == nFNodeType) {
+// 					CString strErr(_T("From 노드의 타입은 존노드입니다. 하지만, 해당 링크의 타입은 존커넥터가 아닙니다."));
+// 					ThrowException(strErr);
+// 				} else { // 0 == nTNodeType
+// 					CString strErr(_T("To노드의 타입은 존노드입니다. 하지만, 해당 링크의 타입은 존커넥터가 아닙니다."));
+// 					ThrowException(strErr);
+// 				}
+// 			}
+// 		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+
+		a_strErrMsg = _T("알수 없는 오류입니다.");
+		return true;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+
+		a_strErrMsg = ex->GetErrorMessage();
+		return true;
+	} catch (...) {
+		TxLogDebugException();
+
+		a_strErrMsg = _T("알수 없는 오류입니다.");
+		return true;
+	}
+
+	return false; // 정상
+}
+
+bool KDlgImportLink::IsFindTableData(std::map<CString, Integer> &a_mapKeyFieldValue, KEMImportType a_emImportType)
+{
+	bool bSingleKey(false);
+
+	if (KEMImportAdd == a_emImportType) {
+		if( m_bAutoGenerateKey ) {
+			//bSingleKey = false;
+			return false; // 중복 없음
+		} else {
+			bSingleKey = true;
+		}
+	} else {
+		if( GetBaseDataType() == KEMBaseLink ) {
+			bSingleKey = true;
+		} else {
+			bSingleKey = false;
+		}
+	}
+
+	auto iter  = a_mapKeyFieldValue.begin();
+	auto itEnd = a_mapKeyFieldValue.end();
+
+	if( bSingleKey ) {
+		Integer nxID(0);
+		for (; iter != itEnd; ++iter) {
+			nxID = iter->second;
+		}
+
+		return IsLinkID(nxID);
+	} else 	{
+		Integer nxFNodeID(0);
+		Integer nxTNodeID(0);
+
+		for (; iter != itEnd; ++iter) {
+			CString strField = iter->first;
+			if (strField.CompareNoCase(COLUMN_FNODE_ID) == 0) {
+				nxFNodeID = iter->second;
+			} else if (strField.CompareNoCase(COLUMN_TNODE_ID) == 0) {
+				nxTNodeID = iter->second;
+			}
+		}
+
+		KODKey oODKey(nxFNodeID, nxTNodeID);
+		return IsLinkID(oODKey);
+	}
+}
+
+bool KDlgImportLink::IsNodeID(Integer a_nxValue)
+{
+	if(m_mapNodeRecord.find( a_nxValue ) == m_mapNodeRecord.end()) {
+		return false;
+	}
+	return true;
+}
+
+bool KDlgImportLink::IsLinkID(Integer a_nxValue)
+{
+	if(m_setLinkID.find( a_nxValue ) == m_setLinkID.end()) {
+		return false;
+	}
+
+	return true;
+}
+
+bool KDlgImportLink::IsLinkID(KODKey a_oODKey)
+{
+	if (m_mapLinkRecord.find(a_oODKey) == m_mapLinkRecord.end()) {
+		return false; 
+	}
+
+	return true;
+}
+
+bool KDlgImportLink::IsWrongIDCount(std::map<CString, Integer> &a_mapKeyFieldValue, KEMImportType a_emImportType)
+{
+	// 추출 ID 갯수 확인
+	int  nIdCount      = (int)(a_mapKeyFieldValue.size());
+	bool bWrongIdCount = false;
+
+	if (KEMImportAdd == a_emImportType || KEMImportInsert == a_emImportType) {
+		if (m_bAutoGenerateKey) {
+			if( nIdCount != 0) 
+				bWrongIdCount = true;
+		} else {
+			if( nIdCount != 1) // link_id
+				bWrongIdCount = true;
+		}
+	} else { // KEMImportUpdate
+		if( GetBaseDataType() == KEMBaseLink ) {
+			if( nIdCount != 1) // link_id
+				bWrongIdCount = true;
+		} else {
+			if( nIdCount != 2) // fnode_id, tnode_id
+				bWrongIdCount = true;
+		}
+	}
+
+	return bWrongIdCount;
+}
+
+bool KDlgImportLink::IsLinkTableDuplicateFTNode(std::map<CString, Integer> &a_mapKeyFieldValue)
+{
+	try
+	{
+		if (GetBaseDataType() != KEMBaseNode) {
+			return false;
+		}
+
+		Integer nxFNodeID(0);
+		Integer nxTNodeID(0); {
+			auto iter  = a_mapKeyFieldValue.begin();
+			auto itEnd = a_mapKeyFieldValue.end();
+
+			for (; iter != itEnd; ++iter ) {
+				CString strField = iter->first;
+				if (strField.CompareNoCase(COLUMN_FNODE_ID) == 0) {
+					nxFNodeID = iter->second;
+				} else if (strField.CompareNoCase(COLUMN_TNODE_ID) == 0) {
+					nxTNodeID = iter->second;
+				}
+			}
+		}
+
+		KODKey oODKey(nxFNodeID, nxTNodeID);
+		return IsDuplicateFTNodeID(oODKey);
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	return false;
+}
+
+bool KDlgImportLink::IsDuplicateFTNodeID(KODKey a_oODKey)
+{
+	if (m_setDuplicateFTNode.find(a_oODKey) == m_setDuplicateFTNode.end()) {
+		return false;
+	}
+
+	return true;
+}
+
+bool KDlgImportLink::CheckDuplicateID(std::map<CString, Integer> &a_mapKeyFieldValue, KEMImportType a_emImportType)
+{
+	try 
+	{
+		std::map<CString, Integer>::iterator iter  = a_mapKeyFieldValue.begin();
+		std::map<CString, Integer>::iterator itEnd = a_mapKeyFieldValue.end();
+
+		int nKeyCnt(0);
+		if (KEMImportAdd == a_emImportType || KEMImportInsert == a_emImportType) {
+			if( m_bAutoGenerateKey )
+				nKeyCnt = 0;
+			else
+				nKeyCnt = 1;
+		} else	{
+			if( GetBaseDataType() == KEMBaseLink )
+				nKeyCnt = 1;
+			else
+				nKeyCnt = 2;
+		}
+
+		if (1 == nKeyCnt) {
+			// single
+			Integer nxID = -1;
+			for (; iter != itEnd; ++iter ) {
+				nxID = iter->second;
+			}
+
+			if (m_setDuplicateSingleID.find(nxID) == m_setDuplicateSingleID.end())
+				m_setDuplicateSingleID.insert(nxID);
+			else
+				return true;
+		} else if (2 == nKeyCnt) {
+			// multi
+			Integer nxFirstID(-1);
+			Integer nxSecondID(-1);
+			for (; iter != itEnd; ++iter ) {
+				CString strField = iter->first;
+
+				if (strField.CompareNoCase(COLUMN_FNODE_ID) == 0) {
+					nxFirstID = iter->second;
+				} else if (strField.CompareNoCase(COLUMN_TNODE_ID) == 0) {
+					nxSecondID = iter->second;
+				}
+			}
+
+			KODKey oODKey(nxFirstID, nxSecondID);
+			if (m_setDuplicateMultiID.find(oODKey) == m_setDuplicateMultiID.end())
+				m_setDuplicateMultiID.insert(oODKey);
+			else
+				return true;
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		return true;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		return true;
+	} catch (...) {
+		TxLogDebugException();
+		return true;
+	}
+
+	return false;
+}
+
+#include <string>
+void KDlgImportLink::WriteOutputStream(CString a_strImportValue, KEMIODataType a_emDataType, std::ofstream& ofs)
+{
+	try
+	{
+		double	dValue  = 0.0;
+		Integer nxValue = 0;
+
+		if(a_emDataType == KEMIODataTypeDouble)	{
+			dValue = _ttof(a_strImportValue);
+			ofs.write(reinterpret_cast<char*>(&dValue), sizeof(double));
+		} else if(a_emDataType == KEMIODataTypeInteger) {
+			nxValue = _ttoi64(a_strImportValue);
+			ofs.write(reinterpret_cast<char*>(&nxValue), sizeof(Integer));
+		} else if(a_emDataType == KEMIODataTypeString) {
+			const int STR_LENGTH = 200;
+			if(a_strImportValue.GetLength() > STR_LENGTH - 1)
+				a_strImportValue.Truncate(STR_LENGTH - 1);
+
+			TCHAR     szStrOut[STR_LENGTH];
+
+			_tcscpy_s(szStrOut, a_strImportValue);
+			ofs.write( reinterpret_cast<char*>( szStrOut  ), sizeof(TCHAR) * STR_LENGTH );
+
+			//delete  szStrOut;
+		}
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+
+		throw ex;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		throw ex;
+	} catch (...) {
+		TxLogDebugException();
+		throw 1;
+	}
+}
+
+void KDlgImportLink::ImportLinkData(ThreadPara* pPara)
+{
+	TxLogDebugStartMsg();
+
+	std::ifstream ifs(m_strMiddleFile, std::ios::binary);
+
+	int nImportDataCount = (int)pPara->TKeyInt32[0];
+
+	CString strValue(_T(""));
+	double	dValue(0.0);
+	Integer	nxValue(0);
+
+	KDBaseConPtr spDBase = m_pTarget->GetDBaseConnection();
+	KImportCommon::DeleteLinkRelation(spDBase); // 트랜잭션을 활용할 수가 없다. (spDBase와 spMapServer는 같은 곳을 바라보고 있기 때문)
+	
+	ITxMapServerPtr   spMapServer    = nullptr;
+	TxFeatureLayerPtr spFeatureLayer = nullptr; 
+
+	try 
+	{
+		LoadLayerInfo(m_pTarget, spMapServer, spFeatureLayer);
+		if (nullptr == spMapServer)
+			throw 1;
+		if (nullptr == spFeatureLayer)
+			throw 2;
+	} catch (int& ex) {
+		CString strError(_T(""));
+		if (1 == ex) {
+			strError.Format(_T("Error : %d (server 접속 실패)"), ex);
+		} else if (2 == ex) {
+			strError.Format(_T("Error : %d (레이어 조회 실패)"), ex);
+		} else {
+			strError.Format(_T("Error : %d"), ex);
+		}
+		TxLogDebug((LPCTSTR)strError);
+
+		//ThrowException(_T("Import에 실패 하였습니다.")); 
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			ThrowException(_T("Import에 실패 하였습니다."));
+		}
+		else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+			ThrowException(_T("Failed to Import !"));
+		}
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		throw ex;
+	} catch (...) {
+		TxLogDebugException();
+		//ThrowException(_T("Import에 실패 하였습니다.")); 
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			ThrowException(_T("Import에 실패 하였습니다."));
+		}
+		else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+			ThrowException(_T("Failed to Import !"));
+		}
+	}
+
+	spMapServer->BeginTransaction();
+
+	try
+	{
+		std::vector<KIOColumn*> vecIOColumn; {
+			CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+			int nRecordCount = pRecords->GetCount();
+			for (int i= 0; i< nRecordCount; i++) {
+				CXTPReportRecord* pRecord        = pRecords->GetAt(i);
+
+				if (!pRecord->IsVisible())
+					continue;
+
+				KIOColumn*        pIOColumn      = GetDefIOColumn(pRecord);
+				int               nSelectedIndex = GetImportColumnIndex(pRecord);
+
+				if(0 < nSelectedIndex)
+					vecIOColumn.push_back(pIOColumn);
+			}
+		}
+		int nSizeCol = (int)vecIOColumn.size();
+
+		int nloopCount(0);
+		while (!ifs.eof())
+		{
+			if ( ++nloopCount % 500 == 0) {
+				CString strMsg;
+				strMsg.Format(_T("Importing data rows ( %d / %d )"), nloopCount, nImportDataCount);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strMsg.Format(_T("읽은 파일 라인수 / 총 라인수 :  %d / %d"), nloopCount, nImportDataCount);
+				}
+				AddStatusMessage( strMsg );
+			}
+
+			Integer link_id(0);
+			Integer nxFNodeID(0);
+			Integer nxTNodeID(0);
+
+			TxRecord oRecord;
+			if (m_bAutoGenerateKey) { // F/T Node 일때는 여기서 link_id값이 수집되고, 그렇지 않은경우 하단에서 link_id 필드매칭에 의해 수집된다.
+				link_id = m_nStartNum++; 
+
+				oRecord.AddItem(COLUMN_LINK_ID, link_id);
+			}
+
+			for (int i= 0; i< nSizeCol; i++) {
+				KIOColumn*    pColumn       = vecIOColumn[i];
+				KEMIODataType emDataType    = pColumn->DataType();
+				CString       strColumnName = pColumn->Name();
+
+				if(emDataType == KEMIODataTypeDouble) {
+					ifs.read(reinterpret_cast<char*>(&dValue), sizeof(double));
+					if(ifs.eof())
+						break;
+
+					oRecord.AddItem(strColumnName, dValue);
+				} else if(emDataType == KEMIODataTypeInteger) {
+					ifs.read(reinterpret_cast<char*>(&nxValue), sizeof(Integer));
+					if(ifs.eof())
+						break;
+					if (strColumnName.CompareNoCase(COLUMN_LINK_ID) == 0)
+						link_id = nxValue;
+					if (strColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0)
+						nxFNodeID = nxValue;
+					if (strColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0)
+						nxTNodeID = nxValue;
+
+					oRecord.AddItem(strColumnName, nxValue);
+				} else if(emDataType == KEMIODataTypeString) {
+					const int STR_LENGTH = 200;
+					TCHAR*  szStringIn = new TCHAR[STR_LENGTH];
+					ifs.read( reinterpret_cast<char*>( szStringIn ), sizeof(TCHAR) * STR_LENGTH );
+					if(ifs.eof())
+						break;
+					strValue = szStringIn;
+					delete szStringIn;
+
+					oRecord.AddItem(strColumnName, strValue);
+				}
+			}
+
+			if(ifs.eof())
+				break;
+
+			std::vector<TxPoint> vecPt;
+			auto itFind = m_mapNodeRecord.find(nxFNodeID);
+			if (itFind == m_mapNodeRecord.end())
+				continue;
+			else
+				vecPt.push_back(itFind->second);
+
+			itFind = m_mapNodeRecord.find(nxTNodeID);
+			if (itFind == m_mapNodeRecord.end())
+				continue;
+			else
+				vecPt.push_back(itFind->second);
+
+			ITxGeometryPtr spGeometry = TxPolylinePtr(new TxPolyline(vecPt));
+			spFeatureLayer->Insert(link_id, spGeometry, oRecord);
+		}
+
+		spMapServer->Commit();
+
+		// RebuildIndex 수행시 트랙젠션 관계로, 외부의 트랙젝션이 끝난후 수행되야 한다.
+		spFeatureLayer->RebuildIndex();
+
+		ifs.close();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	} catch (...) {
+		TxLogDebugException();
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::UpdateUserData(ThreadPara* pPara)
+{
+	TxLogDebugStartMsg();
+	std::ifstream ifs(m_strMiddleFile, std::ios::binary);
+
+	int     nImportDataCount = (int)pPara->TKeyInt32[1]; // 양호건수가 Update 전체건수가 된다.
+	double	dValue  (0.0);
+	Integer nxValue (0);
+	CString strValue(_T(""));
+
+	KDBaseConPtr spDBase = m_pTarget->GetDBaseConnection();
+
+	std::vector<KIOColumn*> vecIOColumn; { // 업데이트에 사용되는 최종 컬럼 정보 수집
+#pragma region 업데이트에 사용되는 최종 컬럼 정보 수집
+		CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+		int nRecordCount = pRecords->GetCount();
+		for (int i= 0; i< nRecordCount; i++)
+		{
+			CXTPReportRecord*        pRecord     = pRecords->GetAt(i);
+			KIOColumn*               pIOColumn      = GetDefIOColumn(pRecord);
+			int                      nSelectedIndex = GetImportColumnIndex(pRecord);
+
+			if( nSelectedIndex == 0 || pRecord->IsVisible() == FALSE )
+				continue;
+
+			CString strColumnName = pIOColumn->Name();
+			auto itFind = m_setKeyFieldName.find(strColumnName); // Key 필드는 제외 (하단에서 키필드 정보 수집)
+			if (itFind != m_setKeyFieldName.end())
+				continue;
+
+			vecIOColumn.push_back(pIOColumn);
+		}
+#pragma endregion 업데이트에 사용되는 최종 컬럼 정보 수집
+	}
+	int nSizeCol = (int)vecIOColumn.size();
+
+	try
+	{
+		CString strSQLUpdate = GenerateUpdatePrepareQuery(vecIOColumn);
+
+		spDBase->BeginTransaction();
+		KPreparedStatementPtr spPrepared = spDBase->PrepareStatement(strSQLUpdate);
+		
+		int nloopCount = 0;
+
+		while(!ifs.eof()) {
+			if ( ++nloopCount % 500 == 0) {
+				CString strMsg;
+				strMsg.Format(_T("Updating data rows ( %d / %d )"), nloopCount, nImportDataCount);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strMsg.Format(_T("읽은 파일 라인수 / 총 라인수 :  %d / %d"), nloopCount, nImportDataCount);
+				}
+				AddStatusMessage( strMsg );
+			}
+
+			int nBindCount(1);
+			for (int i= 0; i< nSizeCol; i++) {
+				KIOColumn*    pColumn       = vecIOColumn[i];
+				KEMIODataType emDataType    = pColumn->DataType();
+				CString       strColumnName = pColumn->Name();
+
+				if(emDataType == KEMIODataTypeDouble) {
+					ifs.read(reinterpret_cast<char*>(&dValue), sizeof(double));
+					if(ifs.eof())
+						break;
+
+					spPrepared->BindDouble(nBindCount++, dValue);
+				} else if(emDataType == KEMIODataTypeInteger) {
+					ifs.read(reinterpret_cast<char*>(&nxValue), sizeof(Integer));
+					if(ifs.eof())
+						break;
+
+					spPrepared->BindInt64(nBindCount++, nxValue);
+				} else if(emDataType == KEMIODataTypeString) {
+					const int STR_LENGTH = 200;
+					TCHAR*  szStringIn = new TCHAR[STR_LENGTH];
+					ifs.read( reinterpret_cast<char*>( szStringIn ), sizeof(TCHAR) * STR_LENGTH );
+					if(ifs.eof())
+						break;
+					strValue = szStringIn;
+					delete szStringIn;
+
+					spPrepared->BindText(nBindCount++, strValue);
+				}
+			}
+
+			// 조건절에 사용될 키 필드
+			auto iter  = m_setKeyFieldName.begin();
+			auto itEnd = m_setKeyFieldName.end();
+			for (; iter != itEnd; ++iter) {
+				ifs.read(reinterpret_cast<char*>(&nxValue), sizeof(Integer));
+
+				if(ifs.eof())
+					break;
+
+				spPrepared->BindInt64(nBindCount++, nxValue);
+			}
+
+			if(ifs.eof())
+				break;
+
+			spPrepared->ExecuteUpdate();
+			spPrepared->Reset();
+		}
+
+		spDBase->Commit();
+		ifs.close();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+
+		spDBase->RollBack();
+		ifs.close();
+		
+		ThrowException(_T("Failed to Update Binary Data..."));
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+
+		spDBase->RollBack();
+		ifs.close();
+
+		throw ex;
+	} catch (...) {
+		TxLogDebugException();
+
+		spDBase->RollBack();
+		ifs.close();
+
+		ThrowException(_T("Failed to Update Binary Data..."));
+	}
+
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::AddLinkData(ThreadPara* pPara)
+{
+	TxLogDebugStartMsg();
+
+	std::ifstream ifs(m_strMiddleFile, std::ios::binary);
+
+	int nImportDataCount = (int)pPara->TKeyInt32[0];
+
+	CString strValue(_T(""));
+	double	dValue(0.0);
+	Integer	nxValue(0);
+
+	KDBaseConPtr spDBase       = m_pTarget->GetDBaseConnection();
+	Integer nxMaxLinkID(0);
+	nxMaxLinkID = KImportCommon::MaxLinkID(spDBase);
+
+	ITxMapServerPtr   spMapServer    = nullptr;
+	TxFeatureLayerPtr spFeatureLayer = nullptr; 
+
+	try 
+	{
+		LoadLayerInfo(m_pTarget, spMapServer, spFeatureLayer, false);
+		if (nullptr == spMapServer)
+			throw 1;
+		if (nullptr == spFeatureLayer)
+			throw 2;
+	} catch (int& ex) {
+		CString strError(_T(""));
+		if (1 == ex) {
+			strError.Format(_T("Error : %d (server 접속 실패)"), ex);
+		} else if (2 == ex) {
+			strError.Format(_T("Error : %d (레이어 조회 실패)"), ex);
+		} else {
+			strError.Format(_T("Error : %d"), ex);
+		}
+		TxLogDebug((LPCTSTR)strError);
+
+		//ThrowException(_T("Import에 실패 하였습니다.")); 
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			ThrowException(_T("Import에 실패 하였습니다."));
+		}
+		else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+			ThrowException(_T("Failed to Import !"));
+		}
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		throw ex;
+	} catch (...) {
+		TxLogDebugException();
+		//ThrowException(_T("Import에 실패 하였습니다.")); 
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			ThrowException(_T("Import에 실패 하였습니다."));
+		}
+		else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+			ThrowException(_T("Failed to Import !"));
+		}
+	}
+
+	spMapServer->BeginTransaction();
+
+	try
+	{
+		std::vector<KIOColumn*> vecIOColumn; {
+			CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+			int nRecordCount = pRecords->GetCount();
+			for (int i= 0; i< nRecordCount; i++) {
+				CXTPReportRecord* pRecord        = pRecords->GetAt(i);
+
+				if (!pRecord->IsVisible())
+					continue;
+
+				KIOColumn*        pIOColumn      = GetDefIOColumn(pRecord);
+				int               nSelectedIndex = GetImportColumnIndex(pRecord);
+
+				if(0 < nSelectedIndex)
+					vecIOColumn.push_back(pIOColumn);
+			}
+		}
+		int nSizeCol = (int)vecIOColumn.size();
+
+		int nloopCount(0);
+		while (!ifs.eof())
+		{
+			if ( ++nloopCount % 500 == 0) {
+				CString strMsg;
+				strMsg.Format(_T("Importing data rows ( %d / %d )"), nloopCount, nImportDataCount);
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strMsg.Format(_T("읽은 파일 라인수 / 총 라인수 :  %d / %d"), nloopCount, nImportDataCount);
+				}
+				AddStatusMessage( strMsg );
+			}
+
+			Integer link_id(0);
+			Integer nxFNodeID(0);
+			Integer nxTNodeID(0);
+
+			TxRecord oRecord;
+			if (m_bAutoGenerateKey) { // F/T Node 일때는 여기서 link_id값이 수집되고, 그렇지 않은경우 하단에서 link_id 필드매칭에 의해 수집된다.
+				link_id = ++nxMaxLinkID; 
+
+				oRecord.AddItem(COLUMN_LINK_ID, link_id);
+			}
+
+			for (int i= 0; i< nSizeCol; i++) {
+				KIOColumn*    pColumn       = vecIOColumn[i];
+				KEMIODataType emDataType    = pColumn->DataType();
+				CString       strColumnName = pColumn->Name();
+
+				if(emDataType == KEMIODataTypeDouble) {
+					ifs.read(reinterpret_cast<char*>(&dValue), sizeof(double));
+					if(ifs.eof())
+						break;
+
+					oRecord.AddItem(strColumnName, dValue);
+				} else if(emDataType == KEMIODataTypeInteger) {
+					ifs.read(reinterpret_cast<char*>(&nxValue), sizeof(Integer));
+					if(ifs.eof())
+						break;
+					if (strColumnName.CompareNoCase(COLUMN_LINK_ID) == 0)
+						link_id = nxValue;
+					if (strColumnName.CompareNoCase(COLUMN_FNODE_ID) == 0)
+						nxFNodeID = nxValue;
+					if (strColumnName.CompareNoCase(COLUMN_TNODE_ID) == 0)
+						nxTNodeID = nxValue;
+
+					oRecord.AddItem(strColumnName, nxValue);
+				} else if(emDataType == KEMIODataTypeString) {
+					const int STR_LENGTH = 200;
+					TCHAR*  szStringIn = new TCHAR[STR_LENGTH];
+					ifs.read( reinterpret_cast<char*>( szStringIn ), sizeof(TCHAR) * STR_LENGTH );
+					if(ifs.eof())
+						break;
+					strValue = szStringIn;
+					delete szStringIn;
+
+					oRecord.AddItem(strColumnName, strValue);
+				}
+			}
+
+			if(ifs.eof())
+				break;
+
+			std::vector<TxPoint> vecPt;
+			auto itFind = m_mapNodeRecord.find(nxFNodeID);
+			if (itFind == m_mapNodeRecord.end())
+				continue;
+			else
+				vecPt.push_back(itFind->second);
+
+			itFind = m_mapNodeRecord.find(nxTNodeID);
+			if (itFind == m_mapNodeRecord.end())
+				continue;
+			else
+				vecPt.push_back(itFind->second);
+
+			ITxGeometryPtr spGeometry = TxPolylinePtr(new TxPolyline(vecPt));
+			spFeatureLayer->Insert(link_id, spGeometry, oRecord);
+		}
+
+		spMapServer->Commit();
+
+		// RebuildIndex 수행시 트랙젠션 관계로, 외부의 트랙젝션이 끝난후 수행되야 한다.
+		spFeatureLayer->RebuildIndex();
+
+		ifs.close();
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	} catch (...) {
+		TxLogDebugException();
+		spMapServer->Rollback();
+		ifs.close();
+		throw 1;
+	}
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::LoadLayerInfo(KTarget* a_pTarget, ITxMapServerPtr &spMapServer, TxFeatureLayerPtr &spFeatureLayer, bool bInitExtent)
+{
+	try 
+	{
+		KMapView* pCreatedMapView = ImChampFrameWindow::GetCreatedMapView(a_pTarget);
+		if (pCreatedMapView != nullptr) { // MapView가 생성되어 있는지 확인
+			ITxFeatureLayerPtr spLayer = pCreatedMapView->MapGetFeatureLayer(KLayerID::Link());
+			if (spLayer != nullptr) {
+				spFeatureLayer = std::dynamic_pointer_cast<TxFeatureLayer>(spLayer);
+			}
+
+			spMapServer = spFeatureLayer->GetServer();
+		} else { // MapView가 생성 되어 있지 않으면 서버에 직접 접속
+			CString strServerPath = a_pTarget->GetIODataFilePath();
+			spMapServer = ITxMapServerPtr(new TxSQLMapServer(TxMapDataServerSqlite, strServerPath));
+			if ( spMapServer->Connect() != 1)  
+				throw 1; 
+
+			// 서버의 레이어 정보 조회
+			std::vector<TxLayerInfoPtr> vecLayerInfo = spMapServer->LayerInfo();
+			for (size_t j=0; j<vecLayerInfo.size(); j++) {
+				TxLayerInfoPtr spLayerInfo = vecLayerInfo[j];
+
+				if (_tcsicmp(m_pTable->Name(), spLayerInfo->Name()) == 0) { // 링크 레이어 조회
+					spFeatureLayer = TxFeatureLayerPtr(new TxFeatureLayer(spMapServer, spLayerInfo));
+				}
+			}
+		}
+
+		if (bInitExtent) {
+			if (nullptr != spFeatureLayer) {
+				TxLayerInfoPtr    spLayerInfo    = spFeatureLayer->LayerInfo();
+				TxLayerInfoSQLPtr spLayerInfoSQL = std::dynamic_pointer_cast<TxLayerInfoSQL>(spLayerInfo);
+				spLayerInfoSQL->SetExtent(0.0,0.0,0.0,0.0); // 초기화
+			}
+		}
+	} catch (int& ex) {
+		TxLogDebugException();
+		throw ex;
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		throw ex;
+	} catch (...) {
+		TxLogDebugException();
+		//ThrowException(_T("Import에 실패 하였습니다.")); 
+		if (KmzSystem::GetLanguage() == KEMKorea) {
+			ThrowException(_T("Import에 실패 하였습니다."));
+		}
+		else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+			ThrowException(_T("Failed to Import !"));
+		}
+	}
+}
+
+CString KDlgImportLink::GenerateUpdatePrepareQuery(std::vector<KIOColumn*> &a_vecIOColumn)
+{
+	CString  strUpdateQuery(_T(""));{
+		strUpdateQuery.Format(_T(" UPDATE %s SET "), m_strTableName);
+		for (size_t i= 0; i< a_vecIOColumn.size(); i++)
+		{
+			KIOColumn* pIOColumn     = a_vecIOColumn[i];
+			CString    strColumnName = pIOColumn->Name();
+
+			if(i > 0)
+				strUpdateQuery.Append(_T(", "));
+			strUpdateQuery.Append(strColumnName);
+			strUpdateQuery.Append(_T(" = ? "));
+		}
+	}
+
+	CString  strWhereQuery (_T("")); { // 조건절
+		auto iter  = m_setKeyFieldName.begin();
+		auto itEnd = m_setKeyFieldName.end();
+		int nIdx(0);
+		for (; iter != itEnd; ++iter, nIdx++) {
+			if( 0 == nIdx) {
+				strWhereQuery.Append(_T(" WHERE "));
+			} else {
+				strWhereQuery.Append(_T(" AND "));
+			}
+			strWhereQuery.Append(*iter);
+			strWhereQuery.Append(_T(" = ? "));
+		}
+	}
+
+	CString strPreparedQuery(_T("")); {
+		strPreparedQuery.Format(_T(" %s %s "), strUpdateQuery, strWhereQuery);
+	}
+
+	return strPreparedQuery;
+}
+
+void KDlgImportLink::ErrorFileOpen()
+{
+	try
+	{
+		if (QBicFile::FileExist(m_strErrFile) == false){
+			return;
+		}
+		ShellExecute(NULL, _T("open"), m_strErrFile, NULL, NULL, SW_SHOW); // 기본 프로그램으로 잡혀 있는 프로그램으로 자동 오픈
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+}
+
+void KDlgImportLink::ValidateImport( void )
+{
+	TxLogDebugStartMsg();
+	try
+	{
+		CString strColumnName(_T(""));
+#pragma region Link 테이블 필수입력_Filed Null 체크
+
+		if (KImportCommon::IsEmptyTable(m_pTarget, TABLE_NODE) == true) { // true: 데이터무, false : 데이터 존재
+			//ThrowException(_T("노드를 먼저 입력해 주세요."));
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				ThrowException(_T("노드를 먼저 입력해 주세요."));
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				ThrowException(_T("Import Node data first !"));
+			}
+		}
+
+		CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+		int nColumnCount = pRecords->GetCount();
+		for (int i= 0; i < nColumnCount; i++) {
+			CXTPReportRecord* pRecord   = pRecords->GetAt(i);
+			KIOColumn*        pIOColumn = nullptr;
+			if( pRecord->IsVisible() == FALSE)
+				continue;
+
+			int nSelectedIndex = GetImportColumnIndex(pRecord);
+			if (nSelectedIndex != 0) // 0이라는 것은 NULL을 선택했다.
+				continue;
+
+			CString strMsg(_T(""));
+			pIOColumn = GetDefIOColumn(pRecord);
+			strColumnName = pIOColumn->Name();
+
+			if(strColumnName.CompareNoCase(COLUMN_LINK_ID) == 0 && m_bAutoGenerateKey == FALSE)	{
+				//strMsg.Format(_T("\"%s\" Field는 Null일 수 없습니다."), pIOColumn->Caption());
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strMsg.Format(_T("\"%s\" 필수 입력 컬럼은 Null 값일 수 없습니다 !"), pIOColumn->Caption());
+				}
+				else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strMsg.Format(_T("\"%s\" Required input column cannot be a NULL value !"), pIOColumn->Caption());
+				}
+				ThrowException(strMsg);
+			}
+			if( strColumnName.CompareNoCase(COLUMN_FNODE_ID)  == 0 || 
+				strColumnName.CompareNoCase(COLUMN_TNODE_ID)  == 0 || 
+				strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0  ) {
+				//strMsg.Format(_T("\"%s\" Field는 Null일 수 없습니다."), pIOColumn->Caption());
+				if (KmzSystem::GetLanguage() == KEMKorea) {
+					strMsg.Format(_T("\"%s\" 필수 입력 컬럼은 Null 값일 수 없습니다 !"), pIOColumn->Caption());
+				}
+				else { //if (KmzSystem::GetLanguage() == KEMEnglish) {
+					strMsg.Format(_T("\"%s\" Required input column cannot be a NULL value !"), pIOColumn->Caption());
+				}
+				ThrowException(strMsg);
+			}
+		}
+#pragma endregion Link 테이블 필수입력_Filed Null 체크
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		ThrowException((LPCTSTR)strError);
+	} catch(KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		ThrowException(ex->GetErrorMessage());
+	} catch(...) {
+		TxLogDebugException();
+		ThrowException(_T("Fail - Validate Import"));
+	}
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::ValidateUpdateMode( void )
+{
+	TxLogDebugStartMsg();
+	UpdateData(TRUE);
+	try
+	{
+		m_setKeyFieldName.clear();
+		CString strColumnName(_T(""));
+		#pragma region Link 테이블 Id_Filed Null 체크
+		if (KImportCommon::IsEmptyTable(m_pTarget, TABLE_NODE)) { // true: 데이터무, false : 데이터 존재
+			//ThrowException(_T("Node Data를 먼저 Insert 해주세요."));
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				ThrowException(_T("노드를 먼저 입력해 주세요."));
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				ThrowException(_T("Import Node data first !"));
+			}
+		}
+
+		CXTPReportRecords* pRecords = m_ctrlReportColumn.GetRecords();
+		int nColumnCount			= pRecords->GetCount();
+		int nUpdateColums(0);
+
+		for (int i = 0; i < nColumnCount; ++i) {
+			CXTPReportRecord*        pRecord        = pRecords->GetAt(i);
+			KIOColumn*               pIOColumn      = nullptr;
+			int                      nSelectedIndex = GetImportColumnIndex(pRecord);
+
+			pIOColumn     = GetDefIOColumn( pRecord );
+			strColumnName = pIOColumn->Name();
+
+			if( pRecord->IsVisible() == FALSE)
+				continue;
+
+			CString strMsg(_T(""));
+			if (nSelectedIndex == 0) {
+				if( GetBaseDataType() == KEMBaseLink ) {
+					if( strColumnName.CompareNoCase(COLUMN_LINK_ID)   == 0 || 
+						strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0  ) {
+						//strMsg.Format(_T("\"%s\" Field는 Null일 수 없습니다."), pIOColumn->Caption());
+						if (KmzSystem::GetLanguage() == KEMKorea) {
+							strMsg.Format(_T("\"%s\" 필수 입력 컬럼은 Null 값일 수 없습니다 !"), pIOColumn->Caption());
+						}
+						else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+							strMsg.Format(_T("\"%s\" Required input column cannot be a NULL value !"), pIOColumn->Caption());
+						}
+						ThrowException(strMsg);
+					}
+				} else {
+					if( strColumnName.CompareNoCase(COLUMN_FNODE_ID)  == 0 || 
+						strColumnName.CompareNoCase(COLUMN_TNODE_ID)  == 0 || 
+						strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0  ) {
+						//strMsg.Format(_T("\"%s\" Field는 Null일 수 없습니다."), pIOColumn->Caption());
+						if (KmzSystem::GetLanguage() == KEMKorea) {
+							strMsg.Format(_T("\"%s\" 필수 입력 컬럼은 Null 값일 수 없습니다 !"), pIOColumn->Caption());
+						}
+						else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+							strMsg.Format(_T("\"%s\" Required input column cannot be a NULL value !"), pIOColumn->Caption());
+						}
+						ThrowException(strMsg);
+					}
+				}
+			} else {
+				if( GetBaseDataType() == KEMBaseLink ) {
+					if( strColumnName.CompareNoCase(COLUMN_FNODE_ID)  == 0 || 
+						strColumnName.CompareNoCase(COLUMN_TNODE_ID)  == 0 || 
+						strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0  ) {
+						//strMsg.Format(_T("\"%s\" Field는 Update 불가"), pIOColumn->Caption());
+						if (KmzSystem::GetLanguage() == KEMKorea) {
+							strMsg.Format(_T("\"%s\" 해당 컬럼은 갱신을 할 수 없습니다 !"), pIOColumn->Caption());
+						}
+						else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+							strMsg.Format(_T("\"%s\" CANNOT update this column !"), pIOColumn->Caption());
+						}
+						ThrowException(strMsg);
+					} 
+					
+					if( strColumnName.CompareNoCase(COLUMN_LINK_ID) == 0 ) {
+						m_setKeyFieldName.insert(strColumnName);
+					} else {
+						nUpdateColums++;
+					}
+				} else {
+					if( strColumnName.CompareNoCase(COLUMN_LINK_ID)  == 0 || 
+						strColumnName.CompareNoCase(COLUMN_LINK_TYPE) == 0  ) {
+						//strMsg.Format(_T("\"%s\" Field는 Update 불가"), pIOColumn->Caption());
+						if (KmzSystem::GetLanguage() == KEMKorea) {
+							strMsg.Format(_T("\"%s\" 해당 컬럼은 갱신을 할 수 없습니다 !"), pIOColumn->Caption());
+						}
+						else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+							strMsg.Format(_T("\"%s\" CANNOT update this column !"), pIOColumn->Caption());
+						}
+						ThrowException(strMsg);
+					}
+					
+					if( strColumnName.CompareNoCase(COLUMN_FNODE_ID)  == 0 ||
+						strColumnName.CompareNoCase(COLUMN_TNODE_ID)  == 0  ) {
+						m_setKeyFieldName.insert(strColumnName);
+					} else {
+						nUpdateColums++;
+					}
+				}
+			}
+		}
+
+		if (0 == nUpdateColums) {
+			//ThrowException(_T("매칭된 업데이트 컬럼 정보가 없습니다.\r\n컬럼을 매칭하세요."));
+			if (KmzSystem::GetLanguage() == KEMKorea) {
+				ThrowException(_T("매칭된 업데이트 컬럼 정보가 없습니다.\r\n컬럼을 매칭하세요."));
+			}
+			else { // if (KmzSystem::GetLanguage() == KEMEnglish) {
+				ThrowException(_T("There is no any matched information.\r\nPlease match the required column first."));
+			}
+		}
+		#pragma endregion Link 테이블 Id_Filed Null 체크
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+		ThrowException((LPCTSTR)strError);
+	} catch(KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+		ThrowException(ex->GetErrorMessage());
+	} catch(...) {
+		TxLogDebugException();
+		ThrowException(_T("Fail - Validate Update"));
+	}
+
+	TxLogDebugEndMsg();
+}
+
+bool KDlgImportLink::AlertTableChange()
+{
+	UpdateData(TRUE);
+
+// 	CString strMsg       = _T("");
+// 	bool    bContinue    = false;
+// 
+// 	KEMImportType emImportType = GetSelectedImportType(); 
+// 
+// 	if (KEMImportInsert == emImportType) {
+// 		if (IsEmptyTable(TABLE_LINK) == false)
+// 			strMsg = _T("Link 데이터를 Insert 하면 Turn 과 Transit을 포함한 관련된 테이블의 데이터가 삭제됩니다.\n진행하시겠습니까 ?");
+// 		else
+// 			return true;
+// 	} else {
+// 		return true;
+// 	}
+// 
+// 	if ( IDNO == AfxMessageBox(strMsg, MB_YESNO) ) {
+// 		return false; 
+// 	}
+
+	return true;
+}
+
+KIOColumn* KDlgImportLink::GetDefIOColumn( CXTPReportRecord* a_pRecord )
+{
+	CXTPReportRecordItemText* pColumnItemText = (CXTPReportRecordItemText*)a_pRecord->GetItem( _0_COLUMN_DEFFILED_NAME );
+	KIOColumn*                pIOColumn		  = (KIOColumn*)(pColumnItemText->GetItemData());
+	return pIOColumn;
+}
+
+int KDlgImportLink::GetImportColumnIndex( CXTPReportRecord* a_pRecord )
+{
+	int nColumnIndex = 0;
+	KColumnReportRecordItem* pColumnItem = (KColumnReportRecordItem*)a_pRecord->GetItem(_2_COLUMN_IMPORTFIELD_NAME);
+	nColumnIndex = pColumnItem->getColumnIndex();
+	return nColumnIndex;
+}
+
+int KDlgImportLink::GetBaseDataType()
+{
+	try
+	{
+		int nCurSel   = m_cboBaseDataType.GetCurSel();
+		int nDataType = (int)m_cboBaseDataType.GetItemData(nCurSel); 
+
+		return nDataType;
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	return -1;
+}
+
+BOOL KDlgImportLink::IsAutoGenerateKey()
+{
+	if (IsDlgButtonChecked(IDC_CHECK3) == BST_CHECKED) {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
+void KDlgImportLink::OnBnClickedRadioImportType(UINT nID)
+{
+	InitAutoGenerateUI();
+	InitBaseDataTypeUI();
+	UpdateColumnRecord();
+}
+
+void KDlgImportLink::OnBnClickedCheckAuto( void )
+{
+	if (IsDlgButtonChecked(IDC_CHECK3) == BST_CHECKED) {
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+	} else {
+		GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
+	}
+
+	UpdateColumnRecord();
+}
+
+void KDlgImportLink::OnSelchangeComboBaseDataType()
+{
+	UpdateColumnRecord();
+}
+
+void KDlgImportLink::RelationTableNotify()
+{
+	TxLogDebugStartMsg();
+	try
+	{
+		KImportCommon::NotifyLinkRelation(m_pTarget);
+
+	} catch (int& ex) {
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+		TxLogDebug((LPCTSTR)strError);
+	} catch (KExceptionPtr ex) {
+		TxExceptionPrint(ex);
+	} catch (...) {
+		TxLogDebugException();
+	}
+
+	TxLogDebugEndMsg();
+}
+
+void KDlgImportLink::AddStatusMessage( CString a_strMsg )
+{
+	QBicSimpleProgressPtr spProgressWindow = QBicSimpleProgressThread::SimpleProgress();
+	if(spProgressWindow) {
+		spProgressWindow->SetStatus(a_strMsg);
+	}
+}
+
+void KDlgImportLink::OnCbnSelchangeCombo4()
+{
+	if( PriviewLoadCSV() ) {
+		InitializeColumnField();
+		UpdateColumnRecord();
+		InitializePreview();
+
+		ControlDefaultCheck();
+	} 
+}
+
+void KDlgImportLink::OnCbnSelchangeCombo5()
+{
+	if( PriviewLoadCSV() ) {
+		InitializeColumnField();
+		UpdateColumnRecord();
+		InitializePreview();
+
+		ControlDefaultCheck();
+	} 
+}
+
+void KDlgImportLink::OnBnClickedCheck1()
+{
+	if( PriviewLoadCSV() ) {
+		InitializeColumnField();
+		UpdateColumnRecord();
+		InitializePreview();
+
+		ControlDefaultCheck();
+	} 
+}

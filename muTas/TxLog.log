@@ -1,0 +1,337 @@
+[Lev2][12-10 11: 1: 0, 161][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 11: 1: 0, 161][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 11: 1: 0, 176][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 11: 1: 0, 333][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 11: 1: 2, 632][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 11: 1: 2, 632][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 11: 1:18, 191][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 11: 1:18, 191][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 11: 1:18, 832][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 11: 1:18, 832][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 11: 1:18, 832][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 11: 1:18, 833][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 11: 1:18, 833][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 11: 1:18, 833][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 11: 1:18, 836][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 11: 7: 7, 584][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 11: 7: 7, 584][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 11: 7: 7, 595][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 11: 7: 7, 707][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 11: 7: 9, 390][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 11: 7: 9, 391][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 11: 7:15, 920][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 11: 7:15, 920][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 11: 7:16, 575][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 11: 7:16, 575][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 11: 7:16, 575][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 11: 7:16, 576][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 11: 7:16, 576][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 11: 7:16, 576][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 11: 7:16, 579][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 11:10:52, 947][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 11:10:52, 948][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 11:10:58, 868][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 11:10:58, 868][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 11:10:59, 299][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 11:10:59, 299][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 11:10:59, 299][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 11:10:59, 300][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 11:10:59, 300][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 11:10:59, 300][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 11:10:59, 303][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 12:36: 5, 108][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:36: 5, 108][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:36: 5, 108][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:36: 5, 249][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:36:11, 179][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:36:11, 180][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:36:19, 985][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 12:36:19, 985][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 12:36:20, 633][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 12:42:43, 440][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:42:43, 440][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:42:43, 476][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:42:43, 596][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:42:51, 450][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:42:51, 450][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:42:59, 537][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 12:42:59, 537][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 12:43: 0, 233][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 12:43: 0, 249][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 12:49:24, 142][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:49:24, 142][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:49:24, 158][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:49:24, 265][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:49:26, 452][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:49:26, 452][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:50:40, 819][CKmzApp::OnProjectOpen]-[1273]:Start
+[Lev2][12-10 12:50:42, 529][CKmzApp::OpenProject]-[1363]:Start
+[Lev0][12-10 12:50:42, 529][KProject::KProject]-[ 53]:Visit....
+[Lev2][12-10 12:50:42, 529][KProject::OpenProject]-[210]:Start
+[Lev2][12-10 12:50:42, 529][KProject::OpenScenario]-[427]:Start
+[Lev2][12-10 12:50:42, 529][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
+[Lev0][12-10 12:50:42, 544][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][12-10 12:50:43,  88][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
+[Lev0][12-10 12:50:43, 105][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][12-10 12:50:43, 637][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
+[Lev0][12-10 12:50:43, 653][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][12-10 12:50:44, 193][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
+[Lev0][12-10 12:50:44, 208][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][12-10 12:50:44, 872][KProject::OpenScenario]-[452]:End
+[Lev0][12-10 12:50:44, 888][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
+[Lev2][12-10 12:50:45, 410][KProject::OpenProject]-[349]:End
+[Lev2][12-10 12:50:45, 410][CKmzApp::OpenProject]-[1428]:End
+[Lev2][12-10 12:50:46, 334][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
+[Lev2][12-10 12:50:46, 334][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
+[Lev0][12-10 12:50:46, 334][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
+[Lev2][12-10 12:50:46, 334][KNaviExplorerWnd::UpdateTree]-[ 48]:End
+[Lev2][12-10 12:50:46, 334][CKmzApp::OnProjectOpen]-[1358]:End
+[Lev2][12-10 12:50:48, 493][CMainFrameWnd::ShowNetworkView]-[749]:Start
+[Lev2][12-10 12:50:48, 493][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
+[Lev0][12-10 12:50:48, 493][CChildFrame::CChildFrame]-[ 65]:Visit....
+[Lev0][12-10 12:50:48, 500][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev0][12-10 12:50:48, 500][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev2][12-10 12:50:48, 500][CChildFrame::OnCreate]-[ 87]:Start
+[Lev2][12-10 12:50:48, 500][CChildFrame::OnCreateClient]-[103]:Start
+[Lev0][12-10 12:50:48, 519][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
+[Lev0][12-10 12:50:48, 519][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
+[Lev2][12-10 12:50:48, 519][KMapFrameWnd::OnCreate]-[128]:Start
+[Lev2][12-10 12:50:48, 519][KMapFrameWnd::OnCreateClient]-[171]:Start
+[Lev0][12-10 12:50:48, 519][KMapFrameWnd::OnCreateClient]-[176]:Visit....
+[Lev0][12-10 12:50:48, 519][KMapView::KMapView]-[253]:Visit....
+[Lev0][12-10 12:50:48, 534][KMapFrameWnd::OnCreateClient]-[180]:Visit....
+[Lev2][12-10 12:50:48, 534][KMapFrameWnd::OnCreateClient]-[192]:End
+[Lev2][12-10 12:50:48, 565][KMapFrameWnd::OnCreate]-[164]:End
+[Lev0][12-10 12:50:48, 565][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev0][12-10 12:50:48, 615][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
+[Lev2][12-10 12:50:48, 615][KTocFrameWnd::OnCreate]-[ 29]:Start
+[Lev2][12-10 12:50:48, 615][KTocFrameWnd::OnCreateClient]-[ 47]:Start
+[Lev2][12-10 12:50:48, 816][KTocFrameWnd::OnCreateClient]-[ 50]:End
+[Lev2][12-10 12:50:48, 816][KTocFrameWnd::OnCreate]-[ 40]:End
+[Lev2][12-10 12:50:48, 816][CChildFrame::OnCreateClient]-[127]:End
+[Lev2][12-10 12:50:48, 832][CChildFrame::OnCreate]-[ 97]:End
+[Lev2][12-10 12:50:48, 832][KMapView::OnInitialUpdate]-[289]:Start
+[Lev2][12-10 12:50:48, 847][KMapView::InitalizeMap]-[298]:Start
+[Lev0][12-10 12:50:48, 847][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
+[Lev2][12-10 12:50:48, 847][KMapView::InitalizeMap]-[328]:End
+[Lev2][12-10 12:50:48, 847][KMapView::OnInitialUpdate]-[292]:End
+[Lev2][12-10 12:50:48, 863][CChildFrame::LoadTarget]-[176]:Start
+[Lev2][12-10 12:50:48, 863][KMapView::LoadMapView]-[554]:Start
+[Lev2][12-10 12:50:48, 863][KMapView::LoadInitialLayers]-[596]:Start
+[Lev2][12-10 12:50:48, 863][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][12-10 12:50:48, 863][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][12-10 12:50:49,  78][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][12-10 12:50:49,  78][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][12-10 12:50:49, 618][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][12-10 12:50:49, 618][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][12-10 12:50:49, 665][KMapView::LoadMapView]-[591]:End
+[Lev2][12-10 12:50:49, 680][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][12-10 12:50:49, 680][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][12-10 12:50:49, 680][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][12-10 12:50:49, 680][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][12-10 12:50:49, 702][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][12-10 12:50:49, 702][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][12-10 12:50:49, 749][CChildFrame::LoadTarget]-[188]:End
+[Lev2][12-10 12:50:49, 749][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
+[Lev2][12-10 12:50:49, 749][CChildFrame::ShowMapView]-[200]:Start
+[Lev2][12-10 12:50:49, 765][CChildFrame::ShowMapView]-[212]:End
+[Lev2][12-10 12:50:49, 765][CMainFrameWnd::ShowNetworkView]-[758]:End
+[Lev0][12-10 12:50:49, 818][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev0][12-10 12:50:49, 818][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev2][12-10 12:50:52, 455][CMainFrameWnd::ShowNetworkView]-[749]:Start
+[Lev2][12-10 12:50:52, 455][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
+[Lev0][12-10 12:50:52, 455][CChildFrame::CChildFrame]-[ 65]:Visit....
+[Lev0][12-10 12:50:52, 455][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev0][12-10 12:50:52, 455][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev2][12-10 12:50:52, 455][CChildFrame::OnCreate]-[ 87]:Start
+[Lev2][12-10 12:50:52, 455][CChildFrame::OnCreateClient]-[103]:Start
+[Lev0][12-10 12:50:52, 455][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
+[Lev0][12-10 12:50:52, 455][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
+[Lev2][12-10 12:50:52, 455][KMapFrameWnd::OnCreate]-[128]:Start
+[Lev2][12-10 12:50:52, 455][KMapFrameWnd::OnCreateClient]-[171]:Start
+[Lev0][12-10 12:50:52, 455][KMapFrameWnd::OnCreateClient]-[176]:Visit....
+[Lev0][12-10 12:50:52, 455][KMapView::KMapView]-[253]:Visit....
+[Lev0][12-10 12:50:52, 455][KMapFrameWnd::OnCreateClient]-[180]:Visit....
+[Lev2][12-10 12:50:52, 455][KMapFrameWnd::OnCreateClient]-[192]:End
+[Lev2][12-10 12:50:52, 486][KMapFrameWnd::OnCreate]-[164]:End
+[Lev0][12-10 12:50:52, 486][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev0][12-10 12:50:52, 521][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
+[Lev2][12-10 12:50:52, 521][KTocFrameWnd::OnCreate]-[ 29]:Start
+[Lev2][12-10 12:50:52, 521][KTocFrameWnd::OnCreateClient]-[ 47]:Start
+[Lev2][12-10 12:50:52, 737][KTocFrameWnd::OnCreateClient]-[ 50]:End
+[Lev2][12-10 12:50:52, 737][KTocFrameWnd::OnCreate]-[ 40]:End
+[Lev2][12-10 12:50:52, 743][CChildFrame::OnCreateClient]-[127]:End
+[Lev2][12-10 12:50:52, 743][CChildFrame::OnCreate]-[ 97]:End
+[Lev2][12-10 12:50:52, 743][KMapView::OnInitialUpdate]-[289]:Start
+[Lev2][12-10 12:50:52, 743][KMapView::InitalizeMap]-[298]:Start
+[Lev0][12-10 12:50:52, 743][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
+[Lev2][12-10 12:50:52, 743][KMapView::InitalizeMap]-[328]:End
+[Lev2][12-10 12:50:52, 743][KMapView::OnInitialUpdate]-[292]:End
+[Lev2][12-10 12:50:52, 763][CChildFrame::LoadTarget]-[176]:Start
+[Lev2][12-10 12:50:52, 763][KMapView::LoadMapView]-[554]:Start
+[Lev2][12-10 12:50:52, 763][KMapView::LoadInitialLayers]-[596]:Start
+[Lev2][12-10 12:50:52, 770][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][12-10 12:50:52, 770][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][12-10 12:50:54,   6][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][12-10 12:50:54,  22][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][12-10 12:50:56, 742][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][12-10 12:50:56, 754][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][12-10 12:50:56, 942][KMapView::LoadMapView]-[591]:End
+[Lev2][12-10 12:50:56, 942][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][12-10 12:50:56, 942][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][12-10 12:50:56, 961][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][12-10 12:50:56, 961][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][12-10 12:50:56, 977][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][12-10 12:50:56, 977][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][12-10 12:50:57, 183][CChildFrame::LoadTarget]-[188]:End
+[Lev2][12-10 12:50:57, 183][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
+[Lev2][12-10 12:50:57, 183][CChildFrame::ShowMapView]-[200]:Start
+[Lev2][12-10 12:50:57, 198][CChildFrame::ShowMapView]-[212]:End
+[Lev2][12-10 12:50:57, 198][CMainFrameWnd::ShowNetworkView]-[758]:End
+[Lev0][12-10 12:50:57, 214][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev0][12-10 12:50:57, 229][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev2][12-10 12:50:58, 785][CChildFrame::OnDestroy]-[133]:Start
+[Lev2][12-10 12:50:58, 785][CChildFrame::OnDestroy]-[138]:End
+[Lev0][12-10 12:50:58, 785][KThemeDrawControl::~KThemeDrawControl]-[ 16]:Visit....
+[Lev0][12-10 12:50:58, 785][KMapView::OnDestroy]-[391]:Visit....
+[Lev0][12-10 12:50:58, 800][KMapView::PostNcDestroy]-[398]:Visit....
+[Lev0][12-10 12:50:58, 800][KMapView::~KMapView]-[259]:Visit....
+[Lev0][12-10 12:50:58, 932][KMapFrameWnd::~KMapFrameWnd]-[ 29]:Visit....
+[Lev0][12-10 12:50:58, 947][KTocFrameWnd::~KTocFrameWnd]-[ 18]:Visit....
+[Lev0][12-10 12:50:58, 967][CChildFrame::PostNcDestroy]-[143]:Visit....
+[Lev0][12-10 12:50:58, 967][CChildFrame::~CChildFrame]-[ 70]:Visit....
+[Lev2][12-10 12:51: 0, 903][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:51: 0, 903][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:51: 3, 675][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:51: 3, 675][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:51: 5,  86][KAccessTripODToVehODDlg::LoadConfigFile]-[445]:JSON 파일 읽는 중 오류 발생.
+[Lev2][12-10 12:51:11,  37][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:51:11,  37][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:51:12, 145][KAccessTripODToVehODDlg::LoadConfigFile]-[445]:JSON 파일 읽는 중 오류 발생.
+[Lev2][12-10 12:51:14, 362][CMainFrameWnd::OnClose]-[612]:Start
+[Lev0][12-10 12:51:15, 557][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
+[Lev2][12-10 12:51:15, 557][CMainFrameWnd::OnDestroy]-[710]:Start
+[Lev2][12-10 12:51:15, 557][CMainFrameWnd::OnDestroy]-[715]:End
+[Lev2][12-10 12:51:15, 557][CChildFrame::OnDestroy]-[133]:Start
+[Lev2][12-10 12:51:15, 557][CChildFrame::OnDestroy]-[138]:End
+[Lev0][12-10 12:51:15, 557][KThemeDrawControl::~KThemeDrawControl]-[ 16]:Visit....
+[Lev0][12-10 12:51:15, 557][KMapView::OnDestroy]-[391]:Visit....
+[Lev0][12-10 12:51:15, 570][KMapView::PostNcDestroy]-[398]:Visit....
+[Lev0][12-10 12:51:15, 570][KMapView::~KMapView]-[259]:Visit....
+[Lev0][12-10 12:51:15, 752][KMapFrameWnd::~KMapFrameWnd]-[ 29]:Visit....
+[Lev0][12-10 12:51:15, 768][KTocFrameWnd::~KTocFrameWnd]-[ 18]:Visit....
+[Lev2][12-10 12:53:44, 361][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:53:44, 361][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:53:44, 374][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:53:44, 496][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:55:12, 195][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:55:12, 195][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:55:14, 345][KAccessTripODToVehODDlg::LoadConfigFile]-[445]:JSON 파일 읽는 중 오류 발생.
+[Lev2][12-10 12:56:42,  38][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:56:42,  38][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:56:42,  54][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:56:42, 173][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:56:45, 491][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:56:45, 491][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:56:47, 343][KAccessTripODToVehODDlg::LoadConfigFile]-[445]:JSON 파일 읽는 중 오류 발생.
+[Lev2][12-10 12:57:35, 368][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:57:35, 368][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:57:53, 117][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 12:57:53, 117][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 12:57:53, 131][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 12:57:53, 226][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 12:57:55, 259][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:57:55, 259][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 12:58:40, 100][KAccessTripODToVehODDlg::LoadConfigFile]-[445]:JSON 파일 읽는 중 오류 발생.
+[Lev2][12-10 12:59: 1, 404][KAccessTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 12:59: 1, 404][KAccessTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 13: 0: 4, 403][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 13: 0: 4, 403][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 13: 1:25, 876][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 13: 1:25, 876][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 13: 2: 7, 393][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 13: 2: 7, 393][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 13: 8:24, 169][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 13: 8:24, 169][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 13: 8:24, 206][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 13: 8:24, 352][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 13: 8:26, 547][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 13: 8:26, 549][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 14: 9:55, 114][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 14: 9:55, 114][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 14:11:30, 987][KTripODToVehODDlg::UpdatePreviewReport]-[873]:Start
+[Lev2][12-10 14:11:30, 987][KTripODToVehODDlg::LoadCSVPreviewData]-[1090]:Start
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::UpdatePreviewReport]-[972]:End
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::UpdateFileColumnReport]-[1044]:Start
+[Lev2][12-10 14:11:31, 987][KTripODToVehODDlg::UpdateFileColumnReport]-[1085]:End
+[Lev2][12-10 14:11:55, 814][KTripODToVehODDlg::UpdateODColumnReport]-[977]:Start
+[Lev2][12-10 14:11:55, 814][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:11:55, 829][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:11:55, 829][KTripODToVehODDlg::UpdateODColumnReport]-[1039]:End
+[Lev2][12-10 14:13:25, 472][CMainFrameWnd::CMainFrameWnd]-[438]:Start
+[Lev2][12-10 14:13:25, 472][CMainFrameWnd::CMainFrameWnd]-[468]:End
+[Lev2][12-10 14:13:25, 497][CMainFrameWnd::OnCreate]-[478]:Start
+[Lev2][12-10 14:13:25, 631][CMainFrameWnd::OnCreate]-[576]:End
+[Lev2][12-10 14:13:27, 920][KTripODToVehODDlg::InitReportColumn]-[276]:Start
+[Lev2][12-10 14:13:27, 920][KTripODToVehODDlg::InitReportColumn]-[324]:End
+[Lev2][12-10 14:13:34,  26][KTripODToVehODDlg::UpdatePreviewReport]-[882]:Start
+[Lev2][12-10 14:13:34,  26][KTripODToVehODDlg::LoadCSVPreviewData]-[1099]:Start
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::UpdatePreviewReport]-[981]:End
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::UpdateFileColumnReport]-[1053]:Start
+[Lev2][12-10 14:13:35,  11][KTripODToVehODDlg::UpdateFileColumnReport]-[1094]:End
+[Lev2][12-10 14:13:40, 221][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:40, 221][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:40, 221][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:40, 221][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:13:44, 231][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:44, 231][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:44, 231][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:44, 231][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:13:47, 696][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:47, 696][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:47, 696][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:47, 696][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:13:49, 325][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:49, 325][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:49, 325][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:49, 325][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:13:51, 742][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:13:51, 742][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:13:51, 742][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:13:51, 742][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:15: 9, 801][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:15: 9, 801][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:15: 9, 801][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:15: 9, 801][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:15:10, 893][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:15:10, 893][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:15:10, 893][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:15:10, 893][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:15:17, 320][KTripODToVehODDlg::UpdatePreviewReport]-[882]:Start
+[Lev2][12-10 14:15:17, 320][KTripODToVehODDlg::LoadCSVPreviewData]-[1099]:Start
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::UpdatePreviewReport]-[981]:End
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::UpdateODColumnReport]-[986]:Start
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::InitODColumn]-[329]:Start
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::InitODColumn]-[371]:End
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::UpdateODColumnReport]-[1048]:End
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::UpdateFileColumnReport]-[1053]:Start
+[Lev2][12-10 14:15:17, 986][KTripODToVehODDlg::UpdateFileColumnReport]-[1094]:End

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="SQLite3Lib\sqlite3.c">
+      <Filter>SQLite3Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileLib\shptree.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileLib\safileio.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLite3Lib\shell.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileLib\shpgeo.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileLib\shpopen.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFileLib\dbfopen.c">
+      <Filter>ShapeFileLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SQLite3Lib\sqlite3ext.h">
+      <Filter>SQLite3Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="SQLite3Lib\sqlite3.h">
+      <Filter>SQLite3Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileLib\shapefil.h">
+      <Filter>ShapeFileLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileLib\shpgeo.h">
+      <Filter>ShapeFileLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFileLib\my_nan.h">
+      <Filter>ShapeFileLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SQLite3Lib">
+      <UniqueIdentifier>{09350aa4-baee-478d-be3a-babc0d9c5fa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShapeFileLib">
+      <UniqueIdentifier>{b19802cb-dcf8-48c9-be20-b08171862a05}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
