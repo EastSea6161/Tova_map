@@ -95,10 +95,10 @@ BOOL KAccessTripODToVehODDlg::OnInitDialog()
 	m_loadingGif.Load(MAKEINTRESOURCE(IDR_PROGRESSIMAGE), _T("GIF"));
 	DrawingLoadingGif(false);
 
-	for (int i = 0; i < UTIL_ACCESSTRIPOD_TO_VEHOD_AREA_CNT; i++)
-	{
-		m_cboAreaNumber.InsertString(i, UTIL_ACCESSTRIPOD_TO_VEHOD_AREA[i]);
-	}
+	//for (int i = 0; i < UTIL_ACCESSTRIPOD_TO_VEHOD_AREA_CNT; i++)
+	//{
+	//	m_cboAreaNumber.InsertString(i, UTIL_ACCESSTRIPOD_TO_VEHOD_AREA[i]);
+	//}
 
 	LoadDistributionList();
 	InitComboSeparator();

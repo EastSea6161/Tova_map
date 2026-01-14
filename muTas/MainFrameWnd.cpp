@@ -3307,7 +3307,10 @@ void CMainFrameWnd::OnEXE_TRIPOD_TO_VEHICLEOD()
 void CMainFrameWnd::OnEXE_FREIGHTOD_DIVISION()
 {
 	KFODDiv dlg2;
-	dlg2.DoModal();
+	if (dlg2.DoModal() == IDOK)
+	{
+		int ndata = 0;
+	}
 }
 
 

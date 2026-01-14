@@ -638,5 +638,3 @@ const TCHAR* THEME_TEXT_ABOVE = _T("Above");
 // Utility
 CString UTIL_TRIPOD_TO_VEHOD_AREA[]			= { _T("1:수도권"), _T("2:전국권"), _T("3:부산울산권"), _T("4:대구광역권"), _T("5:대전충청권"), _T("6:광주광역권"), _T("7:제주권") };
 const int UTIL_TRIPOD_TO_VEHOD_AREA_CNT		= _countof(UTIL_TRIPOD_TO_VEHOD_AREA);
-CString UTIL_ACCESSTRIPOD_TO_VEHOD_AREA[] = { _T("1:수도권"), _T("2:전국권"), _T("3:부산울산권"), _T("4:대구광역권"), _T("5:대전충청권"), _T("6:광주광역권") };
-const int UTIL_ACCESSTRIPOD_TO_VEHOD_AREA_CNT = _countof(UTIL_ACCESSTRIPOD_TO_VEHOD_AREA);

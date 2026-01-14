@@ -71,8 +71,12 @@
 #define IDD_GENERATION_SELECT           36
 #define IDC_BTN_ODFILE                  36
 #define IDD_KGSELECTMODEL               37
+#define IDC_BTN_ODFILE2                 37
+#define IDC_BTN_SUBODFILE               37
 #define IDD_KGSELECTMODELDLG            38
+#define IDC_EDITOR2                     38
 #define IDD_6010_GSelectModelDlg        39
+#define IDC_BTN_MAINODFILE              39
 #define IDD_69_SYMBOLOGY_BARCHART_POLYGON 40
 #define IDD_69_POLYGON_SYMBOLOGY_BARCHART 41
 #define IDD_DIALOG_SPLASH               42
@@ -3545,7 +3549,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        34085
 #define _APS_NEXT_COMMAND_VALUE         34277
-#define _APS_NEXT_CONTROL_VALUE         37
+#define _APS_NEXT_CONTROL_VALUE         40
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

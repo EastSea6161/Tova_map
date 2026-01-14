@@ -51,380 +51,329 @@ bool UtilExcelHandler::GetExcelSheetNames(const CString& excelPath, std::vector<
 {
     outSheetNames.clear();
 
+    // 1. 초기화: 모든 포인터를 NULL로 시작 (나중에 Release 여부 판단 기준)
+    IDispatch* pExcelApp = nullptr;
+    IDispatch* pWorkbooks = nullptr;
+    IDispatch* pWorkbook = nullptr;
+    IDispatch* pSheets = nullptr;
+    bool bResult = false;
+
     HRESULT hr = CoInitialize(nullptr);
     bool needUninit = SUCCEEDED(hr) && (hr != S_FALSE);
 
-    CLSID clsid;
-    hr = CLSIDFromProgID(L"Excel.Application", &clsid);
-    if (FAILED(hr))
-    {
-        if (needUninit) CoUninitialize();
-        return false;
-    }
+    try {
+        // Excel 실행
+        CLSID clsid;
+        if (FAILED(CLSIDFromProgID(L"Excel.Application", &clsid))) throw 1;
+        if (FAILED(CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp))) throw 1;
 
-    IDispatch* pExcelApp = nullptr;
-    hr = CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp);
-    if (FAILED(hr) || !pExcelApp)
-    {
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-
-    // Visible = false
-    {
-        VARIANT x;
-        VariantInit(&x);
-        x.vt = VT_BOOL;
-        x.boolVal = VARIANT_FALSE;
+        // 속성 설정 (Visible/DisplayAlerts = false)
+        VARIANT x; VariantInit(&x); x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"Visible", 1, x);
-    }
-
-    // DisplayAlerts = false
-    {
-        VARIANT x;
-        VariantInit(&x);
-        x.vt = VT_BOOL;
-        x.boolVal = VARIANT_FALSE;
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"DisplayAlerts", 1, x);
+
+        // Workbooks 가져오기
+        VARIANT vWorkbooks; VariantInit(&vWorkbooks);
+        if (FAILED(AutoWrap(DISPATCH_PROPERTYGET, &vWorkbooks, pExcelApp, L"Workbooks", 0))) throw 1;
+        pWorkbooks = vWorkbooks.pdispVal;
+
+        // Workbook 열기
+        VARIANT vWorkbook; VariantInit(&vWorkbook);
+        VARIANT arg; VariantInit(&arg); arg.vt = VT_BSTR; arg.bstrVal = _bstr_t(excelPath);
+        if (FAILED(AutoWrap(DISPATCH_METHOD, &vWorkbook, pWorkbooks, L"Open", 1, arg))) throw 1;
+        pWorkbook = vWorkbook.pdispVal;
+
+        // Sheets 가져오기
+        VARIANT vSheets; VariantInit(&vSheets);
+        if (FAILED(AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0))) throw 1;
+        pSheets = vSheets.pdispVal;
+
+        // 시트 개수 확인
+        VARIANT vCount; VariantInit(&vCount);
+        AutoWrap(DISPATCH_PROPERTYGET, &vCount, pSheets, L"Count", 0);
+        long sheetCount = vCount.lVal;
+
+        // 2. 루프 내 중단 체크 및 이름 수집
+        for (long i = 1; i <= sheetCount; ++i) {
+            // [중요] 사용자가 중단했는지 수시로 체크
+            if (m_pbAbort && *m_pbAbort) throw 0;
+
+            VARIANT argIdx; VariantInit(&argIdx); argIdx.vt = VT_I4; argIdx.lVal = i;
+            VARIANT vSheet; VariantInit(&vSheet);
+            if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vSheet, pSheets, L"Item", 1, argIdx))) {
+                IDispatch* pSheet = vSheet.pdispVal;
+                VARIANT vName; VariantInit(&vName);
+                if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vName, pSheet, L"Name", 0))) {
+                    outSheetNames.push_back(CString(vName.bstrVal));
+                    VariantClear(&vName);
+                }
+                pSheet->Release();
+                VariantClear(&vSheet);
+            }
+        }
+        bResult = true;
+    }
+    catch (...) {
+        bResult = false;
     }
 
-    // --------------------------------------------------------------------
-    // Workbooks
-    // --------------------------------------------------------------------
-    VARIANT vWorkbooks;
-    VariantInit(&vWorkbooks);
-
-    hr = AutoWrap(DISPATCH_PROPERTYGET, &vWorkbooks, pExcelApp, L"Workbooks", 0);
-    if (FAILED(hr) || vWorkbooks.vt != VT_DISPATCH || !vWorkbooks.pdispVal)
-    {
-        VariantClear(&vWorkbooks);
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-
-    IDispatch* pWorkbooks = vWorkbooks.pdispVal;
-    pWorkbooks->AddRef();          // 내가 쓸 참조
-    VariantClear(&vWorkbooks);     // VARIANT 안의 참조는 정리
-
-    // --------------------------------------------------------------------
-    // Workbooks.Open(excelPath)
-    // --------------------------------------------------------------------
-    VARIANT vWorkbook;
-    VariantInit(&vWorkbook);
-
-    {
-        VARIANT arg;
-        VariantInit(&arg);
-        arg.vt = VT_BSTR;
-        arg.bstrVal = _bstr_t(excelPath);
-
-        hr = AutoWrap(DISPATCH_METHOD, &vWorkbook, pWorkbooks, L"Open", 1, arg);
-        // arg 안의 BSTR은 Variant가 쥐고 있고, AutoWrap 끝나면 알아서 Clear 안 하므로 여기서 따로 Clear 필요 없음
-    }
-
-    if (FAILED(hr) || vWorkbook.vt != VT_DISPATCH || !vWorkbook.pdispVal)
-    {
-        VariantClear(&vWorkbook);
-        pWorkbooks->Release();
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-
-    IDispatch* pWorkbook = vWorkbook.pdispVal;
-    pWorkbook->AddRef();
-    VariantClear(&vWorkbook);
-
-    // --------------------------------------------------------------------
-    // Worksheets
-    // --------------------------------------------------------------------
-    VARIANT vSheets;
-    VariantInit(&vSheets);
-
-    hr = AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0);
-    if (FAILED(hr) || vSheets.vt != VT_DISPATCH || !vSheets.pdispVal)
-    {
-        VariantClear(&vSheets);
+    // 3. 최종 정리: 생성된 역순으로 안전하게 해제
+    if (pSheets) pSheets->Release();
+    if (pWorkbook) {
+        VARIANT save; VariantInit(&save); save.vt = VT_BOOL; save.boolVal = VARIANT_FALSE;
+        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, save);
         pWorkbook->Release();
-        pWorkbooks->Release();
+    }
+    if (pWorkbooks) pWorkbooks->Release();
+    if (pExcelApp) {
+        AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
         pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
     }
-
-    IDispatch* pSheets = vSheets.pdispVal;
-    pSheets->AddRef();
-    VariantClear(&vSheets);
-
-    // --------------------------------------------------------------------
-    // Worksheets.Count
-    // --------------------------------------------------------------------
-    long sheetCount = 0;
-    VARIANT vCount;
-    VariantInit(&vCount);
-
-    hr = AutoWrap(DISPATCH_PROPERTYGET, &vCount, pSheets, L"Count", 0);
-    if (SUCCEEDED(hr) && (vCount.vt == VT_I4 || vCount.vt == VT_INT))
-    {
-        sheetCount = vCount.lVal;
-    }
-    VariantClear(&vCount);
-
-    // --------------------------------------------------------------------
-    // 1-based 인덱스로 시트 이름들 가져오기
-    // --------------------------------------------------------------------
-    VARIANT vResult;
-    VariantInit(&vResult);
-
-    for (long i = 1; i <= sheetCount; ++i)
-    {
-        // Sheets.Item(i)
-        VARIANT argIndex;
-        VariantInit(&argIndex);
-        argIndex.vt = VT_I4;
-        argIndex.lVal = i;
-
-        VariantClear(&vResult);
-        hr = AutoWrap(DISPATCH_PROPERTYGET, &vResult, pSheets, L"Item", 1, argIndex);
-        if (FAILED(hr) || vResult.vt != VT_DISPATCH || !vResult.pdispVal)
-        {
-            // 이번 시트는 스킵하고 계속
-            continue;
-        }
-
-        IDispatch* pSheet = vResult.pdispVal;
-        pSheet->AddRef();
-        VariantClear(&vResult);
-
-        // Sheet.Name
-        VariantInit(&vResult);
-        hr = AutoWrap(DISPATCH_PROPERTYGET, &vResult, pSheet, L"Name", 0);
-        if (SUCCEEDED(hr) && vResult.vt == VT_BSTR && vResult.bstrVal != nullptr)
-        {
-            CString sheetName(vResult.bstrVal);
-            outSheetNames.push_back(sheetName);
-        }
-        VariantClear(&vResult);
-
-        pSheet->Release();
-    }
-
-    // --------------------------------------------------------------------
-    // Workbook 닫기 (변경사항 저장 X)
-    // --------------------------------------------------------------------
-    {
-        VARIANT saveChanges;
-        VariantInit(&saveChanges);
-        saveChanges.vt = VT_BOOL;
-        saveChanges.boolVal = VARIANT_FALSE;
-
-        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, saveChanges);
-    }
-
-    // Excel 종료
-    AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
-
-    // Release
-    pSheets->Release();
-    pWorkbook->Release();
-    pWorkbooks->Release();
-    pExcelApp->Release();
 
     if (needUninit) CoUninitialize();
+    return bResult;
+}
 
-    return !outSheetNames.empty();
+bool UtilExcelHandler::ReadExcelToODData(const CString& excelPath, const CString& sheetName, long startRow, std::vector<ODData>& outData)
+{
+    outData.clear();
+
+    // 1. 초기화: 모든 인터페이스 포인터를 NULL로 설정
+    IDispatch* pExcelApp = nullptr, * pWorkbooks = nullptr, * pWorkbook = nullptr;
+    IDispatch* pSheets = nullptr, * pSheet = nullptr, * pRange = nullptr;
+    VARIANT vVal; VariantInit(&vVal);
+    bool bResult = false;
+
+    HRESULT hr = CoInitialize(nullptr);
+    bool needUninit = SUCCEEDED(hr) && (hr != S_FALSE);
+
+    try {
+        // Excel 실행 및 초기 설정
+        CLSID clsid;
+        if (FAILED(CLSIDFromProgID(L"Excel.Application", &clsid))) throw 1;
+        if (FAILED(CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp))) throw 1;
+
+        VARIANT x; VariantInit(&x); x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
+        AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"Visible", 1, x);
+        AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"DisplayAlerts", 1, x);
+
+        // Workbook 열기
+        VARIANT vWBks; VariantInit(&vWBks);
+        AutoWrap(DISPATCH_PROPERTYGET, &vWBks, pExcelApp, L"Workbooks", 0);
+        pWorkbooks = vWBks.pdispVal;
+
+        VARIANT vWB; VariantInit(&vWB);
+        VARIANT argPath; VariantInit(&argPath); argPath.vt = VT_BSTR; argPath.bstrVal = _bstr_t(excelPath);
+        if (FAILED(AutoWrap(DISPATCH_METHOD, &vWB, pWorkbooks, L"Open", 1, argPath))) throw 1;
+        pWorkbook = vWB.pdispVal;
+
+        // Sheet 가져오기
+        VARIANT vSheets; VariantInit(&vSheets);
+        AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0);
+        pSheets = vSheets.pdispVal;
+
+        VARIANT vSheet; VariantInit(&vSheet);
+        VARIANT argSheet; VariantInit(&argSheet); argSheet.vt = VT_BSTR; argSheet.bstrVal = _bstr_t(sheetName);
+        if (FAILED(AutoWrap(DISPATCH_PROPERTYGET, &vSheet, pSheets, L"Item", 1, argSheet))) throw 1;
+        pSheet = vSheet.pdispVal;
+
+        // 2. 데이터 범위 계산 (UsedRange)
+        long lastRow = 0, lastCol = 0;
+        VARIANT vUsed; VariantInit(&vUsed);
+        AutoWrap(DISPATCH_PROPERTYGET, &vUsed, pSheet, L"UsedRange", 0);
+        if (vUsed.pdispVal) {
+            IDispatch* pUsed = vUsed.pdispVal;
+            VARIANT vRows, vCols, vRowCount, vColCount, vStartRow, vStartCol;
+            VariantInit(&vRows); VariantInit(&vCols); VariantInit(&vRowCount);
+            VariantInit(&vColCount); VariantInit(&vStartRow); VariantInit(&vStartCol);
+
+            AutoWrap(DISPATCH_PROPERTYGET, &vRows, pUsed, L"Rows", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vRowCount, vRows.pdispVal, L"Count", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vStartRow, pUsed, L"Row", 0);
+            lastRow = vStartRow.lVal + vRowCount.lVal - 1;
+
+            AutoWrap(DISPATCH_PROPERTYGET, &vCols, pUsed, L"Columns", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vColCount, vCols.pdispVal, L"Count", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vStartCol, pUsed, L"Column", 0);
+            lastCol = vStartCol.lVal + vColCount.lVal - 1;
+
+            vRows.pdispVal->Release(); vCols.pdispVal->Release(); pUsed->Release();
+        }
+
+        // 3. SafeArray를 통한 데이터 추출 루프
+        if (lastRow >= startRow && lastCol > 0) {
+            CString rangeStr;
+            rangeStr.Format(_T("A%ld:%s%ld"), startRow, ExcelColumnLetterFromIndex((int)lastCol).GetString(), lastRow);
+
+            VARIANT vRange; VariantInit(&vRange);
+            VARIANT argRange; VariantInit(&argRange); argRange.vt = VT_BSTR; argRange.bstrVal = _bstr_t(rangeStr);
+            AutoWrap(DISPATCH_PROPERTYGET, &vRange, pSheet, L"Range", 1, argRange);
+            pRange = vRange.pdispVal;
+
+            if (pRange) {
+                AutoWrap(DISPATCH_PROPERTYGET, &vVal, pRange, L"Value2", 0);
+                if ((vVal.vt & VT_ARRAY) && (vVal.vt & VT_VARIANT)) {
+                    SAFEARRAY* psa = vVal.parray;
+                    long lRow, uRow, lCol, uCol;
+                    SafeArrayGetLBound(psa, 1, &lRow); SafeArrayGetUBound(psa, 1, &uRow);
+                    SafeArrayGetLBound(psa, 2, &lCol); SafeArrayGetUBound(psa, 2, &uCol);
+
+                    for (long r = lRow; r <= uRow; ++r) {
+                        // [중요] 사용자가 다이얼로그를 닫았는지 행 단위로 체크
+                        if (m_pbAbort && *m_pbAbort) throw 0;
+
+                        ODData rowData;
+                        for (long c = lCol; c <= uCol; ++c) {
+                            long indices[2] = { r, c };
+                            VARIANT element; VariantInit(&element);
+                            SafeArrayGetElement(psa, indices, &element);
+                            rowData.push_back(VariantToCString(element));
+                            VariantClear(&element);
+                        }
+                        outData.push_back(rowData);
+                    }
+                }
+            }
+        }
+        bResult = !outData.empty();
+    }
+    catch (...) {
+        bResult = false;
+    }
+
+    // 4. 최종 정리: 생성 역순으로 Release 및 엑셀 종료
+    VariantClear(&vVal); // SafeArray 메모리 해제
+    if (pRange) pRange->Release();
+    if (pSheet) pSheet->Release();
+    if (pSheets) pSheets->Release();
+    if (pWorkbook) {
+        VARIANT sc; VariantInit(&sc); sc.vt = VT_BOOL; sc.boolVal = VARIANT_FALSE;
+        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, sc);
+        pWorkbook->Release();
+    }
+    if (pWorkbooks) pWorkbooks->Release();
+    if (pExcelApp) {
+        AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
+        pExcelApp->Release();
+    }
+
+    if (needUninit) CoUninitialize();
+    return bResult;
 }
 
 bool UtilExcelHandler::ReadColumnsBatch(const CString& excelPath, const CString& sheetName, long startRow, std::vector<ExcelColumnRequest*>& requests)
 {
     if (requests.empty()) return true;
 
+    IDispatch* pExcelApp = nullptr, * pWorkbooks = nullptr, * pWorkbook = nullptr;
+    IDispatch* pSheets = nullptr, * pSheet = nullptr;
+    bool bResult = false;
+
     HRESULT hr = CoInitialize(nullptr);
     bool needUninit = SUCCEEDED(hr) && (hr != S_FALSE);
 
-    // 1. Excel 실행
-    CLSID clsid;
-    hr = CLSIDFromProgID(L"Excel.Application", &clsid);
-    if (FAILED(hr)) { if (needUninit) CoUninitialize(); return false; }
+    try {
+        CLSID clsid;
+        if (FAILED(CLSIDFromProgID(L"Excel.Application", &clsid))) throw 1;
+        if (FAILED(CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp))) throw 1;
 
-    IDispatch* pExcelApp = nullptr;
-    hr = CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp);
-    if (FAILED(hr) || !pExcelApp) { if (needUninit) CoUninitialize(); return false; }
-
-    // Visible = false, DisplayAlerts = false
-    {
-        VARIANT x; VariantInit(&x);
-        x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
+        VARIANT x; VariantInit(&x); x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"Visible", 1, x);
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"DisplayAlerts", 1, x);
-    }
 
-    // Workbooks Open
-    IDispatch* pWorkbook = nullptr;
-    {
-        VARIANT vWBks; VariantInit(&vWBks);
-        AutoWrap(DISPATCH_PROPERTYGET, &vWBks, pExcelApp, L"Workbooks", 0);
-        if (vWBks.pdispVal)
-        {
-            VARIANT vRet; VariantInit(&vRet);
-            VARIANT arg; VariantInit(&arg);
-            arg.vt = VT_BSTR; arg.bstrVal = _bstr_t(excelPath);
-            AutoWrap(DISPATCH_METHOD, &vRet, vWBks.pdispVal, L"Open", 1, arg);
-            pWorkbook = vRet.pdispVal; // RefCount 증가 상태
-            vWBks.pdispVal->Release();
+        AutoWrap(DISPATCH_PROPERTYGET, &x, pExcelApp, L"Workbooks", 0);
+        pWorkbooks = x.pdispVal;
+
+        VARIANT vWB; VariantInit(&vWB);
+        VARIANT argPath; VariantInit(&argPath); argPath.vt = VT_BSTR; argPath.bstrVal = _bstr_t(excelPath);
+        if (FAILED(AutoWrap(DISPATCH_METHOD, &vWB, pWorkbooks, L"Open", 1, argPath))) throw 1;
+        pWorkbook = vWB.pdispVal;
+
+        AutoWrap(DISPATCH_PROPERTYGET, &x, pWorkbook, L"Worksheets", 0);
+        pSheets = x.pdispVal;
+
+        VARIANT vSheet; VariantInit(&vSheet);
+        VARIANT argSheet; VariantInit(&argSheet); argSheet.vt = VT_BSTR; argSheet.bstrVal = _bstr_t(sheetName);
+        if (FAILED(AutoWrap(DISPATCH_PROPERTYGET, &vSheet, pSheets, L"Item", 1, argSheet))) throw 1;
+        pSheet = vSheet.pdispVal;
+
+        // 마지막 행 계산
+        long lastRow = 0;
+        VARIANT vUsed; VariantInit(&vUsed);
+        AutoWrap(DISPATCH_PROPERTYGET, &vUsed, pSheet, L"UsedRange", 0);
+        if (vUsed.pdispVal) {
+            IDispatch* pUsed = vUsed.pdispVal;
+            VARIANT vRows, vRowCount, vStartRow;
+            VariantInit(&vRows); VariantInit(&vRowCount); VariantInit(&vStartRow);
+            AutoWrap(DISPATCH_PROPERTYGET, &vRows, pUsed, L"Rows", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vRowCount, vRows.pdispVal, L"Count", 0);
+            AutoWrap(DISPATCH_PROPERTYGET, &vStartRow, pUsed, L"Row", 0);
+            lastRow = vStartRow.lVal + vRowCount.lVal - 1;
+            vRows.pdispVal->Release(); pUsed->Release();
         }
-    }
 
-    if (!pWorkbook)
-    {
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
+        if (lastRow >= startRow) {
+            for (auto* req : requests) {
+                // [컬럼 루프 중단 체크]
+                if (m_pbAbort && *m_pbAbort) throw 0;
 
-    // Sheet 가져오기
-    IDispatch* pSheet = nullptr;
-    {
-        VARIANT vSheets; VariantInit(&vSheets);
-        AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0);
-        if (vSheets.pdispVal)
-        {
-            VARIANT vRet; VariantInit(&vRet);
-            VARIANT arg; VariantInit(&arg);
-            arg.vt = VT_BSTR; arg.bstrVal = _bstr_t(sheetName);
-            AutoWrap(DISPATCH_PROPERTYGET, &vRet, vSheets.pdispVal, L"Item", 1, arg);
-            pSheet = vRet.pdispVal;
-            vSheets.pdispVal->Release();
+                req->data.clear();
+                if (req->colLetter.IsEmpty()) continue;
+
+                CString rangeStr;
+                rangeStr.Format(_T("%s%ld:%s%ld"), req->colLetter.GetString(), startRow, req->colLetter.GetString(), lastRow);
+
+                VARIANT vRange; VariantInit(&vRange);
+                VARIANT argRange; VariantInit(&argRange); argRange.vt = VT_BSTR; argRange.bstrVal = _bstr_t(rangeStr);
+                if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vRange, pSheet, L"Range", 1, argRange))) {
+                    IDispatch* pColRange = vRange.pdispVal;
+                    VARIANT vVal; VariantInit(&vVal);
+                    if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vVal, pColRange, L"Value2", 0))) {
+                        if ((vVal.vt & VT_ARRAY) && (vVal.vt & VT_VARIANT)) {
+                            SAFEARRAY* psa = vVal.parray;
+                            long lRow, uRow;
+                            SafeArrayGetLBound(psa, 1, &lRow); SafeArrayGetUBound(psa, 1, &uRow);
+                            for (long r = lRow; r <= uRow; ++r) {
+                                // [데이터 루프 중단 체크] 대량 데이터 시 필수
+                                if (m_pbAbort && *m_pbAbort) { VariantClear(&vVal); pColRange->Release(); throw 0; }
+                                long indices[2] = { r, 1 };
+                                VARIANT element; VariantInit(&element);
+                                SafeArrayGetElement(psa, indices, &element);
+                                req->data.push_back(VariantToCString(element));
+                                VariantClear(&element);
+                            }
+                        }
+                        else {
+                            req->data.push_back(VariantToCString(vVal));
+                        }
+                        VariantClear(&vVal);
+                    }
+                    pColRange->Release();
+                }
+            }
         }
+        bResult = true;
+    }
+    catch (...) {
+        bResult = false;
     }
 
-    if (!pSheet)
-    {
-        // 정리
+    // 정리 로직
+    if (pSheet) pSheet->Release();
+    if (pSheets) pSheets->Release();
+    if (pWorkbook) {
         VARIANT sc; VariantInit(&sc); sc.vt = VT_BOOL; sc.boolVal = VARIANT_FALSE;
         AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, sc);
         pWorkbook->Release();
-
-        // [수정됨] Quit도 AutoWrap으로 호출해야 합니다.
+    }
+    if (pWorkbooks) pWorkbooks->Release();
+    if (pExcelApp) {
         AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
-
         pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
     }
-
-    // 2. UsedRange로 마지막 행 계산 (한 번만 수행)
-    long lastRow = 0;
-    {
-        VARIANT vUsed; VariantInit(&vUsed);
-        AutoWrap(DISPATCH_PROPERTYGET, &vUsed, pSheet, L"UsedRange", 0);
-        if (vUsed.pdispVal)
-        {
-            IDispatch* pUsed = vUsed.pdispVal;
-            VARIANT vRows, vCount, vFirstRow;
-            VariantInit(&vRows); VariantInit(&vCount); VariantInit(&vFirstRow);
-
-            AutoWrap(DISPATCH_PROPERTYGET, &vRows, pUsed, L"Rows", 0);
-            if (vRows.pdispVal)
-            {
-                AutoWrap(DISPATCH_PROPERTYGET, &vCount, vRows.pdispVal, L"Count", 0);
-                long cnt = vCount.lVal;
-                vRows.pdispVal->Release();
-
-                AutoWrap(DISPATCH_PROPERTYGET, &vFirstRow, pUsed, L"Row", 0);
-                long first = vFirstRow.lVal;
-
-                lastRow = first + cnt - 1;
-            }
-            pUsed->Release();
-        }
-    }
-
-    // 3. 각 컬럼별로 통으로 읽기 (SAFEARRAY 사용)
-    if (lastRow >= startRow)
-    {
-        for (auto* req : requests)
-        {
-            req->data.clear();
-            if (req->colLetter.IsEmpty()) continue;
-
-            // 범위 지정: 예 "A2:A1000"
-            CString rangeStr;
-            rangeStr.Format(_T("%s%ld:%s%ld"), req->colLetter, startRow, req->colLetter, lastRow);
-
-            VARIANT vRange; VariantInit(&vRange);
-            {
-                VARIANT arg; VariantInit(&arg);
-                arg.vt = VT_BSTR; arg.bstrVal = _bstr_t(rangeStr);
-                AutoWrap(DISPATCH_PROPERTYGET, &vRange, pSheet, L"Range", 1, arg);
-            }
-
-            if (vRange.pdispVal)
-            {
-                VARIANT vVal; VariantInit(&vVal);
-                // Value2 속성을 가져옴 (속도가 가장 빠름)
-                AutoWrap(DISPATCH_PROPERTYGET, &vVal, vRange.pdispVal, L"Value2", 0);
-                vRange.pdispVal->Release();
-
-                // 결과가 배열인지 확인
-                if ((vVal.vt & VT_ARRAY) && (vVal.vt & VT_VARIANT))
-                {
-                    SAFEARRAY* psa = vVal.parray;
-                    long lBoundRow, uBoundRow, lBoundCol, uBoundCol;
-                    SafeArrayGetLBound(psa, 1, &lBoundRow);
-                    SafeArrayGetUBound(psa, 1, &uBoundRow);
-                    SafeArrayGetLBound(psa, 2, &lBoundCol);
-                    SafeArrayGetUBound(psa, 2, &uBoundCol);
-
-                    // 배열 순회 (메모리 접근이라 매우 빠름)
-                    for (long r = lBoundRow; r <= uBoundRow; ++r)
-                    {
-                        long indices[2];
-                        indices[0] = r; // Row
-                        indices[1] = 1; // Column (범위를 1열만 잡았으므로 항상 1)
-
-                        VARIANT element;
-                        VariantInit(&element);
-                        // SafeArrayGetElement가 COM 호출보다 월등히 빠름
-                        HRESULT hrArr = SafeArrayGetElement(psa, indices, &element);
-
-                        if (SUCCEEDED(hrArr))
-                        {
-                            CString s = VariantToCString(element);
-                            req->data.push_back(s);
-                            VariantClear(&element);
-                        }
-                        else
-                        {
-                            req->data.push_back(_T(""));
-                        }
-                    }
-                }
-                else
-                {
-                    // 데이터가 1개뿐이거나 배열이 아닌 경우 (단일 셀)
-                    CString s = VariantToCString(vVal);
-                    req->data.push_back(s);
-                }
-                VariantClear(&vVal);
-            }
-        }
-    }
-
-    // 4. 정리 (Close & Quit)
-    {
-        VARIANT sc; VariantInit(&sc); sc.vt = VT_BOOL; sc.boolVal = VARIANT_FALSE;
-        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, sc);
-    }
-    pWorkbook->Release();
-
-    AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
-    pExcelApp->Release();
 
     if (needUninit) CoUninitialize();
-
-    return true;
+    return bResult;
 }
 
 CString UtilExcelHandler::VariantToCString(const VARIANT& v)
@@ -491,166 +440,93 @@ bool UtilExcelHandler::ReadRowRangeFromExcel(const CString& excelPath, const CSt
 {
     outValues.clear();
 
+    IDispatch* pExcelApp = nullptr, * pWorkbooks = nullptr, * pWorkbook = nullptr;
+    IDispatch* pSheets = nullptr, * pSheet = nullptr;
+    bool bResult = false;
+
     HRESULT hr = CoInitialize(nullptr);
     bool needUninit = SUCCEEDED(hr) && (hr != S_FALSE);
 
-    // Excel.Application
-    CLSID clsid;
-    hr = CLSIDFromProgID(L"Excel.Application", &clsid);
-    if (FAILED(hr))
-    {
-        if (needUninit) CoUninitialize();
-        return false;
-    }
+    try {
+        // Excel 실행 및 설정
+        CLSID clsid;
+        if (FAILED(CLSIDFromProgID(L"Excel.Application", &clsid))) throw 1;
+        if (FAILED(CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void**)&pExcelApp))) throw 1;
 
-    IDispatch* pExcelApp = nullptr;
-    hr = CoCreateInstance(clsid, nullptr, CLSCTX_LOCAL_SERVER,
-        IID_IDispatch, (void**)&pExcelApp);
-    if (FAILED(hr) || !pExcelApp)
-    {
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-
-    // Visible = false, DisplayAlerts = false
-    {
-        VARIANT x; VariantInit(&x);
-        x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
+        VARIANT x; VariantInit(&x); x.vt = VT_BOOL; x.boolVal = VARIANT_FALSE;
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"Visible", 1, x);
         AutoWrap(DISPATCH_PROPERTYPUT, nullptr, pExcelApp, L"DisplayAlerts", 1, x);
+
+        // Workbook 열기
+        VARIANT vWBks; VariantInit(&vWBks);
+        AutoWrap(DISPATCH_PROPERTYGET, &vWBks, pExcelApp, L"Workbooks", 0);
+        pWorkbooks = vWBks.pdispVal;
+
+        VARIANT vWB; VariantInit(&vWB);
+        VARIANT argPath; VariantInit(&argPath); argPath.vt = VT_BSTR; argPath.bstrVal = _bstr_t(excelPath);
+        if (FAILED(AutoWrap(DISPATCH_METHOD, &vWB, pWorkbooks, L"Open", 1, argPath))) throw 1;
+        pWorkbook = vWB.pdispVal;
+
+        // Sheet 가져오기
+        VARIANT vSheets; VariantInit(&vSheets);
+        AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0);
+        pSheets = vSheets.pdispVal;
+
+        VARIANT vSheet; VariantInit(&vSheet);
+        VARIANT argSheet; VariantInit(&argSheet); argSheet.vt = VT_BSTR; argSheet.bstrVal = _bstr_t(sheetName);
+        if (FAILED(AutoWrap(DISPATCH_PROPERTYGET, &vSheet, pSheets, L"Item", 1, argSheet))) throw 1;
+        pSheet = vSheet.pdispVal;
+
+        // 열 순회 읽기
+        for (int col = 1; col <= maxColumn; ++col) {
+            // [중단 체크] 사용자가 취소를 눌렀는지 체크
+            if (m_pbAbort && *m_pbAbort) throw 0;
+
+            CString cellAddr;
+            cellAddr.Format(_T("%s%ld"), ExcelColumnLetterFromIndex(col).GetString(), rowIndex);
+
+            VARIANT vRange; VariantInit(&vRange);
+            VARIANT argAddr; VariantInit(&argAddr); argAddr.vt = VT_BSTR; argAddr.bstrVal = _bstr_t(cellAddr);
+
+            if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vRange, pSheet, L"Range", 1, argAddr))) {
+                IDispatch* pCell = vRange.pdispVal;
+                VARIANT vVal; VariantInit(&vVal);
+                if (SUCCEEDED(AutoWrap(DISPATCH_PROPERTYGET, &vVal, pCell, L"Value2", 0))) {
+                    outValues.push_back(VariantToCString(vVal));
+                    VariantClear(&vVal);
+                }
+                else {
+                    outValues.push_back(_T(""));
+                }
+                pCell->Release();
+                VariantClear(&vRange);
+            }
+            else {
+                outValues.push_back(_T(""));
+            }
+        }
+        bResult = !outValues.empty();
+    }
+    catch (...) {
+        bResult = false;
     }
 
-    // Workbooks
-    VARIANT vWBks; VariantInit(&vWBks);
-    hr = AutoWrap(DISPATCH_PROPERTYGET, &vWBks, pExcelApp, L"Workbooks", 0);
-    if (FAILED(hr) || vWBks.vt != VT_DISPATCH || !vWBks.pdispVal)
-    {
-        VariantClear(&vWBks);
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-    IDispatch* pWorkbooks = vWBks.pdispVal;
-
-    // Workbooks.Open
-    VARIANT vWorkbook; VariantInit(&vWorkbook);
-    {
-        VARIANT arg; VariantInit(&arg);
-        arg.vt = VT_BSTR;
-        arg.bstrVal = _bstr_t(excelPath);
-
-        hr = AutoWrap(DISPATCH_METHOD, &vWorkbook, pWorkbooks, L"Open", 1, arg);
-    }
-    if (FAILED(hr) || vWorkbook.vt != VT_DISPATCH || !vWorkbook.pdispVal)
-    {
-        VariantClear(&vWorkbook);
-        pWorkbooks->Release();
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-    IDispatch* pWorkbook = vWorkbook.pdispVal;
-
-    // Worksheets
-    VARIANT vSheets; VariantInit(&vSheets);
-    hr = AutoWrap(DISPATCH_PROPERTYGET, &vSheets, pWorkbook, L"Worksheets", 0);
-    if (FAILED(hr) || vSheets.vt != VT_DISPATCH || !vSheets.pdispVal)
-    {
-        VariantClear(&vSheets);
+    // 일괄 정리
+    if (pSheet) pSheet->Release();
+    if (pSheets) pSheets->Release();
+    if (pWorkbook) {
+        VARIANT sc; VariantInit(&sc); sc.vt = VT_BOOL; sc.boolVal = VARIANT_FALSE;
+        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, sc);
         pWorkbook->Release();
-        pWorkbooks->Release();
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
     }
-    IDispatch* pSheets = vSheets.pdispVal;
-
-    // 특정 시트
-    VARIANT vSheet; VariantInit(&vSheet);
-    {
-        VARIANT arg; VariantInit(&arg);
-        arg.vt = VT_BSTR;
-        arg.bstrVal = _bstr_t(sheetName);
-
-        hr = AutoWrap(DISPATCH_PROPERTYGET, &vSheet, pSheets, L"Item", 1, arg);
-    }
-    if (FAILED(hr) || vSheet.vt != VT_DISPATCH || !vSheet.pdispVal)
-    {
-        VariantClear(&vSheet);
-        pSheets->Release();
-        pWorkbook->Release();
-        pWorkbooks->Release();
-        pExcelApp->Release();
-        if (needUninit) CoUninitialize();
-        return false;
-    }
-    IDispatch* pSheet = vSheet.pdispVal;
-
-    // ------------------------------------------------------------
-    // 한 번 Excel/Workbook/Sheet 열어놓고,
-    // A{rowIndex} ~ [maxColumn열]{rowIndex} 까지 칸을 하나씩 읽는다.
-    // (COM 호출은 열 개수 만큼만, workbook은 한 번만 여니까 충분히 빠름)
-    // ------------------------------------------------------------
-    for (int col = 1; col <= maxColumn; ++col)
-    {
-        CString colLetter = ExcelColumnLetterFromIndex(col);
-        CString cellAddr;
-        cellAddr.Format(_T("%s%ld"), colLetter.GetString(), rowIndex);
-
-        // Range("A1") 같은 단일 셀 Range 얻기
-        VARIANT vRange; VariantInit(&vRange);
-        {
-            VARIANT arg; VariantInit(&arg);
-            arg.vt = VT_BSTR;
-            arg.bstrVal = _bstr_t(cellAddr);
-
-            hr = AutoWrap(DISPATCH_PROPERTYGET, &vRange, pSheet, L"Range", 1, arg);
-        }
-        if (FAILED(hr) || vRange.vt != VT_DISPATCH || !vRange.pdispVal)
-        {
-            VariantClear(&vRange);
-            // 실패한 경우는 그냥 빈 값으로 채움
-            outValues.push_back(CString());
-            continue;
-        }
-
-        IDispatch* pCellRange = vRange.pdispVal;
-
-        VARIANT vValue; VariantInit(&vValue);
-        hr = AutoWrap(DISPATCH_PROPERTYGET, &vValue, pCellRange, L"Value2", 0);
-        pCellRange->Release();
-
-        if (FAILED(hr))
-        {
-            VariantClear(&vValue);
-            outValues.push_back(CString());
-            continue;
-        }
-
-        CString s = VariantToCString(vValue);
-        VariantClear(&vValue);
-
-        outValues.push_back(s);
-    }
-
-    // Workbook 닫기 / Excel 종료
-    {
-        VARIANT saveChanges; VariantInit(&saveChanges);
-        saveChanges.vt = VT_BOOL;
-        saveChanges.boolVal = VARIANT_FALSE;
-        AutoWrap(DISPATCH_METHOD, nullptr, pWorkbook, L"Close", 1, saveChanges);
+    if (pWorkbooks) pWorkbooks->Release();
+    if (pExcelApp) {
         AutoWrap(DISPATCH_METHOD, nullptr, pExcelApp, L"Quit", 0);
+        pExcelApp->Release();
     }
-
-    pSheet->Release();
-    pSheets->Release();
-    pWorkbook->Release();
-    pWorkbooks->Release();
-    pExcelApp->Release();
 
     if (needUninit) CoUninitialize();
-
-    return !outValues.empty();
+    return bResult;
 }
 
 CString UtilExcelHandler::ExcelColumnLetterFromIndex(int index)

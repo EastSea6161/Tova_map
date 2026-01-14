@@ -2,14 +2,18 @@
 #include "afxdialogex.h"
 #include "CustomReportRecordCtrl.h"
 #include "ImportCommon.h"
+#include "UtilExcelHandler.h"
 #include <unordered_map>
 
 #define WM_THREAD_FINISHED (WM_USER + 100)
+#define WM_UPDATE_MAIN_REPORT (WM_USER + 101)
+#define WM_UPDATE_SUB_REPORT  (WM_USER + 102)
+
 
 
 // KTripODToVehODDlg 대화 상자
 
-class KTripODToVehODDlg : public CDialogEx
+class KTripODToVehODDlg : public KDialogEx
 {
 	DECLARE_DYNAMIC(KTripODToVehODDlg)
 
@@ -22,7 +26,7 @@ public:
 	enum { IDD = IDD_7000_UTIL_TripODtoVehOD };
 #endif
 
-	typedef std::vector< CString > CSVRow;
+	typedef std::vector<CString> ODData;
 	typedef std::pair<int, int> ODKey;
 
 	struct TSeparator
@@ -35,8 +39,8 @@ public:
 	struct ColumnInfo
 	{
 		CString name;
-		int index;
-		CString apply;
+		int mainCol;
+		int subCol;
 	};
 
 	struct AccessFactorType
@@ -45,6 +49,12 @@ public:
 		double otherBus;
 		double taxi;
 		double capitalBus;
+	};
+
+	enum FileType
+	{
+		Text = 0,
+		Excel = 1
 	};
 
 	struct ODKeyHash {
@@ -62,34 +72,48 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
-	CComboBox m_cboAreaNumber;
-	CComboBox m_cboDistributionYear;
-	CComboBox m_cboSeparator;
-	CComboBox m_cboEncoding;
-	CEdit m_editODFilePath;
+	CComboBox m_cboRegionNumber;
+	CComboBox m_cboBaseYear;
+	CComboBox m_cboMainSelSheet;
+	CComboBox m_cboMainSelHeader;
+	CComboBox m_cboSubSelSheet;
+	CComboBox m_cboSubSelHeader;
+	CEdit m_editMainODFilePath;
+	CEdit m_editSubODFilePath;
 	CButton m_chkAutoColumn;
 	CXTPOfficeBorder<KCustomReportRecordCtrl, false> m_rptODColumn;
-	CXTPOfficeBorder<CXTPReportControl, false> m_rptFileColumn;
-	CXTPOfficeBorder<CXTPReportControl, false> m_rptFilePreview;
+	CXTPOfficeBorder<CXTPReportControl, false> m_rptMainFilePreview;
+	CXTPOfficeBorder<CXTPReportControl, false> m_rptSubFilePreview;
 	CPictureEx m_loadingGif;
 
 protected:
-	std::map<int, TSeparator> m_mapSeparator;
-	//std::map<ODKey, double> m_mapScaleFactor;
+
 	std::unordered_map<ODKey, double, ODKeyHash> m_mapAutoScaleFactor;
 	std::map<int, AccessFactorType> m_mapAccessScaleFactor;
 
-	std::vector<int> m_vecOD_O;
-	std::vector<int> m_vecOD_D;
-	std::vector<std::vector<double>> m_vecODDataSet;
+	std::vector<int> m_vecMainOD_O;
+	std::vector<int> m_vecMainOD_D;
+	std::vector<int> m_vecSubOD_O;
+	std::vector<int> m_vecSubOD_D;
+	std::vector<std::vector<double>> m_vecMainODDataSet;
+	std::vector<std::vector<double>> m_vecSubODDataSet;
 
-	CSVRow m_ColumnRow;
-	std::vector<CSVRow> m_Rows;
+	std::vector<CString> m_vecMainHeader;
+	std::vector<CString> m_vecSubHeader;
+	std::vector<ODData> m_vecMainODData;
+	std::vector<ODData> m_vecSubODData;
 
-	bool m_bImportHeader;
-	bool m_bLoadFile = false;
+	bool m_bMainImportHeader;
+	bool m_bSubImportHeader;
+	bool m_bMainODLoadFile = false;
+	bool m_bSubODLoadFile = false;
+	bool m_bMainODFileLoading = false;
+	bool m_bSubODFileLoading = false;
+	FileType m_eMainODFileType;
+	FileType m_eSubODFileType;
 	bool m_bIsLoading = false;
-	CString m_strODFilePath;
+	CString m_strMainODFilePath;
+	CString m_strSubODFilePath;
 
 	CString m_strRegion;
 	CString m_strYear;
@@ -97,56 +121,61 @@ protected:
 	AreaInfoMap m_AreaInfoMap;
 	std::vector<ColumnInfo> m_curColumnInfo;
 
-	TCHAR m_tcCachedSeparator;
-	int m_nCachedEncoding;
+	UtilExcelHandler m_excelHandler;
+
+	int m_nActiveThreadCount = 0;
+	bool m_bAbortThread = false;
 
 protected:
-	void LoadDistributionList();
-	void InitComboSeparator();
-	void InitComboEncoding();
-	void InitReportColumn();
+	void LoadBaseYearList();
 	void InitODColumn();
 
 	void LoadConfigFile();
 	bool GetColumnInfo(CString region, CString year, std::vector<ColumnInfo>& columnInfo);
 	
-	void CheckSeperator(CString a_strFile);
-	void CheckEncoding(CString a_strFile);
-	void CheckImportHeader(CString a_strFile);
+	void LoadSheetList(CString strPath, bool bIsMain);
+	void CheckImportHeader(CString a_strFile, bool bIsMain);
 
-	TCHAR GetSelectedSeparator();
-	int GetSelectedEncoding();
-
-	void UpdatePreviewReport();
+	void UpdateMainPreviewReport();
+	void UpdateSubPreviewReport();
 	void UpdateODColumnReport();
-	void UpdateFileColumnReport();
 
-	bool LoadCSVPreviewData();
-	void ParseCSVLineString(CString& strLine, TCHAR tcSeparator, CSVRow& row);
+	bool LoadMainODData();
+	bool LoadSubODData();
 
 	bool LoadExcelAutoFactorData();
 	bool LoadExcelAccessFactorData();
 	bool GetAutoScaleFactorValue(int nO, int nD, double& dValue);
 	bool GetAccessScaleFactorValue(int nO, AccessFactorType& factorData);
-	bool GetScaleFactorValue(int no, int nd, int nCol, double& dValue);
+	bool GetScaleFactorValue(int no, int nd, int nCol, double& dValue, bool bIsMain);
 	void SetCurColumnInfo();
 
-	bool BulildODDataSet();
-	bool ExportVehODFile();
+	bool BuildMainODDataSet();
+	bool BuildSubODDataSet();
+	bool ExportMainVehODFile();
+	bool ExportSubVehODFile();
 
 	void DrawingLoadingGif(bool bSatrt);
 
 	static UINT ThreadWorker(LPVOID pParam);
+	static UINT ThreadFileLoading(LPVOID pParam);
+	static UINT ThreadExcelLoading(LPVOID pParam);
 	
 public:
 	virtual BOOL OnInitDialog();
-public:
+	virtual void OnCancel();
 	afx_msg void OnBnClickedRun();
-	afx_msg void OnBnClickedBtnOdfile();
+	afx_msg void OnBnClickedBtnMainODFile();
+	afx_msg void OnBnClickedBtnSubODFile();
 	afx_msg void OnBnClickedCheck4();
 	afx_msg void OnCbnSelchangeCombo1();
 	afx_msg void OnCbnSelchangeCombo2();
-	afx_msg void OnReportRecordsDropped(NMHDR* pNotifyStruct, LRESULT* pResult);
 	afx_msg void OnBnClickedBtnConvertExcel();
+	afx_msg void OnCbnSelchangeCombo3();
+	afx_msg void OnCbnSelchangeCombo5();
+	afx_msg void OnCbnSelchangeCombo4();
+	afx_msg void OnCbnSelchangeCombo6();
+	afx_msg LRESULT OnUpdateMainReport(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnUpdateSubReport(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnThreadFinished(WPARAM wParam, LPARAM lParam);
 };

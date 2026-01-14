@@ -76,6 +76,11 @@
 #include "ModelProcessMultiModal.h"
 #include "ZoneODGroupGenerationDlg.h"
 
+#include "..\QBicGIS\TxTmsServer.h"
+#include "..\QBicGIS\TxImageTmsLayer.h"
+#include "..\QBicGIS\TxLayerInfo.h"
+#include "..\QBicGIS\TxMapEnumType.h"
+
 #include "TurnVolumeViewDlg.h"
 #include "ModelProcessInterModal.h"
 #include "RulerDlg.h"
@@ -594,6 +599,30 @@ void KMapView::LoadMapView( KTarget* pTarget )
 void KMapView::LoadInitialLayers(bool bFirst)
 {
     TxLogDebugStartMsg();
+
+    if (bFirst)
+    {
+        try
+        {
+            // 2. Google 지도 서버 생성 (Type: 0 = Roadmap, 1 = Satellite)
+            // TxTmsServer는 기본적으로 구글 지도를 위해 만들어진 클래스입니다.
+            ITxTmsServerPtr spTmsServer(new TxTmsServer(0));
+
+            // 3. 레이어 정보 생성
+            TxLayerInfoPtr spLayerInfo(new TxLayerInfo(GeoImageMap, _T("Google Map")));
+
+            // 4. 이미지 레이어 생성
+            ITxLayerPtr spBgLayer(new TxImageTmsLayer(spLayerInfo, spTmsServer));
+
+            // 5. 레이어 가시성 설정 및 추가
+            spBgLayer->LayerOn(true);
+            MapAddLayer(spBgLayer, 9000, 0);
+        }
+        catch (...)
+        {
+            TxLogDebug(_T("Google 지도 로드 실패"));
+        }
+    }
 
     if (m_pTarget == nullptr)
         return;
