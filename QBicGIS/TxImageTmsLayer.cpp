@@ -66,9 +66,9 @@ TxGdiplusBitmapPtr TxImageTmsLayer::GetImageLeftTop( ThunderMapDispPtr spThunder
 
     int nTileSize  = m_spTmsServer->GetTileSize();
     int nZoomLevel = m_spTmsServer->ZoomLevel(dScale);
-    if (nZoomLevel <= 8) {/*8이하-전국을 볼경우 좌표변환 이슈로 지도가 일치하지 않음*/
-        return nullptr;
-    }
+    //if (nZoomLevel <= 8) {/*8이하-전국을 볼경우 좌표변환 이슈로 지도가 일치하지 않음*/
+    //    return nullptr;
+    //}
      
     //★ 지도의 영역 정보
     double dMinX(0.0), dMinY(0.0), dMaxX(0.0), dMaxY(0.0); {

@@ -37,10 +37,14 @@ private:
                  2 : VWorld 컬러
                  3 : VWorld 위성
                  4 : VWorld Gray
+                 5 : OpenStreetMap
                  */
 public:
     TxTmsServer(int nType=0);
     virtual ~TxTmsServer();
+
+private:
+    CString GetCacheDirectory();
 
 public:
     virtual int GetTileSize() {

@@ -9,7 +9,7 @@ TxTmsServer::TxTmsServer( int nType/*=0*/ )
     //★ 서버 루핑
     m_nSvrID = 0; 
 
-    if (nType > 4) {
+    if (nType > 5) {
         m_nType = 0;
     } 
     else {
@@ -21,6 +21,30 @@ TxTmsServer::~TxTmsServer()
 {
 }
 
+CString TxTmsServer::GetCacheDirectory()
+{
+    WCHAR szModulePath[MAX_PATH] = { 0, };
+    DWORD dwLength = ::GetModuleFileName(nullptr, szModulePath, MAX_PATH);
+
+    CString strCachePath;
+    if (dwLength > 0)
+    {
+        CString strModulePath(szModulePath);
+        int nPos = strModulePath.ReverseFind(_T('\\'));
+        if (nPos != -1)
+            strModulePath = strModulePath.Left(nPos);
+
+        strCachePath.Format(_T("%s\\TMSCache"), strModulePath);
+    }
+    else
+    {
+        strCachePath = _T(".\\TMSCache");
+    }
+
+    QBicDir::CreateDir(strCachePath);
+    return strCachePath;
+}
+
 TxGdiplusBitmapPtr TxTmsServer::GetTile( int X, int Y, int nZ, bool bPreCached )
 {   
     CString strURL(_T(""));
@@ -29,7 +53,8 @@ TxGdiplusBitmapPtr TxTmsServer::GetTile( int X, int Y, int nZ, bool bPreCached )
     int nTileY = Y;
     int nTileX = X;
 
-    CString strTempPath(_T(".\\TMSCache"));
+    //CString strTempPath(_T(".\\TMSCache"));
+    CString strTempPath = GetCacheDirectory();
 
     /* OpenStreet 
     strURL.Append(_T("http://tile.openstreetmap.org"));
@@ -48,9 +73,8 @@ TxGdiplusBitmapPtr TxTmsServer::GetTile( int X, int Y, int nZ, bool bPreCached )
         strFileName.Format(_T("%s\\GoogleSat_%d_%d_%d.png"), strTempPath, nTileX, nTileY, nZ);
     } 
     else if (m_nType == 2) {
-        //strURL.Format(_T("http://xdworld.vworld.kr:8080/2d/Base/201710/%d/%d/%d.png"), nZ, nTileX, nTileY);
-		//2018.12.19 Url 변경
-		strURL.Format(_T("http://xdworld.vworld.kr:8080/2d/Base/service/%d/%d/%d.png"), nZ, nTileX, nTileY);
+        CString strAPIKey = _T("4C0D99E3-033E-3921-8540-CA939AE5F84E");
+        strURL.Format(_T("http://api.vworld.kr/req/wmts/1.0.0/%s/Base/%d/%d/%d.png"), strAPIKey, nZ, nTileY, nTileX);
 		strFileName.Format(_T("%s\\VWorld_%d_%d_%d.png"), strTempPath, nTileX, nTileY, nZ);
     } 
     else if (m_nType == 3){
@@ -61,6 +85,17 @@ TxGdiplusBitmapPtr TxTmsServer::GetTile( int X, int Y, int nZ, bool bPreCached )
         strURL.Format(_T("http://xdworld.vworld.kr:8080/2d/gray/201710/%d/%d/%d.png"), nZ, nTileX, nTileY);
         strFileName.Format(_T("%s\\VWorldG_%d_%d_%d.png"), strTempPath, nTileX, nTileY, nZ);
     } 
+    else if (m_nType == 5)
+    {
+        m_nSvrID = ++m_nSvrID % 3; // 0, 1, 2 (a, b, c 서버 순환)
+        char cSvr = 'a' + m_nSvrID;
+
+        // OSM URL 형식: http://{a,b,c}.tile.openstreetmap.org/{z}/{x}/{y}.png
+        strURL.Format(_T("http://%c.tile.openstreetmap.org/%d/%d/%d.png"), cSvr, nZ, nTileX, nTileY);
+
+        // 캐시 파일명 저장 (OSM_x_y_z.png)
+        strFileName.Format(_T("%s\\OSM_%d_%d_%d.png"), strTempPath, nTileX, nTileY, nZ);
+    }
     else {
         m_nSvrID = ++m_nSvrID % 4; // 0, 1, 2, 3 
         m_nSvrID++;                //             + 1 -> 1, 2, 3, 4
@@ -104,7 +139,8 @@ MapDownloadData TxTmsServer::GetTileInfo( int X, int Y, int Z )
     int nTileY = Y;
     int nTileX = X;
 
-    CString strTempPath(_T(".\\TMSCache"));        
+    //CString strTempPath(_T(".\\TMSCache"));
+    CString strTempPath = GetCacheDirectory();
     if (m_nType == 0) {
         m_nSvrID = ++m_nSvrID % 4; //0,1,2,3 서버가 가능 -> // http://mt1.google.com/vt/hl=ko
 
@@ -116,7 +152,8 @@ MapDownloadData TxTmsServer::GetTileInfo( int X, int Y, int Z )
         strFileName.Format(_T("%s\\GoogleSat_%d_%d_%d.png"), strTempPath, nTileX, nTileY, Z);
     } 
     else if (m_nType == 2) {
-        strURL.Format(_T("http://xdworld.vworld.kr:8080/2d/Base/201710/%d/%d/%d.png"), Z, nTileX, nTileY);
+        CString strAPIKey = _T("4C0D99E3-033E-3921-8540-CA939AE5F84E");
+        strURL.Format(_T("http://api.vworld.kr/req/wmts/1.0.0/%s/Base/%d/%d/%d.png"), strAPIKey, Z, nTileY, nTileX);
         strFileName.Format(_T("%s\\VWorld_%d_%d_%d.png"), strTempPath, nTileX, nTileY, Z);
     } 
     else if (m_nType == 3) {
@@ -127,6 +164,14 @@ MapDownloadData TxTmsServer::GetTileInfo( int X, int Y, int Z )
         strURL.Format(_T("http://xdworld.vworld.kr:8080/2d/gray/201710/%d/%d/%d.png"), Z, nTileX, nTileY);
         strFileName.Format(_T("%s\\VWorldG_%d_%d_%d.png"), strTempPath, nTileX, nTileY, Z);
     } 
+    else if (m_nType == 5)
+    {
+        m_nSvrID = ++m_nSvrID % 3;
+        char cSvr = 'a' + m_nSvrID;
+
+        strURL.Format(_T("http://%c.tile.openstreetmap.org/%d/%d/%d.png"), cSvr, Z, nTileX, nTileY);
+        strFileName.Format(_T("%s\\OSM_%d_%d_%d.png"), strTempPath, nTileX, nTileY, Z);
+    }
     else {
         m_nSvrID = ++m_nSvrID % 4; // 0, 1, 2, 3 
         m_nSvrID++;                //             + 1 -> 1, 2, 3, 4
