@@ -125,7 +125,6 @@ protected:
     virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = NULL);
     virtual void OnInitialUpdate();    
             void InitalizeMap();
-    virtual void PostNcDestroy();
     afx_msg void OnDestroy();
 private:
     ThunderMapCtrl m_ThunderMapCtrl;
@@ -218,6 +217,8 @@ private:
     int    m_nMouseDownX,    m_nMouseDownY;
     double m_dMouseDownMapX, m_dMouseDownMapY;
 protected :    
+
+	ITxLayerPtr m_spBgLayer;
     
 public:
     afx_msg void OnMapviewFullExtent( void );  
@@ -237,6 +238,10 @@ public:
     // 이전, 이후
     afx_msg void OnMapExtentStack( UINT nID );
     afx_msg void OnUpdateMapExtentStack( CCmdUI* pCmdUI );
+
+	// 배경 지도 활성화
+	afx_msg void OnMapBackgroundCommand();
+	afx_msg void OnUpdateMapBackgroundCommand(CCmdUI* pCmd);
     
     
 public:

@@ -212,6 +212,10 @@ BEGIN_MESSAGE_MAP(KMapView, CFormView)
 	ON_XTP_EXECUTE(ID_MAP_BACKGROUND_SELECTOR, &KMapView::OnBackgroundSelector)
 	ON_UPDATE_COMMAND_UI(ID_MAP_BACKGROUND_SELECTOR, &KMapView::OnUpdateBackgroundSelector)
 
+    // 배경 구글 맵 활성화
+    ON_COMMAND(ID_MAP_BACKGROUND, &KMapView::OnMapBackgroundCommand)
+    ON_UPDATE_COMMAND_UI(ID_MAP_BACKGROUND, &KMapView::OnUpdateMapBackgroundCommand)
+
 	END_MESSAGE_MAP()
 
 KMapView::KMapView(Gdiplus::Color crBackground)
@@ -254,6 +258,8 @@ KMapView::KMapView(Gdiplus::Color crBackground)
 
     m_lMouseMoveMapX = 0L;
     m_lMouseMoveMapY = 0L;
+
+    m_spBgLayer = nullptr;
 
     TxLogDebugVisitor();
 }
@@ -394,16 +400,6 @@ void KMapView::OnDestroy()
     }    
 
     TxLogDebugVisitor();
-}
-
-void KMapView::PostNcDestroy()
-{
-    //CFormView::PostNcDestroy();
-    /// View window class는 동적으로 생성된 후 스스로 삭제 된다.
-    TxLogDebugVisitor();
-    //KMapDiplayMonitor::Instance()->UnRegister(this); 
-    delete this;
-    //CFormView::PostNcDestroy();
 }
 
 void KMapView::OnMapviewZoomInCommand()
@@ -596,7 +592,7 @@ void KMapView::LoadMapView( KTarget* pTarget )
     TxLogDebugEndMsg();
 }
 
-void KMapView::LoadInitialLayers(bool bFirst)
+void KMapView::LoadInitialLayers(bool bFirst) 
 {
     TxLogDebugStartMsg();
 
@@ -604,23 +600,18 @@ void KMapView::LoadInitialLayers(bool bFirst)
     {
         try
         {
-            // 2. Google 지도 서버 생성 (Type: 0 = Roadmap, 1 = Satellite)
-            // TxTmsServer는 기본적으로 구글 지도를 위해 만들어진 클래스입니다.
-            ITxTmsServerPtr spTmsServer(new TxTmsServer(0));
+            ITxTmsServerPtr spTmsServer(new TxTmsServer(2));
 
-            // 3. 레이어 정보 생성
-            TxLayerInfoPtr spLayerInfo(new TxLayerInfo(GeoImageMap, _T("Google Map")));
+            TxLayerInfoPtr spLayerInfo(new TxLayerInfo(GeoImageMap, _T("VWorld")));
 
-            // 4. 이미지 레이어 생성
-            ITxLayerPtr spBgLayer(new TxImageTmsLayer(spLayerInfo, spTmsServer));
+            m_spBgLayer = ITxLayerPtr(new TxImageTmsLayer(spLayerInfo, spTmsServer));
 
-            // 5. 레이어 가시성 설정 및 추가
-            spBgLayer->LayerOn(true);
-            MapAddLayer(spBgLayer, 9000, 0);
+            m_spBgLayer->LayerOn(true);
+            MapAddLayer(m_spBgLayer, 9000, 0);
         }
         catch (...)
         {
-            TxLogDebug(_T("Google 지도 로드 실패"));
+            TxLogDebug(_T("지도 로드 실패"));
         }
     }
 

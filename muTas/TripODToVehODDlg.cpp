@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "afxdialogex.h"
 #include "TripODToVehODDlg.h"
-#include "ExcelExportConfigDlg.h"
 #include "ImChampDir.h"
 #include "UtilExcelHandler.h"
 
@@ -53,7 +52,6 @@ BEGIN_MESSAGE_MAP(KTripODToVehODDlg, KDialogEx)
 	ON_BN_CLICKED(IDC_CHECK4, &KTripODToVehODDlg::OnBnClickedCheck4)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &KTripODToVehODDlg::OnCbnSelchangeCombo1)
 	ON_CBN_SELCHANGE(IDC_COMBO2, &KTripODToVehODDlg::OnCbnSelchangeCombo2)
-	ON_BN_CLICKED(IDC_BTN_CONVERT_EXCEL, &KTripODToVehODDlg::OnBnClickedBtnConvertExcel)
 	ON_CBN_SELCHANGE(IDC_COMBO3, &KTripODToVehODDlg::OnCbnSelchangeCombo3)
 	ON_CBN_SELCHANGE(IDC_COMBO5, &KTripODToVehODDlg::OnCbnSelchangeCombo5)
 	ON_CBN_SELCHANGE(IDC_COMBO4, &KTripODToVehODDlg::OnCbnSelchangeCombo4)
@@ -133,7 +131,12 @@ void KTripODToVehODDlg::OnBnClickedRun()
 
 	GetDlgItem(ID_RUN)->EnableWindow(FALSE);
 
-	AfxBeginThread(ThreadWorker, this);
+	m_mapVehODDataSet.clear();
+
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadWorker, &oPara, false, 0);
+
+	//AfxBeginThread(ThreadWorker, this);
 }
 
 void KTripODToVehODDlg::LoadBaseYearList()
@@ -150,7 +153,7 @@ void KTripODToVehODDlg::LoadBaseYearList()
 			basePath = basePath.Left(pos + 1);
 		}
 
-		CString distPath = basePath + _T("Utility\\TripODToVehOD\\죤체계_재차인원\\");
+		CString distPath = basePath + _T("Utility\\TripODToVehOD\\존체계_재차인원\\");
 
 		m_cboBaseYear.ResetContent();
 
@@ -186,7 +189,7 @@ void KTripODToVehODDlg::LoadBaseYearList()
 		CString strError(_T(""));
 		if (ex == 1)
 		{
-			strError.Format(_T("재차인원 폴더가 존재하지 않습니다."));
+			strError.Format(_T("존체계 폴더가 존재하지 않습니다."));
 			AfxMessageBox(strError);
 		}
 		else
@@ -375,10 +378,10 @@ void KTripODToVehODDlg::OnBnClickedBtnMainODFile()
 		return;
 	}
 
-	int areaIdx = m_cboRegionNumber.GetCurSel();
-	if (areaIdx == 0)
+	m_nAreaIdx = m_cboRegionNumber.GetCurSel();
+	if (m_nAreaIdx == 0)
 		m_strRegion = _T("수도권");
-	else if (areaIdx == 1)
+	else if (m_nAreaIdx == 1)
 		m_strRegion = _T("전국권");
 	else
 		m_strRegion = _T("5대권역");
@@ -404,12 +407,18 @@ void KTripODToVehODDlg::OnBnClickedBtnMainODFile()
 	else
 		m_eMainODFileType = Excel;
 
+	m_cboMainSelSheet.ResetContent();
+	m_cboMainSelHeader.ResetContent();
+
 	m_bMainODFileLoading = true;
 	m_nActiveThreadCount++;
 	
 	DrawingLoadingGif(true);
 
-	AfxBeginThread(ThreadFileLoading, this);
+	//AfxBeginThread(ThreadFileLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadFileLoading, &oPara, false, 0);
+
 }
 
 void KTripODToVehODDlg::OnBnClickedBtnSubODFile()
@@ -425,10 +434,10 @@ void KTripODToVehODDlg::OnBnClickedBtnSubODFile()
 		return;
 	}
 
-	int areaIdx = m_cboRegionNumber.GetCurSel();
-	if (areaIdx == 0)
+	m_nAreaIdx = m_cboRegionNumber.GetCurSel();
+	if (m_nAreaIdx == 0)
 		m_strRegion = _T("수도권");
-	else if (areaIdx == 1)
+	else if (m_nAreaIdx == 1)
 		m_strRegion = _T("전국권");
 	else
 		m_strRegion = _T("5대권역");
@@ -454,12 +463,17 @@ void KTripODToVehODDlg::OnBnClickedBtnSubODFile()
 	else
 		m_eSubODFileType = Excel;
 
+	m_cboSubSelSheet.ResetContent();
+	m_cboSubSelHeader.ResetContent();
+
 	m_bSubODFileLoading = true;
 	m_nActiveThreadCount++;
 
 	DrawingLoadingGif(true);
 
-	AfxBeginThread(ThreadFileLoading, this);
+	//AfxBeginThread(ThreadFileLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadFileLoading, &oPara, false, 0);
 }
 
 void KTripODToVehODDlg::OnBnClickedCheck4()
@@ -546,13 +560,6 @@ void KTripODToVehODDlg::OnCbnSelchangeCombo2()
 	SetCurColumnInfo();
 	UpdateODColumnReport();
 }
-
-void KTripODToVehODDlg::OnBnClickedBtnConvertExcel()
-{
-	KExcelExportConfigDlg dlg(this);
-	dlg.DoModal();
-}
-
 
 
 void KTripODToVehODDlg::LoadSheetList(CString strPath, bool bIsMain)
@@ -1258,7 +1265,7 @@ bool KTripODToVehODDlg::LoadExcelAutoFactorData()
 			strBasePath = strBasePath.Left(pos + 1);
 
 		CString strDistFolder;
-		strDistFolder.Format(_T("%sUtility\\TripODToVehOD\\죤체계_재차인원\\"), strBasePath);
+		strDistFolder.Format(_T("%sUtility\\TripODToVehOD\\존체계_재차인원\\"), strBasePath);
 		CString strExcelPath;
 		strExcelPath.Format(_T("%s%s\\승용차재차인원_%s.xlsx"), strDistFolder, m_strYear, m_strYear);
 
@@ -1389,7 +1396,7 @@ bool KTripODToVehODDlg::LoadExcelAccessFactorData()
 			strBasePath = strBasePath.Left(pos + 1);
 
 		CString strDistFolder;
-		strDistFolder.Format(_T("%sUtility\\TripODToVehOD\\죤체계_재차인원\\"), strBasePath);
+		strDistFolder.Format(_T("%sUtility\\TripODToVehOD\\존체계_재차인원\\"), strBasePath);
 		CString strExcelPath;
 		strExcelPath.Format(_T("%s%s\\기타수단재차인원_%s.xlsx"), strDistFolder, m_strYear, m_strYear);
 
@@ -1511,6 +1518,155 @@ bool KTripODToVehODDlg::LoadExcelAccessFactorData()
 	}
 }
 
+bool KTripODToVehODDlg::LoadExcelZoneSystemData()
+{
+	try
+	{
+		if (m_strRegion.IsEmpty() || m_strYear.IsEmpty())
+		{
+			AfxMessageBox(_T("분석지역 번호나 배포년도가 선택되지 않았습니다."));
+			return false;
+		}
+
+		TCHAR szModulePath[MAX_PATH] = { 0 };
+		GetModuleFileName(nullptr, szModulePath, MAX_PATH);
+
+		CString strBasePath(szModulePath);
+		int pos = strBasePath.ReverseFind(_T('\\'));
+		if (pos != -1)
+			strBasePath = strBasePath.Left(pos + 1);
+
+		CString strDistFolder;
+		strDistFolder.Format(_T("%sUtility\\TripODToVehOD\\존체계_재차인원\\"), strBasePath);
+		CString strExcelPath;
+		strExcelPath.Format(_T("%s%s\\존체계_%s.xlsx"), strDistFolder, m_strYear, m_strYear);
+
+		// 파일이 없으면 파일 선택 다이얼로그로 사용자에게 직접 선택하게 함
+		if (GetFileAttributes(strDistFolder) == INVALID_FILE_ATTRIBUTES)
+		{
+			CFileDialog dlg(TRUE, _T("xlsx"), nullptr, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T("Excel Files (*.xlsx)|*.xlsx||"), this);
+
+			dlg.m_ofn.lpstrInitialDir = strDistFolder;
+			dlg.m_ofn.lpstrTitle = _T("존체계 엑셀 파일 선택");
+
+			if (dlg.DoModal() != IDOK)
+				throw 1;
+
+			strExcelPath = dlg.GetPathName();
+		}
+
+		UtilExcelHandler excel;
+
+		// 시트 불러오기
+		std::vector<CString> sheetList;
+		if (!excel.GetExcelSheetNames(strExcelPath, sheetList))
+			throw 2;
+
+		if (sheetList.empty())
+			throw 2;
+
+		m_ZoneInfoMap.clear();
+
+		for (size_t i = 0; i < sheetList.size(); i++)
+		{
+			ExcelColumnRequest reqA;
+			ExcelColumnRequest reqB;
+			ExcelColumnRequest reqD;
+
+			reqA.colLetter = _T("A");		// 존번호
+			reqB.colLetter = _T("B");		// 시구존체계
+			reqD.colLetter = _T("D");		// 권역번호
+
+			std::vector<ExcelColumnRequest*> requests;
+			requests.push_back(&reqA);
+			requests.push_back(&reqB);
+			requests.push_back(&reqD);
+
+			// 1행은 헤더(O, D, Auto) 이므로 2행부터 읽기
+			if (!excel.ReadColumnsBatch(strExcelPath, sheetList[i], 2, requests))
+			{
+				throw 3;
+			}
+
+			ZoneIndexInfoMap infoMap;
+			size_t rowCount = min(reqA.data.size(), min(reqB.data.size(), reqD.data.size()));
+
+			for (size_t j = 0; j < rowCount; j++)
+			{
+				CString sA = reqA.data[j];
+				CString sB = reqB.data[j];
+				CString sD = reqD.data[j];
+
+				sA.Trim(); sB.Trim(); sD.Trim();
+
+				if (sA.IsEmpty() || sB.IsEmpty() || sD.IsEmpty())
+					continue;
+
+				int zoneIdx = _ttoi(sA);
+				int capitalIdx = _ttoi(sB);
+				int areaIdx = _ttoi(sD);
+
+				if ((zoneIdx == 0 && sA.CompareNoCase(_T("0")) != 0) || (capitalIdx == 0 && sB.CompareNoCase(_T("0")) != 0) || 
+					(areaIdx == 0 && sA.CompareNoCase(_T("0")) != 0))
+				{
+					continue;
+				}
+
+				ZoneSystemInfo info;
+				info.capitalIndex = capitalIdx;
+				info.areaIndex = areaIdx;
+				infoMap[zoneIdx] = info;
+			}
+
+			m_ZoneInfoMap[i] = infoMap;
+		}
+
+		if (m_ZoneInfoMap.empty())
+		{
+			throw 3;
+		}
+		
+		return true;
+	}
+	catch (int& ex)
+	{
+		CString strError(_T(""));
+		if (ex == 1)
+		{
+			strError.Format(_T("존체계 엑셀 파일을 여는데 실패했습니다."));
+			AfxMessageBox(strError);
+		}
+		else if (ex == 2)
+		{
+			strError.Format(_T("존체계 엑셀 파일 시트를 읽어오는데 실패했습니다.\n시트 데이터를 확인해 주세요."));
+			AfxMessageBox(strError);
+		}
+		else if (ex == 3)
+		{
+			strError.Format(_T("존체계 엑셀에서 데이터를 읽지 못했습니다.\n엑셀 파일 형식을 확인해 주세요."));
+			AfxMessageBox(strError);
+		}
+		else
+		{
+			strError.Format(_T("Error : %d"), ex);
+		}
+
+		TxLogDebug((LPCTSTR)strError);
+		return false;
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxExceptionPrint(ex);
+		return false;
+	}
+	catch (...)
+	{
+		AfxMessageBox(_T("존체계 파일을 읽는데 실패하였습니다."));
+		TxLogDebugException();
+		return false;
+	}
+}
+
 bool KTripODToVehODDlg::GetAutoScaleFactorValue(int nO, int nD, double& dValue)
 {
 	ODKey key(nO, nD);
@@ -1534,19 +1690,40 @@ bool KTripODToVehODDlg::GetAccessScaleFactorValue(int nO, AccessFactorType& fact
 	return true;
 }
 
-bool KTripODToVehODDlg::GetScaleFactorValue(int nO, int nD, int nCol, double& dValue, bool bIsMain)
+bool KTripODToVehODDlg::GetZoneInfoValue(int nSheetIdx, int nZoneID, ZoneSystemInfo& zoneInfo)
+{
+	auto itSheet = m_ZoneInfoMap.find(nSheetIdx);
+	if (itSheet == m_ZoneInfoMap.end())
+		return false;
+
+	auto itZone = itSheet->second.find(nZoneID);
+	if (itZone == itSheet->second.end())
+		return false;
+
+	zoneInfo = itZone->second;
+	return true;
+}
+
+bool KTripODToVehODDlg::GetScaleFactorValue(int nO, int nD, int nCol, double& dValue)
 {
 	if (m_curColumnInfo.size() <= 0)
 		return false;
 
+	ZoneSystemInfo OZoneInfo;
+	ZoneSystemInfo DZoneInfo;
+	if (!GetZoneInfoValue(m_nAreaIdx, nO, OZoneInfo))
+		return false;
+	if (!GetZoneInfoValue(m_nAreaIdx, nD, DZoneInfo))
+		return false;
+
 	if (nCol == 2 || nCol == 4)
 	{
-		return GetAutoScaleFactorValue(nO, nD, dValue);
+		return GetAutoScaleFactorValue(OZoneInfo.areaIndex, DZoneInfo.areaIndex, dValue);
 	}
 	else if (nCol == 3 || nCol == 5 || nCol == 6)
 	{
 		AccessFactorType factorData;
-		if (!GetAccessScaleFactorValue(nO, factorData))
+		if (!GetAccessScaleFactorValue(OZoneInfo.capitalIndex, factorData))
 			return false;
 
 		if (nCol == 3)
@@ -1618,6 +1795,172 @@ void KTripODToVehODDlg::SetCurColumnInfo()
 	}
 }
 
+bool KTripODToVehODDlg::CalcMainODData()
+{
+	if (!m_bMainODLoadFile)
+		return true;
+
+	try
+	{
+		CXTPReportRecords* pRecords = m_rptODColumn.GetRecords();
+		int nTotalRows = (int)pRecords->GetCount();
+		int nDataColCount = nTotalRows - 2;
+
+		std::vector<int> vecMainIdx(nTotalRows, -1);
+		for (int i = 0; i < nTotalRows; i++)
+		{
+			KColumnReportRecordItem* pItem = (KColumnReportRecordItem*)pRecords->GetAt(i)->GetItem(2);
+			if (pItem)
+				vecMainIdx[i] = pItem->m_nIndex - 1;
+		}
+
+		auto itRow = m_vecMainODData.begin();
+		if (m_bMainImportHeader && itRow != m_vecMainODData.end())
+			itRow++;
+
+		for (; itRow != m_vecMainODData.end(); ++itRow)
+		{
+			const ODData& row = *itRow;
+			int nO = _ttoi(row[vecMainIdx[0]]);
+			int nD = _ttoi(row[vecMainIdx[1]]);
+			ODKey key(nO, nD);
+
+			VehData vehData;
+
+			// 계산되는 데이터는 Auto, Taxi, AutoTaxt, Bus, OtherBus 총 5개 이므로 다르면 오류
+			if (nDataColCount != 5)
+				throw;
+
+			for (int ds = 0; ds < nDataColCount; ds++)
+			{
+				double dVal = 0.0;
+				double dFactor = 1.0;
+				int colIdx = vecMainIdx[ds + 2];
+
+				if (colIdx == -1)
+					continue;
+				
+				if (colIdx >= 0 && colIdx < (int)row.size())
+				{
+					dVal = _tstof(row[colIdx]);
+				}
+				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor))
+				{
+					dFactor = 1.0;
+				}
+
+				vehData.val[ds] = (dVal / dFactor);
+			}
+
+			m_mapVehODDataSet[key] += vehData;
+		}
+
+		return true;
+	}
+	catch (int& ex)
+	{
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+
+		TxLogDebug((LPCTSTR)strError);
+		return false;
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxExceptionPrint(ex);
+		return false;
+	}
+	catch (...)
+	{
+		AfxMessageBox(_T("재차인원 계산 적용에 실패하였습니다."));
+		TxLogDebugException();
+		return false;
+	}
+}
+
+bool KTripODToVehODDlg::CalcSubODData()
+{
+	if (!m_bSubODLoadFile)
+		return true;
+
+	try
+	{
+		CXTPReportRecords* pRecords = m_rptODColumn.GetRecords();
+		int nTotalRows = (int)pRecords->GetCount();
+		int nDataColCount = nTotalRows - 2;
+
+		std::vector<int> vecSubIdx(nTotalRows, -1);
+		for (int i = 0; i < nTotalRows; i++)
+		{
+			KColumnReportRecordItem* pItem = (KColumnReportRecordItem*)pRecords->GetAt(i)->GetItem(3);
+			if (pItem)
+				vecSubIdx[i] = pItem->m_nIndex - 1;
+		}
+
+		auto itRow = m_vecSubODData.begin();
+		if (m_bSubImportHeader && itRow != m_vecSubODData.end())
+			itRow++;
+
+		for (; itRow != m_vecSubODData.end(); ++itRow)
+		{
+			const ODData& row = *itRow;
+			int nO = _ttoi(row[vecSubIdx[0]]);
+			int nD = _ttoi(row[vecSubIdx[1]]);
+			ODKey key(nO, nD);
+
+			VehData vehData;
+
+			// 계산되는 데이터는 Auto, Taxi, AutoTaxt, Bus, OtherBus 총 5개 이므로 다르면 오류
+			if (nDataColCount != 5)
+				throw;
+
+			for (int ds = 0; ds < nDataColCount; ds++)
+			{
+				double dVal = 0.0;
+				double dFactor = 1.0;
+				int colIdx = vecSubIdx[ds + 2];
+
+				if (colIdx == -1)
+					continue;
+
+				if (colIdx >= 0 && colIdx < (int)row.size())
+				{
+					dVal = _tstof(row[colIdx]);
+				}
+				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor))
+				{
+					dFactor = 1.0;
+				}
+
+				vehData.val[ds] = (dVal / dFactor);
+			}
+
+			m_mapVehODDataSet[key] += vehData;
+		}
+
+		return true;
+	}
+	catch (int& ex)
+	{
+		CString strError(_T(""));
+		strError.Format(_T("Error : %d"), ex);
+
+		TxLogDebug((LPCTSTR)strError);
+		return false;
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxExceptionPrint(ex);
+		return false;
+	}
+	catch (...)
+	{
+		AfxMessageBox(_T("재차인원 계산 적용에 실패하였습니다."));
+		TxLogDebugException();
+		return false;
+	}
+}
+
 bool KTripODToVehODDlg::BuildMainODDataSet()
 {
 	if (!m_bMainODLoadFile)
@@ -1671,7 +2014,7 @@ bool KTripODToVehODDlg::BuildMainODDataSet()
 				{
 					dVal = _tstof(row[colIdx]);
 				}
-				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor, true))
+				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor))
 				{
 					dFactor = 1.0;
 				}
@@ -1756,7 +2099,7 @@ bool KTripODToVehODDlg::BuildSubODDataSet()
 				{
 					dVal = _tstof(row[colIdx]);
 				}
-				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor, false))
+				if (!GetScaleFactorValue(nO, nD, ds + 2, dFactor))
 				{
 					dFactor = 1.0;
 				}
@@ -1783,6 +2126,153 @@ bool KTripODToVehODDlg::BuildSubODDataSet()
 	catch (...)
 	{
 		AfxMessageBox(_T("재차인원 계산 적용에 실패하였습니다."));
+		TxLogDebugException();
+		return false;
+	}
+}
+
+bool KTripODToVehODDlg::ExportVehODFile()
+{
+	try
+	{
+		if (m_mapVehODDataSet.empty())
+			throw 1;
+
+		CString strBasePath;
+		if (m_bMainODLoadFile)
+			strBasePath = m_strMainODFilePath;
+		else
+			strBasePath = m_strSubODFilePath;
+
+		if (strBasePath.IsEmpty())
+			throw 2;
+
+		int nPos = strBasePath.ReverseFind('\\');
+		if (nPos > 0)
+			strBasePath = strBasePath.Left(nPos + 1);
+
+		CString strRegion, strYear;
+		m_cboRegionNumber.GetWindowText(strRegion);
+		m_cboBaseYear.GetWindowText(strYear);
+
+		int nIndex = strRegion.Find(_T(':'));
+		if (nIndex >= 0)
+		{
+			strRegion = strRegion.Mid(nIndex + 1);
+		}
+		strRegion.Trim();
+
+		CTime cTime = CTime::GetCurrentTime();
+		CString strDate = cTime.Format(_T("%y%m%d%H%M"));
+
+		CString strFilePath;
+		strFilePath.Format(_T("%s%s_%s_%s_Veh.txt"), strBasePath, strRegion, strYear, strDate);
+
+		CStdioFile file;
+		CFileException ex;
+		if (!file.Open(strFilePath, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary, &ex))
+		{
+			throw 3;
+		}
+
+		// 버퍼 설정 (예: 64KB ~ 1MB 정도)
+		const int BUF_SIZE = 1024 * 1024; // 1MB 버퍼
+		std::vector<char> buffer(BUF_SIZE);
+		char* pBuffer = buffer.data();
+		int nBufOffset = 0;
+
+		// ANSI
+		//UINT nCodePage = CP_ACP;
+
+		// UTF-8
+		UINT nCodePage = CP_UTF8;
+		unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
+		memcpy(pBuffer + nBufOffset, bom, 3);
+		nBufOffset += 3;
+
+		CStringA strTmp;
+
+		// Header 삽입
+		for (const auto& info : m_curColumnInfo)
+		{
+			CW2A pszName(info.name, nCodePage);
+			CStringA strItem;
+			strItem.Format("%s\t", (LPCSTR)pszName);	// 탭 구분자 사용
+			strTmp += strItem;
+		}
+
+		strTmp += "\r\n";
+		int nLen = strTmp.GetLength();
+		memcpy(pBuffer + nBufOffset, (LPCSTR)strTmp, nLen);
+		nBufOffset += nLen;
+
+		for (auto const& data : m_mapVehODDataSet)
+		{
+			int nO = data.first.first;
+			int nD = data.first.second;
+
+			const VehData& val = data.second;
+			strTmp.Format("%d\t%d\t%.3g\t%.3g\t%.3g\t%.3g\t%.3g",
+				nO, nD, val.val[0], val.val[1], val.val[2], val.val[3], val.val[4]);
+
+			strTmp += "\r\n";
+
+			int nLen = strTmp.GetLength();
+			// 버퍼가 꽉 차면 파일에 쓰기
+			if (nBufOffset + nLen >= BUF_SIZE)
+			{
+				file.Write(pBuffer, nBufOffset);
+				nBufOffset = 0;
+			}
+
+			// 버퍼에 데이터 추가
+			memcpy(pBuffer + nBufOffset, (LPCSTR)strTmp, nLen);
+			nBufOffset += nLen;
+		}
+
+		// 남은 버퍼 쓰기
+		if (nBufOffset > 0)
+		{
+			file.Write(pBuffer, nBufOffset);
+		}
+
+		file.Close();
+		return true;
+
+	}
+	catch (int& ex)
+	{
+		CString strError(_T(""));
+		if (ex == 1)
+		{
+			strError.Format(_T("재차인원 OD 데이터가 없습니다. 데이터를 확인해주세요"));
+			AfxMessageBox(strError);
+		}
+		else if (ex == 2)
+		{
+			strError.Format(_T("주수단, 보조수단 파일 경로를 찾을수 없습니다."));
+			AfxMessageBox(strError);
+		}
+		else if (ex == 3)
+		{
+			strError.Format(_T("재차인원 파일을 생성할 수 없습니다."));
+			AfxMessageBox(strError);
+		}
+		else
+		{
+			strError.Format(_T("Error : %d"), ex);
+		}
+
+		TxLogDebug((LPCTSTR)strError);
+		return false;
+	}
+	catch (KExceptionPtr ex)
+	{
+		TxExceptionPrint(ex);
+		return false;
+	}
+	catch (...)
+	{
 		TxLogDebugException();
 		return false;
 	}
@@ -2097,152 +2587,315 @@ void KTripODToVehODDlg::DrawingLoadingGif(bool bStart)
 	}
 }
 
-UINT KTripODToVehODDlg::ThreadWorker(LPVOID pParam)
+//UINT KTripODToVehODDlg::ThreadWorker(LPVOID pParam)
+//{
+//	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
+//
+//	if (pDlg == nullptr)
+//		return 1;
+//
+//	bool bSuccess = true;
+//
+//	if (!pDlg->LoadExcelAutoFactorData())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//	if (bSuccess && !pDlg->LoadExcelAccessFactorData())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//	if (bSuccess && !pDlg->BuildMainODDataSet())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//	if (bSuccess && !pDlg->BuildSubODDataSet())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//	if (bSuccess && !pDlg->ExportMainVehODFile())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//	if (bSuccess && !pDlg->ExportSubVehODFile())
+//		bSuccess = false;
+//	if (pDlg->m_bAbortThread)
+//		bSuccess = false;
+//
+//	CString msg;
+//	if (bSuccess)
+//		msg.Format(_T("Veh OD 파일을 생성했습니다."));
+//	else
+//		msg.Format(_T("Veh OD 파일을 생성에 실패했습니다."));
+//	
+//	AfxMessageBox(msg);
+//
+//	::PostMessage(pDlg->m_hWnd, WM_THREAD_FINISHED, (WPARAM)bSuccess, 0);
+//
+//	return 0;
+//}
+
+unsigned __stdcall KTripODToVehODDlg::ThreadWorker(void* p)
 {
-	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
+	QBicSimpleProgressParameter* pParameter = (QBicSimpleProgressParameter*)p;
+	if (pParameter != nullptr) {
+		ThreadPara* pPara = (ThreadPara*)pParameter->GetParameter(); {
+			KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pPara->TWindow;
+			bool bSuccess = true;
 
-	if (pDlg == nullptr)
-		return 1;
+			if (!pDlg->LoadExcelAutoFactorData())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			if (bSuccess && !pDlg->LoadExcelAccessFactorData())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			if (bSuccess && !pDlg->LoadExcelZoneSystemData())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			if (bSuccess && !pDlg->CalcMainODData())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			if (bSuccess && !pDlg->CalcSubODData())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			if (bSuccess && !pDlg->ExportVehODFile())
+				bSuccess = false;
+			if (pDlg->m_bAbortThread)
+				bSuccess = false;
+			//if (bSuccess && !pDlg->ExportSubVehODFile())
+			//	bSuccess = false;
+			//if (pDlg->m_bAbortThread)
+			//	bSuccess = false;
 
-	bool bSuccess = true;
-
-	if (!pDlg->LoadExcelAutoFactorData())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-	if (bSuccess && !pDlg->LoadExcelAccessFactorData())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-	if (bSuccess && !pDlg->BuildMainODDataSet())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-	if (bSuccess && !pDlg->BuildSubODDataSet())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-	if (bSuccess && !pDlg->ExportMainVehODFile())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-	if (bSuccess && !pDlg->ExportSubVehODFile())
-		bSuccess = false;
-	if (pDlg->m_bAbortThread)
-		bSuccess = false;
-
-	CString msg;
-	msg.Format(_T("Veh OD 파일을 생성했습니다."));
-	AfxMessageBox(msg);
-
-	::PostMessage(pDlg->m_hWnd, WM_THREAD_FINISHED, (WPARAM)bSuccess, 0);
-
-	return 0;
-}
-
-UINT KTripODToVehODDlg::ThreadFileLoading(LPVOID pParam)
-{
-	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
-
-	if (pDlg == nullptr)
-		return 1;
-
-	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-	pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
-
-	try
-	{
-		if (pDlg->m_bMainODFileLoading)
-		{
-			pDlg->m_bMainODFileLoading = false;
-			if (pDlg->m_eMainODFileType == Text)
-			{
-				pDlg->CheckImportHeader(pDlg->m_strMainODFilePath, true);
-			}
+			CString msg;
+			if (bSuccess)
+				msg.Format(_T("Veh OD 파일을 생성했습니다."));
 			else
-			{
-				pDlg->m_bMainImportHeader = false;
-				pDlg->LoadSheetList(pDlg->m_strMainODFilePath, true);
-			}
+				msg.Format(_T("Veh OD 파일을 생성에 실패했습니다."));
 
-			if (pDlg->m_bAbortThread)
-				throw 0;
+			AfxMessageBox(msg);
 
-			pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
-			::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
-		}
-		if (pDlg->m_bSubODFileLoading)
-		{
-			pDlg->m_bSubODFileLoading = false;
-			if (pDlg->m_eSubODFileType == Text)
-			{
-				pDlg->CheckImportHeader(pDlg->m_strSubODFilePath, false);
-			}
-			else
-			{
-				pDlg->m_bSubImportHeader = false;
-				pDlg->LoadSheetList(pDlg->m_strSubODFilePath, false);
-			}
-
-			if (pDlg->m_bAbortThread)
-				throw 0;
-
-			pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
-			::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+			::PostMessage(pDlg->m_hWnd, WM_THREAD_FINISHED, (WPARAM)bSuccess, 0);
 		}
 	}
-	catch (...)
-	{
 
-	}
-
-	CoUninitialize();
-
-	return 0;
+	return 1;
 }
 
-UINT KTripODToVehODDlg::ThreadExcelLoading(LPVOID pParam)
+unsigned __stdcall KTripODToVehODDlg::ThreadFileLoading(void* p)
 {
-	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
+	QBicSimpleProgressParameter* pParameter = (QBicSimpleProgressParameter*)p;
+	if (pParameter != nullptr) {
+		ThreadPara* pPara = (ThreadPara*)pParameter->GetParameter(); {
+			KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pPara->TWindow;
 
-	if (pDlg == nullptr)
-		return 1;
+			HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+			pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
+			try
+			{
+				if (pDlg->m_bMainODFileLoading)
+				{
+					pDlg->m_bMainODFileLoading = false;
+					if (pDlg->m_eMainODFileType == Text)
+					{
+						pDlg->CheckImportHeader(pDlg->m_strMainODFilePath, true);
+					}
+					else
+					{
+						pDlg->m_bMainImportHeader = false;
+						pDlg->LoadSheetList(pDlg->m_strMainODFilePath, true);
+					}
 
-	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-	pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
+					if (pDlg->m_bAbortThread)
+						throw 0;
 
-	try
-	{
-		if (pDlg->m_bMainODFileLoading)
-		{
-			pDlg->m_bMainODFileLoading = false;
-			pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
+					pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
+					::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
+				}
+				if (pDlg->m_bSubODFileLoading)
+				{
+					pDlg->m_bSubODFileLoading = false;
+					if (pDlg->m_eSubODFileType == Text)
+					{
+						pDlg->CheckImportHeader(pDlg->m_strSubODFilePath, false);
+					}
+					else
+					{
+						pDlg->m_bSubImportHeader = false;
+						pDlg->LoadSheetList(pDlg->m_strSubODFilePath, false);
+					}
 
-			if (pDlg->m_bAbortThread)
-				throw 0;
+					if (pDlg->m_bAbortThread)
+						throw 0;
 
-			::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
-		}
-		else
-		{
-			pDlg->m_bSubODFileLoading = false;
-			pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
+					pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
+					::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+				}
+			}
+			catch (...)
+			{
 
-			if (pDlg->m_bAbortThread)
-				throw 0;
+			}
 
-			::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+			CoUninitialize();
 		}
 	}
-	catch (...)
-	{
 
-	}
-
-	CoUninitialize();
-
-	return 0;
+	return 1;
 }
+
+unsigned __stdcall KTripODToVehODDlg::ThreadExcelLoading(void* p)
+{
+	QBicSimpleProgressParameter* pParameter = (QBicSimpleProgressParameter*)p;
+	if (pParameter != nullptr) {
+		ThreadPara* pPara = (ThreadPara*)pParameter->GetParameter(); {
+			KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pPara->TWindow;
+
+			HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+			pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
+
+			try
+			{
+				if (pDlg->m_bMainODFileLoading)
+				{
+					pDlg->m_bMainODFileLoading = false;
+					pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
+
+					if (pDlg->m_bAbortThread)
+						throw 0;
+
+					::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
+				}
+				else
+				{
+					pDlg->m_bSubODFileLoading = false;
+					pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
+
+					if (pDlg->m_bAbortThread)
+						throw 0;
+
+					::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+				}
+			}
+			catch (...)
+			{
+
+			}
+
+			CoUninitialize();
+		}
+	}
+
+	return 1;
+}
+
+//UINT KTripODToVehODDlg::ThreadFileLoading(LPVOID pParam)
+//{
+//	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
+//
+//	if (pDlg == nullptr)
+//		return 1;
+//
+//	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+//	pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
+//
+//	try
+//	{
+//		if (pDlg->m_bMainODFileLoading)
+//		{
+//			pDlg->m_bMainODFileLoading = false;
+//			if (pDlg->m_eMainODFileType == Text)
+//			{
+//				pDlg->CheckImportHeader(pDlg->m_strMainODFilePath, true);
+//			}
+//			else
+//			{
+//				pDlg->m_bMainImportHeader = false;
+//				pDlg->LoadSheetList(pDlg->m_strMainODFilePath, true);
+//			}
+//
+//			if (pDlg->m_bAbortThread)
+//				throw 0;
+//
+//			pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
+//			::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
+//		}
+//		if (pDlg->m_bSubODFileLoading)
+//		{
+//			pDlg->m_bSubODFileLoading = false;
+//			if (pDlg->m_eSubODFileType == Text)
+//			{
+//				pDlg->CheckImportHeader(pDlg->m_strSubODFilePath, false);
+//			}
+//			else
+//			{
+//				pDlg->m_bSubImportHeader = false;
+//				pDlg->LoadSheetList(pDlg->m_strSubODFilePath, false);
+//			}
+//
+//			if (pDlg->m_bAbortThread)
+//				throw 0;
+//
+//			pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
+//			::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+//		}
+//	}
+//	catch (...)
+//	{
+//
+//	}
+//
+//	CoUninitialize();
+//
+//	return 0;
+//}
+//
+//UINT KTripODToVehODDlg::ThreadExcelLoading(LPVOID pParam)
+//{
+//	KTripODToVehODDlg* pDlg = (KTripODToVehODDlg*)pParam;
+//
+//	if (pDlg == nullptr)
+//		return 1;
+//
+//	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+//	pDlg->m_excelHandler.m_pbAbort = &pDlg->m_bAbortThread;
+//
+//	try
+//	{
+//		if (pDlg->m_bMainODFileLoading)
+//		{
+//			pDlg->m_bMainODFileLoading = false;
+//			pDlg->m_bMainODLoadFile = pDlg->LoadMainODData();
+//
+//			if (pDlg->m_bAbortThread)
+//				throw 0;
+//
+//			::PostMessage(pDlg->m_hWnd, WM_UPDATE_MAIN_REPORT, (WPARAM)pDlg->m_bMainODLoadFile, 0);
+//		}
+//		else
+//		{
+//			pDlg->m_bSubODFileLoading = false;
+//			pDlg->m_bSubODLoadFile = pDlg->LoadSubODData();
+//
+//			if (pDlg->m_bAbortThread)
+//				throw 0;
+//
+//			::PostMessage(pDlg->m_hWnd, WM_UPDATE_SUB_REPORT, (WPARAM)pDlg->m_bSubODLoadFile, 0);
+//		}
+//	}
+//	catch (...)
+//	{
+//
+//	}
+//
+//	CoUninitialize();
+//
+//	return 0;
+//}
 
 void KTripODToVehODDlg::OnCbnSelchangeCombo3()
 {
@@ -2253,7 +2906,9 @@ void KTripODToVehODDlg::OnCbnSelchangeCombo3()
 	DrawingLoadingGif(true);
 	m_cboMainSelSheet.EnableWindow(FALSE);
 	m_cboMainSelHeader.EnableWindow(FALSE);
-	AfxBeginThread(ThreadExcelLoading, this);
+	//AfxBeginThread(ThreadExcelLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadExcelLoading, &oPara, false, 0);
 }
 
 void KTripODToVehODDlg::OnCbnSelchangeCombo5()
@@ -2265,7 +2920,9 @@ void KTripODToVehODDlg::OnCbnSelchangeCombo5()
 	DrawingLoadingGif(true);
 	m_cboSubSelSheet.EnableWindow(FALSE);
 	m_cboSubSelHeader.EnableWindow(FALSE);
-	AfxBeginThread(ThreadExcelLoading, this);
+	//AfxBeginThread(ThreadExcelLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadExcelLoading, &oPara, false, 0);
 }
 
 void KTripODToVehODDlg::OnCbnSelchangeCombo4()
@@ -2277,7 +2934,9 @@ void KTripODToVehODDlg::OnCbnSelchangeCombo4()
 	DrawingLoadingGif(true);
 	m_cboMainSelSheet.EnableWindow(FALSE);
 	m_cboMainSelHeader.EnableWindow(FALSE);
-	AfxBeginThread(ThreadExcelLoading, this);
+	//AfxBeginThread(ThreadExcelLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadExcelLoading, &oPara, false, 0);
 }
 
 void KTripODToVehODDlg::OnCbnSelchangeCombo6()
@@ -2289,7 +2948,9 @@ void KTripODToVehODDlg::OnCbnSelchangeCombo6()
 	DrawingLoadingGif(true);
 	m_cboSubSelSheet.EnableWindow(FALSE);
 	m_cboSubSelHeader.EnableWindow(FALSE);
-	AfxBeginThread(ThreadExcelLoading, this);
+	//AfxBeginThread(ThreadExcelLoading, this);
+	ThreadPara oPara(this);
+	QBicSimpleProgressThread::ExecuteThread(ThreadExcelLoading, &oPara, false, 0);
 }
 
 LRESULT KTripODToVehODDlg::OnUpdateMainReport(WPARAM wParam, LPARAM lParam)

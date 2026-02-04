@@ -463,7 +463,4 @@ private:
 	afx_msg void OnUpdateEXE_TRIPOD_TO_VEHICLEOD(CCmdUI* pCmdUI);
 	afx_msg void OnEXE_FREIGHTOD_DIVISION();
 	afx_msg void OnUpdateEXE_FREIGHTOD_DIVISION(CCmdUI* pCmdUI);
-public:
-	afx_msg void OnEXE_ACCESSTRIPOD_TO_VEHICLEOD();
-	afx_msg void OnUpdateEXE_ACCESSTRIPOD_TO_VEHICLEOD(CCmdUI* pCmdUI);
 };

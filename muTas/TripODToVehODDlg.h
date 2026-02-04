@@ -29,13 +29,6 @@ public:
 	typedef std::vector<CString> ODData;
 	typedef std::pair<int, int> ODKey;
 
-	struct TSeparator
-	{
-		int   nCode;
-		TCHAR tcSeparator;
-		CString strDispName;
-	};
-
 	struct ColumnInfo
 	{
 		CString name;
@@ -49,6 +42,30 @@ public:
 		double otherBus;
 		double taxi;
 		double capitalBus;
+	};
+
+	struct ZoneSystemInfo
+	{
+		int capitalIndex;
+		int areaIndex;
+	};
+
+	struct VehData
+	{
+		double val[5];
+
+		VehData()
+		{
+			for (int i = 0; i < 5; i++)
+				val[i] = 0.0;
+		}
+
+		VehData& operator += (const VehData& rhs)
+		{
+			for (int i = 0; i < 5; i++)
+				val[i] += rhs.val[i];
+			return *this;
+		}
 	};
 
 	enum FileType
@@ -66,6 +83,8 @@ public:
 
 	typedef std::map <CString, std::vector<ColumnInfo>> YearInfoMap;
 	typedef std::map <CString, YearInfoMap> AreaInfoMap;
+	typedef std::map <int, ZoneSystemInfo> ZoneIndexInfoMap;
+	typedef std::map <int, ZoneIndexInfoMap> ZoneInfoMap;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
@@ -102,6 +121,7 @@ protected:
 	std::vector<CString> m_vecSubHeader;
 	std::vector<ODData> m_vecMainODData;
 	std::vector<ODData> m_vecSubODData;
+	std::map<ODKey, VehData> m_mapVehODDataSet;
 
 	bool m_bMainImportHeader;
 	bool m_bSubImportHeader;
@@ -115,10 +135,12 @@ protected:
 	CString m_strMainODFilePath;
 	CString m_strSubODFilePath;
 
+	int m_nAreaIdx;
 	CString m_strRegion;
 	CString m_strYear;
 
 	AreaInfoMap m_AreaInfoMap;
+	ZoneInfoMap m_ZoneInfoMap;
 	std::vector<ColumnInfo> m_curColumnInfo;
 
 	UtilExcelHandler m_excelHandler;
@@ -145,21 +167,26 @@ protected:
 
 	bool LoadExcelAutoFactorData();
 	bool LoadExcelAccessFactorData();
+	bool LoadExcelZoneSystemData();
 	bool GetAutoScaleFactorValue(int nO, int nD, double& dValue);
 	bool GetAccessScaleFactorValue(int nO, AccessFactorType& factorData);
-	bool GetScaleFactorValue(int no, int nd, int nCol, double& dValue, bool bIsMain);
+	bool GetZoneInfoValue(int nSheetIdx, int nZoneID, ZoneSystemInfo& zoneInfo);
+	bool GetScaleFactorValue(int no, int nd, int nCol, double& dValue);
 	void SetCurColumnInfo();
 
+	bool CalcMainODData();
+	bool CalcSubODData();
 	bool BuildMainODDataSet();
 	bool BuildSubODDataSet();
+	bool ExportVehODFile();
 	bool ExportMainVehODFile();
 	bool ExportSubVehODFile();
 
 	void DrawingLoadingGif(bool bSatrt);
 
-	static UINT ThreadWorker(LPVOID pParam);
-	static UINT ThreadFileLoading(LPVOID pParam);
-	static UINT ThreadExcelLoading(LPVOID pParam);
+	static unsigned __stdcall ThreadWorker(void* p);
+	static unsigned __stdcall ThreadFileLoading(void* p);
+	static unsigned __stdcall ThreadExcelLoading(void* p);
 	
 public:
 	virtual BOOL OnInitDialog();
@@ -170,7 +197,6 @@ public:
 	afx_msg void OnBnClickedCheck4();
 	afx_msg void OnCbnSelchangeCombo1();
 	afx_msg void OnCbnSelchangeCombo2();
-	afx_msg void OnBnClickedBtnConvertExcel();
 	afx_msg void OnCbnSelchangeCombo3();
 	afx_msg void OnCbnSelchangeCombo5();
 	afx_msg void OnCbnSelchangeCombo4();

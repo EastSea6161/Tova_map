@@ -60,7 +60,6 @@
 #define IDR_MENU1                       30
 #define IDC_BTN_EXCEL                   30
 #define IDC_BTN_EXPORT_EXCEL            30
-#define IDC_BTN_CONVERT_EXCEL           30
 #define IDR_POPUP_RENDERER              31
 #define IDC_EDIT_EXCEL_PATH             31
 #define IDR_MENU2                       32
@@ -69,7 +68,6 @@
 #define IDD_6000_GenerationModelDlg     35
 #define IDC_EDITOR1                     35
 #define IDD_GENERATION_SELECT           36
-#define IDC_BTN_ODFILE                  36
 #define IDD_KGSELECTMODEL               37
 #define IDC_BTN_ODFILE2                 37
 #define IDC_BTN_SUBODFILE               37
@@ -78,6 +76,7 @@
 #define IDD_6010_GSelectModelDlg        39
 #define IDC_BTN_MAINODFILE              39
 #define IDD_69_SYMBOLOGY_BARCHART_POLYGON 40
+#define IDC_BTN_ODFILE                  40
 #define IDD_69_POLYGON_SYMBOLOGY_BARCHART 41
 #define IDD_DIALOG_SPLASH               42
 #define IDD_0000_StartMainDlg           43
@@ -705,6 +704,7 @@
 #define IDC_TOCCONTROL1                 655
 #define IDC_COMBO3                      656
 #define IDD_3901_SELECT_TARGET          657
+#define IDC_COMBO20                     657
 #define IDB_BITMAP_RADIO                658
 #define IDC_EDIT12                      659
 #define IDC_COMBO_NODEEND_NORMAL        660
@@ -2393,7 +2393,6 @@
 #define IDD_7001_UTIL_FODDiv            4458
 #define IDD_7002_UTIL_FODDiv            4458
 #define IDD_7001_UTIL_AidTripODtoVehOD  4459
-#define IDD_7001_UTIL_AccessTripODtoVehOD 4459
 #define IDC_BTN_MULTI_SCENARIO          8000
 #define IDS_GROUP_CHECKED_TRUE          12001
 #define IDS_GROUP_CHECKED_FALSE         12002
@@ -3358,6 +3357,7 @@
 #define IDR_GIF5                        34084
 #define IDR_LOADING                     34084
 #define ID_GROUPGENERATION_ZONEGROUPGENERATION34085 34085
+#define IDI_ICON_MAP_BACKGROUND         34085
 #define ID_GROUPGENERATION_ZONEOD       34086
 #define ID_GROUPGENERATION_ODGROUPGEN   34087
 #define ID_GROUPGENERATION_NEWODGROUPGEN 34088
@@ -3541,15 +3541,16 @@
 #define ID_UTILITIES_ACCESSTRIPODTOVEHICLEOD 34274
 #define ID_ACCESSTRIPODTOVEHICLEOD_ID   34275
 #define ID_UTILITIES_ACCESSTRIPODTOVEHICLEOD34276 34276
+#define ID_MAP_BACKGROUND               34277
 #define IDC_STATIC_EXPORT               65535
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        34085
-#define _APS_NEXT_COMMAND_VALUE         34277
-#define _APS_NEXT_CONTROL_VALUE         40
+#define _APS_NEXT_RESOURCE_VALUE        34086
+#define _APS_NEXT_COMMAND_VALUE         34278
+#define _APS_NEXT_CONTROL_VALUE         41
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

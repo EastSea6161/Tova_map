@@ -614,3 +614,5 @@ extern const TCHAR* THEME_TEXT_ABOVE;
 
 extern CString UTIL_TRIPOD_TO_VEHOD_AREA[];
 extern const int UTIL_TRIPOD_TO_VEHOD_AREA_CNT;
+extern CString UTIL_FOD_DIV_AREA[];
+extern const int UTIL_FOD_DIV_AREA_CNT;

@@ -376,21 +376,6 @@
     <Filter Include="000_Common\70_Etc\ParseExpression">
       <UniqueIdentifier>{0e61c090-366b-4484-8793-cfb66c04be74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="080_ResultView">
-      <UniqueIdentifier>{54c2a575-78f4-4af6-ab76-48d6af4524ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="080_ResultView\10_Generation">
-      <UniqueIdentifier>{18a9e5b1-6b23-4fce-b916-5b8ba40dccf5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="080_ResultView\30_Mode">
-      <UniqueIdentifier>{4ff8d7b0-9d90-457d-b017-3ada65ae45e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="080_ResultView\40_Assignment">
-      <UniqueIdentifier>{c4705fbf-9fe7-43f7-b4c5-386a3d1ceee5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="080_ResultView\20_Distribution">
-      <UniqueIdentifier>{2ce47d23-de8a-4afc-94ba-575e6f7be713}</UniqueIdentifier>
-    </Filter>
     <Filter Include="910_Chunk\20_DAO\10_BulkDbase\31_Intersection">
       <UniqueIdentifier>{10681baf-0ab1-42ad-a17c-b8aaf401c9a4}</UniqueIdentifier>
     </Filter>
@@ -1405,11 +1390,23 @@
     <Filter Include="120_Utility\01_TripODToVehOD">
       <UniqueIdentifier>{c3fbf1a6-66de-4851-aa3d-6bab2482cf62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="120_Utility\03_FODDiv">
-      <UniqueIdentifier>{a8b7f045-69a2-42c4-8e1e-dfb1bc737438}</UniqueIdentifier>
+    <Filter Include="090_TableManager\080_ResultView">
+      <UniqueIdentifier>{54c2a575-78f4-4af6-ab76-48d6af4524ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="120_Utility\02_AccessTripODToVehOD">
-      <UniqueIdentifier>{2fec2560-aeb7-4427-bc19-031053d60d70}</UniqueIdentifier>
+    <Filter Include="090_TableManager\080_ResultView\10_Generation">
+      <UniqueIdentifier>{18a9e5b1-6b23-4fce-b916-5b8ba40dccf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="090_TableManager\080_ResultView\30_Mode">
+      <UniqueIdentifier>{4ff8d7b0-9d90-457d-b017-3ada65ae45e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="090_TableManager\080_ResultView\40_Assignment">
+      <UniqueIdentifier>{c4705fbf-9fe7-43f7-b4c5-386a3d1ceee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="090_TableManager\080_ResultView\20_Distribution">
+      <UniqueIdentifier>{2ce47d23-de8a-4afc-94ba-575e6f7be713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="120_Utility\02_FODDiv">
+      <UniqueIdentifier>{a8b7f045-69a2-42c4-8e1e-dfb1bc737438}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1558,10 +1555,10 @@
       <Filter>070_Tools\20_OD</Filter>
     </ClCompile>
     <ClCompile Include="KPASumDlg.cpp">
-      <Filter>080_ResultView\10_Generation</Filter>
+      <Filter>090_TableManager\080_ResultView\10_Generation</Filter>
     </ClCompile>
     <ClCompile Include="KPurposeKey.cpp">
-      <Filter>080_ResultView\10_Generation</Filter>
+      <Filter>090_TableManager\080_ResultView\10_Generation</Filter>
     </ClCompile>
     <ClCompile Include="IORecordsetFactory.cpp">
       <Filter>000_IOTable\30_KIORecordSet &lt;- %28KIOTable%29</Filter>
@@ -1873,22 +1870,22 @@
       <Filter>070_Tools\40_경로탐색</Filter>
     </ClCompile>
     <ClCompile Include="ResultViewDistributionDlg.cpp">
-      <Filter>080_ResultView\20_Distribution</Filter>
+      <Filter>090_TableManager\080_ResultView\20_Distribution</Filter>
     </ClCompile>
     <ClCompile Include="ResultViewModeDlg.cpp">
-      <Filter>080_ResultView\30_Mode</Filter>
+      <Filter>090_TableManager\080_ResultView\30_Mode</Filter>
     </ClCompile>
     <ClCompile Include="ODResultViewVRecord.cpp">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClCompile>
     <ClCompile Include="DBaseResultView.cpp">
       <Filter>910_Chunk\20_DAO\10_BulkDbase\ResultView</Filter>
     </ClCompile>
     <ClCompile Include="ViewResultInfo.cpp">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClCompile>
     <ClCompile Include="ResultViewTreeCtrl.cpp">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClCompile>
     <ClCompile Include="ModeTree.cpp">
       <Filter>050_Model\03_ModeChoice\02_Tree</Filter>
@@ -1939,7 +1936,7 @@
       <Filter>050_Model\03_ModeChoice\00_base</Filter>
     </ClCompile>
     <ClCompile Include="ResultViewAssignmentDlg.cpp">
-      <Filter>080_ResultView\40_Assignment</Filter>
+      <Filter>090_TableManager\080_ResultView\40_Assignment</Filter>
     </ClCompile>
     <ClCompile Include="DBaseVehicleCon.cpp">
       <Filter>910_Chunk\20_DAO\10_BulkDbase\VehicleConvert</Filter>
@@ -3732,14 +3729,14 @@
     <ClCompile Include="UtilExcelHandler.cpp">
       <Filter>120_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="FODDiv.cpp">
-      <Filter>120_Utility\03_FODDiv</Filter>
-    </ClCompile>
     <ClCompile Include="ExcelExportConfigDlg.cpp">
       <Filter>120_Utility</Filter>
     </ClCompile>
-    <ClCompile Include="AccessTripODToVehODDlg.cpp">
-      <Filter>120_Utility\02_AccessTripODToVehOD</Filter>
+    <ClCompile Include="MapViewBackground.cpp">
+      <Filter>010_MainFrame\→30_ChildFrame%28Map+IO%29\→10_MapFrameWnd\→10_MapView\10▲_MapView</Filter>
+    </ClCompile>
+    <ClCompile Include="FODDivDlg.cpp">
+      <Filter>120_Utility\02_FODDiv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3906,10 +3903,10 @@
       <Filter>070_Tools\20_OD</Filter>
     </ClInclude>
     <ClInclude Include="KPurposeKey.h">
-      <Filter>080_ResultView\10_Generation</Filter>
+      <Filter>090_TableManager\080_ResultView\10_Generation</Filter>
     </ClInclude>
     <ClInclude Include="KPASumDlg.h">
-      <Filter>080_ResultView\10_Generation</Filter>
+      <Filter>090_TableManager\080_ResultView\10_Generation</Filter>
     </ClInclude>
     <ClInclude Include="IORecordsetFactory.h">
       <Filter>000_IOTable\30_KIORecordSet &lt;- %28KIOTable%29</Filter>
@@ -4230,22 +4227,22 @@
       <Filter>070_Tools\40_경로탐색</Filter>
     </ClInclude>
     <ClInclude Include="ResultViewDistributionDlg.h">
-      <Filter>080_ResultView\20_Distribution</Filter>
+      <Filter>090_TableManager\080_ResultView\20_Distribution</Filter>
     </ClInclude>
     <ClInclude Include="ResultViewModeDlg.h">
-      <Filter>080_ResultView\30_Mode</Filter>
+      <Filter>090_TableManager\080_ResultView\30_Mode</Filter>
     </ClInclude>
     <ClInclude Include="ODResultViewVRecord.h">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClInclude>
     <ClInclude Include="DBaseResultView.h">
       <Filter>910_Chunk\20_DAO\10_BulkDbase\ResultView</Filter>
     </ClInclude>
     <ClInclude Include="ViewResultInfo.h">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClInclude>
     <ClInclude Include="ResultViewTreeCtrl.h">
-      <Filter>080_ResultView</Filter>
+      <Filter>090_TableManager\080_ResultView</Filter>
     </ClInclude>
     <ClInclude Include="ModeTreeNodeMode.h">
       <Filter>050_Model\03_ModeChoice\02_Tree</Filter>
@@ -4296,7 +4293,7 @@
       <Filter>050_Model\03_ModeChoice\00_base</Filter>
     </ClInclude>
     <ClInclude Include="ResultViewAssignmentDlg.h">
-      <Filter>080_ResultView\40_Assignment</Filter>
+      <Filter>090_TableManager\080_ResultView\40_Assignment</Filter>
     </ClInclude>
     <ClInclude Include="DBaseVehicleCon.h">
       <Filter>910_Chunk\20_DAO\10_BulkDbase\VehicleConvert</Filter>
@@ -6188,14 +6185,11 @@
     <ClInclude Include="UtilExcelHandler.h">
       <Filter>120_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="FODDiv.h">
-      <Filter>120_Utility\03_FODDiv</Filter>
-    </ClInclude>
     <ClInclude Include="ExcelExportConfigDlg.h">
       <Filter>120_Utility</Filter>
     </ClInclude>
-    <ClInclude Include="AccessTripODToVehODDlg.h">
-      <Filter>120_Utility\02_AccessTripODToVehOD</Filter>
+    <ClInclude Include="FODDivDlg.h">
+      <Filter>120_Utility\02_FODDiv</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6881,6 +6875,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="res\loading.gif">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\map_icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

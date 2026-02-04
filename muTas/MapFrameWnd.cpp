@@ -572,6 +572,16 @@ int KMapFrameWnd::OnCreateControl( LPCREATECONTROLSTRUCT lpCreateControl )
 
 		lpCreateControl->pControl = pPopupColor;
 	}
+    else if (ID_MAP_BACKGROUND == lpCreateControl->nID)
+    {
+        CXTPControlButton* pButton = (CXTPControlButton*)CXTPControlButton::CreateObject();
+        pButton->SetStyle(xtpButtonIcon);
+        pButton->SetCaption(_T("지도 배경화면 표시"));
+
+        HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_MAP_BACKGROUND);
+        pButton->SetCustomIcon(hIcon);
+        lpCreateControl->pControl = pButton;
+    }
     //
     /*
     else if( ID_MAPVIEW_EDITTASK == lpCreateControl->nID )

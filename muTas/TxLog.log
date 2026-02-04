@@ -1,403 +1,200 @@
-[Lev2][ 1-14 11: 8: 1, 112][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11: 8: 1, 112][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11: 8: 1, 153][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11: 8: 1, 320][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11: 8: 9, 879][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11: 8: 9, 880][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11: 8:15, 623][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11: 8:15, 624][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11: 8:25, 446][KTripODToVehODDlg::UpdateODColumnReport]-[918]:Start
-[Lev2][ 1-14 11: 8:31, 424][KTripODToVehODDlg::LoadMainODData]-[1024]:Start
-[Lev2][ 1-14 11: 9:52, 827][KTripODToVehODDlg::UpdateMainPreviewReport]-[722]:Start
-[Lev2][ 1-14 11: 9:52, 942][KTripODToVehODDlg::UpdateMainPreviewReport]-[815]:End
-[Lev2][ 1-14 11: 9:52, 942][KTripODToVehODDlg::UpdateODColumnReport]-[918]:Start
-[Lev2][ 1-14 11: 9:52, 942][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11: 9:52, 943][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11: 9:52, 943][KTripODToVehODDlg::UpdateODColumnReport]-[1019]:End
-[Lev2][ 1-14 11:10:19,  31][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:10:19,  31][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:10:42, 914][CKmzApp::OnProjectOpen]-[1273]:Start
-[Lev2][ 1-14 11:10:48, 749][CKmzApp::OpenProject]-[1363]:Start
-[Lev0][ 1-14 11:10:48, 750][KProject::KProject]-[ 53]:Visit....
-[Lev2][ 1-14 11:10:48, 751][KProject::OpenProject]-[210]:Start
-[Lev2][ 1-14 11:10:48, 755][KProject::OpenScenario]-[427]:Start
-[Lev2][ 1-14 11:10:48, 758][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
-[Lev0][ 1-14 11:10:48, 773][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:10:49, 300][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
-[Lev0][ 1-14 11:10:49, 318][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:10:49, 856][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
-[Lev0][ 1-14 11:10:49, 870][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:10:50, 403][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
-[Lev0][ 1-14 11:10:50, 420][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:10:51, 108][KProject::OpenScenario]-[452]:End
-[Lev0][ 1-14 11:10:51, 122][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
-[Lev2][ 1-14 11:10:51, 634][KProject::OpenProject]-[349]:End
-[Lev2][ 1-14 11:10:51, 634][CKmzApp::OpenProject]-[1428]:End
-[Lev2][ 1-14 11:10:52, 509][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
-[Lev2][ 1-14 11:10:52, 509][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
-[Lev0][ 1-14 11:10:52, 509][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
-[Lev2][ 1-14 11:10:52, 514][KNaviExplorerWnd::UpdateTree]-[ 48]:End
-[Lev2][ 1-14 11:10:52, 517][CKmzApp::OnProjectOpen]-[1358]:End
-[Lev2][ 1-14 11:10:54, 933][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
-[Lev0][ 1-14 11:10:54, 935][CChildFrame::CChildFrame]-[ 65]:Visit....
-[Lev0][ 1-14 11:10:54, 943][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev0][ 1-14 11:10:54, 944][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev2][ 1-14 11:10:54, 945][CChildFrame::OnCreate]-[ 87]:Start
-[Lev2][ 1-14 11:10:54, 945][CChildFrame::OnCreateClient]-[103]:Start
-[Lev0][ 1-14 11:10:54, 955][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
-[Lev0][ 1-14 11:10:54, 955][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
-[Lev2][ 1-14 11:10:54, 955][KMapFrameWnd::OnCreate]-[128]:Start
-[Lev2][ 1-14 11:10:54, 955][KMapFrameWnd::OnCreateClient]-[171]:Start
-[Lev0][ 1-14 11:10:54, 955][KMapFrameWnd::OnCreateClient]-[176]:Visit....
-[Lev0][ 1-14 11:10:54, 959][KMapView::KMapView]-[258]:Visit....
-[Lev0][ 1-14 11:10:54, 963][KMapFrameWnd::OnCreateClient]-[180]:Visit....
-[Lev2][ 1-14 11:10:54, 968][KMapFrameWnd::OnCreateClient]-[192]:End
-[Lev2][ 1-14 11:10:55,   4][KMapFrameWnd::OnCreate]-[164]:End
-[Lev0][ 1-14 11:10:55,   5][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev0][ 1-14 11:10:55,  59][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
-[Lev2][ 1-14 11:10:55,  60][KTocFrameWnd::OnCreate]-[ 29]:Start
-[Lev2][ 1-14 11:10:55,  60][KTocFrameWnd::OnCreateClient]-[ 47]:Start
-[Lev2][ 1-14 11:10:55, 402][KTocFrameWnd::OnCreateClient]-[ 50]:End
-[Lev2][ 1-14 11:10:55, 403][KTocFrameWnd::OnCreate]-[ 40]:End
-[Lev2][ 1-14 11:10:55, 406][CChildFrame::OnCreateClient]-[127]:End
-[Lev2][ 1-14 11:10:55, 414][CChildFrame::OnCreate]-[ 97]:End
-[Lev2][ 1-14 11:10:55, 420][KMapView::OnInitialUpdate]-[294]:Start
-[Lev2][ 1-14 11:10:55, 424][KMapView::InitalizeMap]-[303]:Start
-[Lev0][ 1-14 11:10:55, 425][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
-[Lev2][ 1-14 11:10:55, 425][KMapView::InitalizeMap]-[333]:End
-[Lev2][ 1-14 11:10:55, 425][KMapView::OnInitialUpdate]-[297]:End
-[Lev2][ 1-14 11:10:55, 442][CChildFrame::LoadTarget]-[176]:Start
-[Lev2][ 1-14 11:10:55, 442][KMapView::LoadMapView]-[559]:Start
-[Lev2][ 1-14 11:10:55, 442][KMapView::LoadInitialLayers]-[601]:Start
-[Lev2][ 1-14 11:10:55, 447][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:10:55, 447][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:10:55, 447][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:10:55, 447][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:10:55, 448][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:10:55, 448][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:10:56, 947][KMapView::LoadMapView]-[596]:End
-[Lev2][ 1-14 11:10:56, 957][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:10:56, 957][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:10:56, 972][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:10:56, 972][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:10:56, 985][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:10:56, 985][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:10:57, 606][CChildFrame::LoadTarget]-[188]:End
-[Lev2][ 1-14 11:10:57, 606][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
-[Lev2][ 1-14 11:10:57, 606][CChildFrame::ShowIOView]-[218]:Start
-[Lev2][ 1-14 11:10:57, 614][CChildFrame::ShowIOView]-[228]:End
-[Lev2][ 1-14 11:11: 3, 771][KDlgImportNode::InitializeColumnField]-[463]:Start
-[Lev2][ 1-14 11:11: 3, 771][KDlgImportNode::InitializeColumnField]-[540]:End
-[Lev2][ 1-14 11:11:17, 226][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
-[Lev2][ 1-14 11:11:17, 226][CChildFrame::ShowIOView]-[218]:Start
-[Lev2][ 1-14 11:11:20,   5][KDlgImportLink::InitializeColumnField]-[535]:Start
-[Lev2][ 1-14 11:11:20,   6][KDlgImportLink::InitializeColumnField]-[609]:End
-[Lev2][ 1-14 11:11:30, 682][CMainFrameWnd::OnClose]-[612]:Start
-[Lev2][ 1-14 11:11:32, 487][CMainFrameWnd::OnDestroy]-[710]:Start
-[Lev2][ 1-14 11:11:32, 502][CMainFrameWnd::OnDestroy]-[715]:End
-[Lev2][ 1-14 11:11:32, 503][CChildFrame::OnDestroy]-[133]:Start
-[Lev2][ 1-14 11:11:32, 503][CChildFrame::OnDestroy]-[138]:End
-[Lev0][ 1-14 11:11:32, 503][KThemeDrawControl::~KThemeDrawControl]-[ 16]:Visit....
-[Lev0][ 1-14 11:11:32, 503][KMapView::OnDestroy]-[396]:Visit....
-[Lev0][ 1-14 11:11:32, 517][KMapView::PostNcDestroy]-[403]:Visit....
-[Lev0][ 1-14 11:11:32, 517][KMapView::~KMapView]-[264]:Visit....
-[Lev0][ 1-14 11:11:32, 637][KMapFrameWnd::~KMapFrameWnd]-[ 29]:Visit....
-[Lev0][ 1-14 11:11:32, 682][KTocFrameWnd::~KTocFrameWnd]-[ 18]:Visit....
-[Lev0][ 1-14 11:11:32, 683][CChildFrame::PostNcDestroy]-[143]:Visit....
-[Lev0][ 1-14 11:11:32, 683][CChildFrame::~CChildFrame]-[ 70]:Visit....
-[Lev0][ 1-14 11:11:32, 685][CMainFrameWnd::~CMainFrameWnd]-[473]:Visit....
-[Lev2][ 1-14 11:11:32, 686][CMainFrameWnd::OnClose]-[651]:End
-[Lev2][ 1-14 11:12:51, 585][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:12:51, 586][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:12:51, 599][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:12:51, 698][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:12:53,  96][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:12:53,  96][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:13: 8, 220][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:13: 8, 220][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:19:14, 690][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:19:14, 690][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:19:14, 704][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:19:14, 808][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:19:21, 532][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:19:21, 533][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:20:25, 323][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:20:25, 323][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:20:25, 344][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:20:25, 453][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:20:26, 904][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:20:26, 904][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:20:33, 175][CMainFrameWnd::OnClose]-[612]:Start
-[Lev2][ 1-14 11:20:33, 224][CMainFrameWnd::OnDestroy]-[710]:Start
-[Lev2][ 1-14 11:20:33, 231][CMainFrameWnd::OnDestroy]-[715]:End
-[Lev0][ 1-14 11:20:33, 244][CMainFrameWnd::~CMainFrameWnd]-[473]:Visit....
-[Lev2][ 1-14 11:20:33, 245][CMainFrameWnd::OnClose]-[651]:End
-[Lev2][ 1-14 11:21:16, 914][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:21:16, 914][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:21:16, 933][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:21:17,  43][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:21:18, 732][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:21:18, 733][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:21:26, 789][CMainFrameWnd::OnClose]-[612]:Start
-[Lev2][ 1-14 11:21:26, 824][CMainFrameWnd::OnDestroy]-[710]:Start
-[Lev2][ 1-14 11:21:26, 831][CMainFrameWnd::OnDestroy]-[715]:End
-[Lev0][ 1-14 11:21:26, 850][CMainFrameWnd::~CMainFrameWnd]-[473]:Visit....
-[Lev2][ 1-14 11:21:26, 851][CMainFrameWnd::OnClose]-[651]:End
-[Lev2][ 1-14 11:22: 0, 738][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:22: 0, 739][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:22: 0, 758][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:22: 0, 883][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:22: 2, 399][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:22: 2, 400][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:22: 4, 758][CMainFrameWnd::OnClose]-[612]:Start
-[Lev2][ 1-14 11:22:25, 238][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:22:25, 238][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:22:25, 255][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:22:25, 361][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:22:27,  11][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:22:27,  11][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:22:30, 951][KTripODToVehODDlg::UpdateODColumnReport]-[918]:Start
-[Lev2][ 1-14 11:22:40, 383][KTripODToVehODDlg::LoadMainODData]-[1024]:Start
-[Lev2][ 1-14 11:24: 2, 356][KTripODToVehODDlg::UpdateMainPreviewReport]-[722]:Start
-[Lev2][ 1-14 11:24: 2, 486][KTripODToVehODDlg::UpdateMainPreviewReport]-[815]:End
-[Lev2][ 1-14 11:24: 2, 486][KTripODToVehODDlg::UpdateODColumnReport]-[918]:Start
-[Lev2][ 1-14 11:24: 2, 486][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:24: 2, 487][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:24: 2, 487][KTripODToVehODDlg::UpdateODColumnReport]-[1019]:End
-[Lev2][ 1-14 11:24:12, 167][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:24:12, 167][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:24:54, 304][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:24:54, 311][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:25:19,  55][CKmzApp::OnProjectOpen]-[1273]:Start
-[Lev2][ 1-14 11:26:26, 644][CKmzApp::OnProjectOpen]-[1273]:Start
-[Lev2][ 1-14 11:26:27, 937][CKmzApp::OpenProject]-[1363]:Start
-[Lev0][ 1-14 11:26:27, 937][KProject::KProject]-[ 53]:Visit....
-[Lev2][ 1-14 11:26:27, 937][KProject::OpenProject]-[210]:Start
-[Lev2][ 1-14 11:26:27, 939][KProject::OpenScenario]-[427]:Start
-[Lev2][ 1-14 11:26:27, 939][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
-[Lev0][ 1-14 11:26:27, 952][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:28, 481][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
-[Lev0][ 1-14 11:26:28, 496][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:29,  13][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
-[Lev0][ 1-14 11:26:29,  24][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:29, 544][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
-[Lev0][ 1-14 11:26:29, 556][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:30, 246][KProject::OpenScenario]-[452]:End
-[Lev0][ 1-14 11:26:30, 259][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
-[Lev2][ 1-14 11:26:30, 770][KProject::OpenProject]-[349]:End
-[Lev2][ 1-14 11:26:30, 770][CKmzApp::OpenProject]-[1428]:End
-[Lev2][ 1-14 11:26:30, 953][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
-[Lev2][ 1-14 11:26:30, 953][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
-[Lev0][ 1-14 11:26:30, 953][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
-[Lev2][ 1-14 11:26:30, 957][KNaviExplorerWnd::UpdateTree]-[ 48]:End
-[Lev2][ 1-14 11:26:30, 958][CKmzApp::OnProjectOpen]-[1358]:End
-[Lev2][ 1-14 11:26:33, 217][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
-[Lev0][ 1-14 11:26:33, 217][CChildFrame::CChildFrame]-[ 65]:Visit....
-[Lev0][ 1-14 11:26:33, 220][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev0][ 1-14 11:26:33, 220][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev2][ 1-14 11:26:33, 220][CChildFrame::OnCreate]-[ 87]:Start
-[Lev2][ 1-14 11:26:33, 220][CChildFrame::OnCreateClient]-[103]:Start
-[Lev0][ 1-14 11:26:33, 225][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
-[Lev0][ 1-14 11:26:33, 225][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
-[Lev2][ 1-14 11:26:33, 225][KMapFrameWnd::OnCreate]-[128]:Start
-[Lev2][ 1-14 11:26:33, 225][KMapFrameWnd::OnCreateClient]-[171]:Start
-[Lev0][ 1-14 11:26:33, 225][KMapFrameWnd::OnCreateClient]-[176]:Visit....
-[Lev0][ 1-14 11:26:33, 225][KMapView::KMapView]-[258]:Visit....
-[Lev0][ 1-14 11:26:33, 227][KMapFrameWnd::OnCreateClient]-[180]:Visit....
-[Lev2][ 1-14 11:26:33, 231][KMapFrameWnd::OnCreateClient]-[192]:End
-[Lev2][ 1-14 11:26:33, 259][KMapFrameWnd::OnCreate]-[164]:End
-[Lev0][ 1-14 11:26:33, 260][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev0][ 1-14 11:26:33, 292][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
-[Lev2][ 1-14 11:26:33, 292][KTocFrameWnd::OnCreate]-[ 29]:Start
-[Lev2][ 1-14 11:26:33, 292][KTocFrameWnd::OnCreateClient]-[ 47]:Start
-[Lev2][ 1-14 11:26:33, 560][KTocFrameWnd::OnCreateClient]-[ 50]:End
-[Lev2][ 1-14 11:26:33, 561][KTocFrameWnd::OnCreate]-[ 40]:End
-[Lev2][ 1-14 11:26:33, 564][CChildFrame::OnCreateClient]-[127]:End
-[Lev2][ 1-14 11:26:33, 569][CChildFrame::OnCreate]-[ 97]:End
-[Lev2][ 1-14 11:26:33, 575][KMapView::OnInitialUpdate]-[294]:Start
-[Lev2][ 1-14 11:26:33, 576][KMapView::InitalizeMap]-[303]:Start
-[Lev0][ 1-14 11:26:33, 576][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
-[Lev2][ 1-14 11:26:33, 576][KMapView::InitalizeMap]-[333]:End
-[Lev2][ 1-14 11:26:33, 576][KMapView::OnInitialUpdate]-[297]:End
-[Lev2][ 1-14 11:26:33, 592][CChildFrame::LoadTarget]-[176]:Start
-[Lev2][ 1-14 11:26:33, 592][KMapView::LoadMapView]-[559]:Start
-[Lev2][ 1-14 11:26:33, 592][KMapView::LoadInitialLayers]-[601]:Start
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:26:33, 593][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:26:34, 712][KMapView::LoadMapView]-[596]:End
-[Lev2][ 1-14 11:26:34, 721][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:26:34, 721][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:26:34, 733][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:26:34, 733][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:26:34, 743][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:26:34, 743][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:26:35, 329][CChildFrame::LoadTarget]-[188]:End
-[Lev2][ 1-14 11:26:35, 329][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
-[Lev2][ 1-14 11:26:35, 329][CChildFrame::ShowIOView]-[218]:Start
-[Lev2][ 1-14 11:26:35, 337][CChildFrame::ShowIOView]-[228]:End
-[Lev2][ 1-14 11:26:39,  81][KDlgImportNode::InitializeColumnField]-[463]:Start
-[Lev2][ 1-14 11:26:39,  82][KDlgImportNode::InitializeColumnField]-[540]:End
-[Lev2][ 1-14 11:26:50, 556][CMainFrameWnd::CMainFrameWnd]-[438]:Start
-[Lev2][ 1-14 11:26:50, 556][CMainFrameWnd::CMainFrameWnd]-[468]:End
-[Lev2][ 1-14 11:26:50, 569][CMainFrameWnd::OnCreate]-[478]:Start
-[Lev2][ 1-14 11:26:50, 705][CMainFrameWnd::OnCreate]-[576]:End
-[Lev2][ 1-14 11:26:52, 304][CKmzApp::OnProjectOpen]-[1273]:Start
-[Lev2][ 1-14 11:26:53, 853][CKmzApp::OpenProject]-[1363]:Start
-[Lev0][ 1-14 11:26:53, 853][KProject::KProject]-[ 53]:Visit....
-[Lev2][ 1-14 11:26:53, 853][KProject::OpenProject]-[210]:Start
-[Lev2][ 1-14 11:26:53, 854][KProject::OpenScenario]-[427]:Start
-[Lev2][ 1-14 11:26:53, 855][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
-[Lev0][ 1-14 11:26:53, 867][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:54, 390][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
-[Lev0][ 1-14 11:26:54, 417][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:54, 937][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
-[Lev0][ 1-14 11:26:54, 954][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:55, 515][KTarget::CreateInitialObject]-[ 74]:D:\Project\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
-[Lev0][ 1-14 11:26:55, 530][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
-[Lev2][ 1-14 11:26:56, 202][KProject::OpenScenario]-[452]:End
-[Lev0][ 1-14 11:26:56, 214][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
-[Lev2][ 1-14 11:26:56, 715][KProject::OpenProject]-[349]:End
-[Lev2][ 1-14 11:26:56, 715][CKmzApp::OpenProject]-[1428]:End
-[Lev2][ 1-14 11:26:56, 953][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
-[Lev2][ 1-14 11:26:56, 954][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
-[Lev0][ 1-14 11:26:56, 954][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
-[Lev2][ 1-14 11:26:56, 959][KNaviExplorerWnd::UpdateTree]-[ 48]:End
-[Lev2][ 1-14 11:26:56, 961][CKmzApp::OnProjectOpen]-[1358]:End
-[Lev2][ 1-14 11:26:58, 937][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
-[Lev0][ 1-14 11:26:58, 937][CChildFrame::CChildFrame]-[ 65]:Visit....
-[Lev0][ 1-14 11:26:58, 941][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev0][ 1-14 11:26:58, 943][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev2][ 1-14 11:26:58, 943][CChildFrame::OnCreate]-[ 87]:Start
-[Lev2][ 1-14 11:26:58, 945][CChildFrame::OnCreateClient]-[103]:Start
-[Lev0][ 1-14 11:26:58, 949][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
-[Lev0][ 1-14 11:26:58, 949][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
-[Lev2][ 1-14 11:26:58, 949][KMapFrameWnd::OnCreate]-[128]:Start
-[Lev2][ 1-14 11:26:58, 949][KMapFrameWnd::OnCreateClient]-[171]:Start
-[Lev0][ 1-14 11:26:58, 949][KMapFrameWnd::OnCreateClient]-[176]:Visit....
-[Lev0][ 1-14 11:26:58, 949][KMapView::KMapView]-[258]:Visit....
-[Lev0][ 1-14 11:26:58, 951][KMapFrameWnd::OnCreateClient]-[180]:Visit....
-[Lev2][ 1-14 11:26:58, 956][KMapFrameWnd::OnCreateClient]-[192]:End
-[Lev2][ 1-14 11:26:58, 990][KMapFrameWnd::OnCreate]-[164]:End
-[Lev0][ 1-14 11:26:58, 991][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev0][ 1-14 11:26:59,  36][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
-[Lev2][ 1-14 11:26:59,  37][KTocFrameWnd::OnCreate]-[ 29]:Start
-[Lev2][ 1-14 11:26:59,  37][KTocFrameWnd::OnCreateClient]-[ 47]:Start
-[Lev2][ 1-14 11:26:59, 351][KTocFrameWnd::OnCreateClient]-[ 50]:End
-[Lev2][ 1-14 11:26:59, 352][KTocFrameWnd::OnCreate]-[ 40]:End
-[Lev2][ 1-14 11:26:59, 355][CChildFrame::OnCreateClient]-[127]:End
-[Lev2][ 1-14 11:26:59, 363][CChildFrame::OnCreate]-[ 97]:End
-[Lev2][ 1-14 11:26:59, 369][KMapView::OnInitialUpdate]-[294]:Start
-[Lev2][ 1-14 11:26:59, 371][KMapView::InitalizeMap]-[303]:Start
-[Lev0][ 1-14 11:26:59, 371][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
-[Lev2][ 1-14 11:26:59, 371][KMapView::InitalizeMap]-[333]:End
-[Lev2][ 1-14 11:26:59, 371][KMapView::OnInitialUpdate]-[297]:End
-[Lev2][ 1-14 11:26:59, 388][CChildFrame::LoadTarget]-[176]:Start
-[Lev2][ 1-14 11:26:59, 388][KMapView::LoadMapView]-[559]:Start
-[Lev2][ 1-14 11:26:59, 388][KMapView::LoadInitialLayers]-[601]:Start
-[Lev2][ 1-14 11:26:59, 388][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:26:59, 389][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:26:59, 389][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:26:59, 389][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:26:59, 389][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:26:59, 389][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:27: 0, 495][KMapView::LoadMapView]-[596]:End
-[Lev2][ 1-14 11:27: 0, 499][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:27: 0, 499][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:27: 0, 512][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:27: 0, 513][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:27: 0, 525][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:27: 0, 525][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:27: 1, 114][CChildFrame::LoadTarget]-[188]:End
-[Lev2][ 1-14 11:27: 1, 114][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
-[Lev2][ 1-14 11:27: 1, 114][CChildFrame::ShowIOView]-[218]:Start
-[Lev2][ 1-14 11:27: 1, 121][CChildFrame::ShowIOView]-[228]:End
-[Lev2][ 1-14 11:27: 6,   2][KDlgImportNode::InitializeColumnField]-[463]:Start
-[Lev2][ 1-14 11:27: 6,   2][KDlgImportNode::InitializeColumnField]-[540]:End
-[Lev2][ 1-14 11:32:50, 249][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:32:50, 250][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:33: 0, 707][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:33: 0, 707][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:33:11, 605][KTripODToVehODDlg::InitODColumn]-[210]:Start
-[Lev2][ 1-14 11:33:11, 606][KTripODToVehODDlg::InitODColumn]-[258]:End
-[Lev2][ 1-14 11:34:44, 129][CMainFrameWnd::ShowNetworkView]-[749]:Start
-[Lev2][ 1-14 11:34:44, 129][CMainFrameWnd::GetCreateTargetChildFrame]-[859]:Start
-[Lev0][ 1-14 11:34:44, 130][CChildFrame::CChildFrame]-[ 65]:Visit....
-[Lev0][ 1-14 11:34:44, 132][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev0][ 1-14 11:34:44, 132][CChildFrame::PreCreateWindow]-[ 75]:Visit....
-[Lev2][ 1-14 11:34:44, 132][CChildFrame::OnCreate]-[ 87]:Start
-[Lev2][ 1-14 11:34:44, 132][CChildFrame::OnCreateClient]-[103]:Start
-[Lev0][ 1-14 11:34:44, 137][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
-[Lev0][ 1-14 11:34:44, 137][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
-[Lev2][ 1-14 11:34:44, 137][KMapFrameWnd::OnCreate]-[128]:Start
-[Lev2][ 1-14 11:34:44, 137][KMapFrameWnd::OnCreateClient]-[171]:Start
-[Lev0][ 1-14 11:34:44, 137][KMapFrameWnd::OnCreateClient]-[176]:Visit....
-[Lev0][ 1-14 11:34:44, 137][KMapView::KMapView]-[258]:Visit....
-[Lev0][ 1-14 11:34:44, 139][KMapFrameWnd::OnCreateClient]-[180]:Visit....
-[Lev2][ 1-14 11:34:44, 144][KMapFrameWnd::OnCreateClient]-[192]:End
-[Lev2][ 1-14 11:34:44, 175][KMapFrameWnd::OnCreate]-[164]:End
-[Lev0][ 1-14 11:34:44, 177][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev0][ 1-14 11:34:44, 212][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
-[Lev2][ 1-14 11:34:44, 213][KTocFrameWnd::OnCreate]-[ 29]:Start
-[Lev2][ 1-14 11:34:44, 213][KTocFrameWnd::OnCreateClient]-[ 47]:Start
-[Lev2][ 1-14 11:34:44, 622][KTocFrameWnd::OnCreateClient]-[ 50]:End
-[Lev2][ 1-14 11:34:44, 626][KTocFrameWnd::OnCreate]-[ 40]:End
-[Lev2][ 1-14 11:34:44, 633][CChildFrame::OnCreateClient]-[127]:End
-[Lev2][ 1-14 11:34:44, 641][CChildFrame::OnCreate]-[ 97]:End
-[Lev2][ 1-14 11:34:44, 650][KMapView::OnInitialUpdate]-[294]:Start
-[Lev2][ 1-14 11:34:44, 651][KMapView::InitalizeMap]-[303]:Start
-[Lev0][ 1-14 11:34:44, 651][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
-[Lev2][ 1-14 11:34:44, 651][KMapView::InitalizeMap]-[333]:End
-[Lev2][ 1-14 11:34:44, 651][KMapView::OnInitialUpdate]-[297]:End
-[Lev2][ 1-14 11:34:44, 666][CChildFrame::LoadTarget]-[176]:Start
-[Lev2][ 1-14 11:34:44, 666][KMapView::LoadMapView]-[559]:Start
-[Lev2][ 1-14 11:34:44, 666][KMapView::LoadInitialLayers]-[601]:Start
-[Lev2][ 1-14 11:34:44, 677][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:34:44, 677][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:34:44, 888][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:34:44, 900][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:34:45, 433][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:34:45, 443][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:34:45, 504][KMapView::LoadMapView]-[596]:End
-[Lev2][ 1-14 11:34:45, 510][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
-[Lev2][ 1-14 11:34:45, 510][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
-[Lev2][ 1-14 11:34:45, 520][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
-[Lev2][ 1-14 11:34:45, 520][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
-[Lev2][ 1-14 11:34:45, 535][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
-[Lev2][ 1-14 11:34:45, 535][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
-[Lev2][ 1-14 11:34:45, 593][CChildFrame::LoadTarget]-[188]:End
-[Lev2][ 1-14 11:34:45, 593][CMainFrameWnd::GetCreateTargetChildFrame]-[894]:End
-[Lev2][ 1-14 11:34:45, 593][CChildFrame::ShowMapView]-[200]:Start
-[Lev2][ 1-14 11:34:45, 604][CChildFrame::ShowMapView]-[212]:End
-[Lev2][ 1-14 11:34:45, 604][CMainFrameWnd::ShowNetworkView]-[758]:End
-[Lev0][ 1-14 11:34:45, 633][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev0][ 1-14 11:34:45, 639][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev2][ 1-14 11:35:26, 181][CMainFrameWnd::OnClose]-[612]:Start
-[Lev0][ 1-14 11:35:29, 113][KMapFrameWnd::OnDockingPaneNotify]-[594]:Visit....
-[Lev2][ 1-14 11:35:29, 116][CMainFrameWnd::OnDestroy]-[710]:Start
-[Lev2][ 1-14 11:35:29, 121][CMainFrameWnd::OnDestroy]-[715]:End
-[Lev2][ 1-14 11:35:29, 121][CChildFrame::OnDestroy]-[133]:Start
-[Lev2][ 1-14 11:35:29, 121][CChildFrame::OnDestroy]-[138]:End
-[Lev0][ 1-14 11:35:29, 121][KThemeDrawControl::~KThemeDrawControl]-[ 16]:Visit....
-[Lev0][ 1-14 11:35:29, 121][KMapView::OnDestroy]-[396]:Visit....
-[Lev2][ 1-14 11:35:29, 125][CChildFrame::OnDestroy]-[133]:Start
-[Lev2][ 1-14 11:35:29, 125][CChildFrame::OnDestroy]-[138]:End
-[Lev0][ 1-14 11:35:29, 125][KThemeDrawControl::~KThemeDrawControl]-[ 16]:Visit....
-[Lev0][ 1-14 11:35:29, 125][KMapView::OnDestroy]-[396]:Visit....
-[Lev0][ 1-14 11:35:29, 141][KMapView::PostNcDestroy]-[403]:Visit....
-[Lev0][ 1-14 11:35:29, 141][KMapView::~KMapView]-[264]:Visit....
-[Lev0][ 1-14 11:35:29, 272][KMapFrameWnd::~KMapFrameWnd]-[ 29]:Visit....
-[Lev0][ 1-14 11:35:29, 284][KTocFrameWnd::~KTocFrameWnd]-[ 18]:Visit....
-[Lev0][ 1-14 11:35:29, 295][CChildFrame::PostNcDestroy]-[143]:Visit....
-[Lev0][ 1-14 11:35:29, 295][CChildFrame::~CChildFrame]-[ 70]:Visit....
-[Lev0][ 1-14 11:35:29, 295][KMapView::PostNcDestroy]-[403]:Visit....
-[Lev0][ 1-14 11:35:29, 295][KMapView::~KMapView]-[264]:Visit....
-[Lev0][ 1-14 11:35:29, 405][KMapFrameWnd::~KMapFrameWnd]-[ 29]:Visit....
-[Lev0][ 1-14 11:35:29, 423][KTocFrameWnd::~KTocFrameWnd]-[ 18]:Visit....
-[Lev0][ 1-14 11:35:29, 424][CChildFrame::PostNcDestroy]-[143]:Visit....
-[Lev0][ 1-14 11:35:29, 424][CChildFrame::~CChildFrame]-[ 70]:Visit....
-[Lev0][ 1-14 11:35:29, 425][CMainFrameWnd::~CMainFrameWnd]-[473]:Visit....
-[Lev2][ 1-14 11:35:29, 425][CMainFrameWnd::OnClose]-[651]:End
+[Lev2][ 2- 4  9:26:20, 949][CMainFrameWnd::CMainFrameWnd]-[435]:Start
+[Lev2][ 2- 4  9:26:20, 949][CMainFrameWnd::CMainFrameWnd]-[465]:End
+[Lev2][ 2- 4  9:26:20, 967][CMainFrameWnd::OnCreate]-[475]:Start
+[Lev2][ 2- 4  9:26:21, 140][CMainFrameWnd::OnCreate]-[573]:End
+[Lev2][ 2- 4  9:26:23, 249][CKmzApp::OnProjectOpen]-[1273]:Start
+[Lev2][ 2- 4  9:26:25,   3][CKmzApp::OpenProject]-[1363]:Start
+[Lev0][ 2- 4  9:26:25,   3][KProject::KProject]-[ 53]:Visit....
+[Lev2][ 2- 4  9:26:25,   3][KProject::OpenProject]-[210]:Start
+[Lev2][ 2- 4  9:26:25,   5][KProject::OpenScenario]-[427]:Start
+[Lev2][ 2- 4  9:26:25,   6][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
+[Lev0][ 2- 4  9:26:25, 332][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:26:25, 939][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
+[Lev0][ 2- 4  9:26:26,  47][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:26:26, 593][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
+[Lev0][ 2- 4  9:26:26, 726][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:26:27, 230][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
+[Lev0][ 2- 4  9:26:27, 266][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:26:27, 945][KProject::OpenScenario]-[452]:End
+[Lev0][ 2- 4  9:26:27, 998][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
+[Lev2][ 2- 4  9:26:28, 461][KProject::OpenProject]-[349]:End
+[Lev2][ 2- 4  9:26:28, 461][CKmzApp::OpenProject]-[1428]:End
+[Lev2][ 2- 4  9:26:39,  21][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
+[Lev2][ 2- 4  9:26:39,  21][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
+[Lev0][ 2- 4  9:26:39,  21][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
+[Lev2][ 2- 4  9:26:39,  41][KNaviExplorerWnd::UpdateTree]-[ 48]:End
+[Lev2][ 2- 4  9:26:39,  43][CKmzApp::OnProjectOpen]-[1358]:End
+[Lev2][ 2- 4  9:26:43,  16][CMainFrameWnd::ShowNetworkView]-[746]:Start
+[Lev2][ 2- 4  9:26:43,  16][CMainFrameWnd::GetCreateTargetChildFrame]-[856]:Start
+[Lev0][ 2- 4  9:26:43,  16][CChildFrame::CChildFrame]-[ 65]:Visit....
+[Lev0][ 2- 4  9:26:43,  18][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev0][ 2- 4  9:26:43,  19][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev2][ 2- 4  9:26:43,  19][CChildFrame::OnCreate]-[ 87]:Start
+[Lev2][ 2- 4  9:26:43,  21][CChildFrame::OnCreateClient]-[103]:Start
+[Lev0][ 2- 4  9:26:43,  26][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
+[Lev0][ 2- 4  9:26:43,  26][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
+[Lev2][ 2- 4  9:26:43,  26][KMapFrameWnd::OnCreate]-[128]:Start
+[Lev2][ 2- 4  9:26:43,  26][KMapFrameWnd::OnCreateClient]-[171]:Start
+[Lev0][ 2- 4  9:26:43,  26][KMapFrameWnd::OnCreateClient]-[176]:Visit....
+[Lev0][ 2- 4  9:26:43,  27][KMapView::KMapView]-[264]:Visit....
+[Lev0][ 2- 4  9:26:43,  29][KMapFrameWnd::OnCreateClient]-[180]:Visit....
+[Lev2][ 2- 4  9:26:43,  34][KMapFrameWnd::OnCreateClient]-[192]:End
+[Lev2][ 2- 4  9:26:43,  63][KMapFrameWnd::OnCreate]-[164]:End
+[Lev0][ 2- 4  9:26:43,  71][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev0][ 2- 4  9:26:43, 119][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
+[Lev2][ 2- 4  9:26:43, 120][KTocFrameWnd::OnCreate]-[ 29]:Start
+[Lev2][ 2- 4  9:26:43, 120][KTocFrameWnd::OnCreateClient]-[ 47]:Start
+[Lev2][ 2- 4  9:26:43, 376][KTocFrameWnd::OnCreateClient]-[ 50]:End
+[Lev2][ 2- 4  9:26:43, 377][KTocFrameWnd::OnCreate]-[ 40]:End
+[Lev2][ 2- 4  9:26:43, 380][CChildFrame::OnCreateClient]-[127]:End
+[Lev2][ 2- 4  9:26:43, 399][CChildFrame::OnCreate]-[ 97]:End
+[Lev2][ 2- 4  9:26:43, 405][KMapView::OnInitialUpdate]-[300]:Start
+[Lev2][ 2- 4  9:26:43, 407][KMapView::InitalizeMap]-[309]:Start
+[Lev0][ 2- 4  9:26:43, 407][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
+[Lev2][ 2- 4  9:26:43, 407][KMapView::InitalizeMap]-[339]:End
+[Lev2][ 2- 4  9:26:43, 407][KMapView::OnInitialUpdate]-[303]:End
+[Lev2][ 2- 4  9:26:43, 427][CChildFrame::LoadTarget]-[176]:Start
+[Lev2][ 2- 4  9:26:43, 427][KMapView::LoadMapView]-[555]:Start
+[Lev2][ 2- 4  9:26:43, 427][KMapView::LoadInitialLayers]-[597]:Start
+[Lev2][ 2- 4  9:26:43, 446][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][ 2- 4  9:26:43, 447][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][ 2- 4  9:26:43, 657][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][ 2- 4  9:26:43, 657][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][ 2- 4  9:26:44, 329][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:26:44, 329][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:26:44, 384][KMapView::LoadMapView]-[592]:End
+[Lev2][ 2- 4  9:26:44, 394][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][ 2- 4  9:26:44, 394][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][ 2- 4  9:26:44, 405][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][ 2- 4  9:26:44, 405][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][ 2- 4  9:26:44, 421][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:26:44, 421][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:26:44, 472][CChildFrame::LoadTarget]-[188]:End
+[Lev2][ 2- 4  9:26:44, 472][CMainFrameWnd::GetCreateTargetChildFrame]-[891]:End
+[Lev2][ 2- 4  9:26:44, 472][CChildFrame::ShowMapView]-[200]:Start
+[Lev2][ 2- 4  9:26:44, 483][CChildFrame::ShowMapView]-[212]:End
+[Lev2][ 2- 4  9:26:44, 483][CMainFrameWnd::ShowNetworkView]-[755]:End
+[Lev0][ 2- 4  9:26:44, 541][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev0][ 2- 4  9:26:44, 548][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev2][ 2- 4  9:28:46,   0][CMainFrameWnd::CMainFrameWnd]-[435]:Start
+[Lev2][ 2- 4  9:28:46,   1][CMainFrameWnd::CMainFrameWnd]-[465]:End
+[Lev2][ 2- 4  9:28:46,  34][CMainFrameWnd::OnCreate]-[475]:Start
+[Lev2][ 2- 4  9:28:46, 165][CMainFrameWnd::OnCreate]-[573]:End
+[Lev2][ 2- 4  9:28:53, 821][CKmzApp::OnProjectOpen]-[1273]:Start
+[Lev2][ 2- 4  9:28:55, 762][CKmzApp::OpenProject]-[1363]:Start
+[Lev0][ 2- 4  9:28:55, 762][KProject::KProject]-[ 53]:Visit....
+[Lev2][ 2- 4  9:28:55, 762][KProject::OpenProject]-[210]:Start
+[Lev2][ 2- 4  9:28:55, 764][KProject::OpenScenario]-[427]:Start
+[Lev2][ 2- 4  9:28:55, 764][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\BASE\2023\iolocal.db
+[Lev0][ 2- 4  9:28:55, 776][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:28:56, 303][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2023\iolocal.db
+[Lev0][ 2- 4  9:28:56, 319][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:28:56, 839][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\전국권\2025\iolocal.db
+[Lev0][ 2- 4  9:28:56, 854][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:28:57, 372][KTarget::CreateInitialObject]-[ 74]:E:\TOVA\TOVA_data\05 오류관리\251204_신규버전(4) 테스트 관련\FinalTest_251125\수도권\2023\iolocal.db
+[Lev0][ 2- 4  9:28:57, 383][KTarget::UpgradeDataBaseProcess]-[570]:Visit....
+[Lev2][ 2- 4  9:28:58,  61][KProject::OpenScenario]-[452]:End
+[Lev0][ 2- 4  9:28:58,  83][KProject::UpgradeProjectDBProcess]-[1042]:Visit....
+[Lev2][ 2- 4  9:28:58, 593][KProject::OpenProject]-[349]:End
+[Lev2][ 2- 4  9:28:58, 593][CKmzApp::OpenProject]-[1428]:End
+[Lev2][ 2- 4  9:28:58, 788][KNaviExplorerWnd::UpdateTree]-[ 22]:Start
+[Lev2][ 2- 4  9:28:58, 788][KNaviExplorerWnd::UpdateTree]-[ 33]:Start
+[Lev0][ 2- 4  9:28:58, 788][KNaviExplorerWnd::ClearTree]-[ 54]:Visit....
+[Lev2][ 2- 4  9:28:58, 793][KNaviExplorerWnd::UpdateTree]-[ 48]:End
+[Lev2][ 2- 4  9:28:58, 795][CKmzApp::OnProjectOpen]-[1358]:End
+[Lev2][ 2- 4  9:29: 3, 905][CMainFrameWnd::ShowNetworkView]-[746]:Start
+[Lev2][ 2- 4  9:29: 3, 905][CMainFrameWnd::GetCreateTargetChildFrame]-[856]:Start
+[Lev0][ 2- 4  9:29: 3, 905][CChildFrame::CChildFrame]-[ 65]:Visit....
+[Lev0][ 2- 4  9:29: 3, 907][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev0][ 2- 4  9:29: 3, 907][CChildFrame::PreCreateWindow]-[ 75]:Visit....
+[Lev2][ 2- 4  9:29: 3, 908][CChildFrame::OnCreate]-[ 87]:Start
+[Lev2][ 2- 4  9:29: 3, 909][CChildFrame::OnCreateClient]-[103]:Start
+[Lev0][ 2- 4  9:29: 3, 913][KMapFrameWnd::KMapFrameWnd]-[ 22]:Visit....
+[Lev0][ 2- 4  9:29: 3, 913][KMapFrameWnd::PreCreateWindow]-[119]:Visit....
+[Lev2][ 2- 4  9:29: 3, 914][KMapFrameWnd::OnCreate]-[128]:Start
+[Lev2][ 2- 4  9:29: 3, 914][KMapFrameWnd::OnCreateClient]-[171]:Start
+[Lev0][ 2- 4  9:29: 3, 914][KMapFrameWnd::OnCreateClient]-[176]:Visit....
+[Lev0][ 2- 4  9:29: 3, 914][KMapView::KMapView]-[264]:Visit....
+[Lev0][ 2- 4  9:29: 3, 916][KMapFrameWnd::OnCreateClient]-[180]:Visit....
+[Lev2][ 2- 4  9:29: 3, 921][KMapFrameWnd::OnCreateClient]-[192]:End
+[Lev2][ 2- 4  9:29: 3, 947][KMapFrameWnd::OnCreate]-[164]:End
+[Lev0][ 2- 4  9:29: 3, 956][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev0][ 2- 4  9:29: 4,   4][KTocFrameWnd::KTocFrameWnd]-[ 13]:Visit....
+[Lev2][ 2- 4  9:29: 4,   4][KTocFrameWnd::OnCreate]-[ 29]:Start
+[Lev2][ 2- 4  9:29: 4,   4][KTocFrameWnd::OnCreateClient]-[ 47]:Start
+[Lev2][ 2- 4  9:29: 4, 253][KTocFrameWnd::OnCreateClient]-[ 50]:End
+[Lev2][ 2- 4  9:29: 4, 254][KTocFrameWnd::OnCreate]-[ 40]:End
+[Lev2][ 2- 4  9:29: 4, 257][CChildFrame::OnCreateClient]-[127]:End
+[Lev2][ 2- 4  9:29: 4, 265][CChildFrame::OnCreate]-[ 97]:End
+[Lev2][ 2- 4  9:29: 4, 272][KMapView::OnInitialUpdate]-[300]:Start
+[Lev2][ 2- 4  9:29: 4, 274][KMapView::InitalizeMap]-[309]:Start
+[Lev0][ 2- 4  9:29: 4, 274][KThemeDrawControl::KThemeDrawControl]-[  9]:Visit....
+[Lev2][ 2- 4  9:29: 4, 274][KMapView::InitalizeMap]-[339]:End
+[Lev2][ 2- 4  9:29: 4, 274][KMapView::OnInitialUpdate]-[303]:End
+[Lev2][ 2- 4  9:29: 4, 297][CChildFrame::LoadTarget]-[176]:Start
+[Lev2][ 2- 4  9:29: 4, 297][KMapView::LoadMapView]-[555]:Start
+[Lev2][ 2- 4  9:29: 4, 297][KMapView::LoadInitialLayers]-[597]:Start
+[Lev2][ 2- 4  9:29: 4, 298][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][ 2- 4  9:29: 4, 298][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][ 2- 4  9:29: 4, 508][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][ 2- 4  9:29: 4, 509][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][ 2- 4  9:29: 4, 999][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:29: 5,   0][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:29: 5,  40][KMapView::LoadMapView]-[592]:End
+[Lev2][ 2- 4  9:29: 5,  49][KLayerXmlRenderer::LoadNodeProperty]-[217]:Start
+[Lev2][ 2- 4  9:29: 5,  49][KLayerXmlRenderer::LoadNodeProperty]-[258]:End
+[Lev2][ 2- 4  9:29: 5,  58][KLayerXmlRenderer::LoadLinkProperty]-[ 90]:Start
+[Lev2][ 2- 4  9:29: 5,  58][KLayerXmlRenderer::LoadLinkProperty]-[141]:End
+[Lev2][ 2- 4  9:29: 5,  74][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:29: 5,  75][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:29: 5, 131][CChildFrame::LoadTarget]-[188]:End
+[Lev2][ 2- 4  9:29: 5, 131][CMainFrameWnd::GetCreateTargetChildFrame]-[891]:End
+[Lev2][ 2- 4  9:29: 5, 131][CChildFrame::ShowMapView]-[200]:Start
+[Lev2][ 2- 4  9:29: 5, 146][CChildFrame::ShowMapView]-[212]:End
+[Lev2][ 2- 4  9:29: 5, 146][CMainFrameWnd::ShowNetworkView]-[755]:End
+[Lev0][ 2- 4  9:29: 5, 190][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev0][ 2- 4  9:29: 5, 196][KMapFrameWnd::OnDockingPaneNotify]-[604]:Visit....
+[Lev2][ 2- 4  9:30:29,  48][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:29,  48][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:29,  48][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:29,  48][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:32, 862][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:32, 862][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:32, 862][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:32, 862][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:36, 804][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:36, 804][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:36, 804][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:36, 804][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:40, 427][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:40, 427][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:30:40, 427][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:30:40, 427][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:31:21, 284][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:31:21, 284][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:31:21, 284][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:31:21, 285][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:31:57, 687][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:31:57, 687][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:31:57, 687][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:31:57, 687][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32: 1, 319][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32: 1, 319][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32: 1, 319][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32: 1, 319][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32: 8, 202][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32: 8, 202][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32: 8, 202][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32: 8, 202][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32:14,  35][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32:14,  35][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:32:14,  35][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:32:14,  35][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:37:12, 572][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:37:12, 572][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:37:12, 572][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:37:12, 572][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:38:34, 619][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:38:34, 619][KLayerXmlRenderer::LoadZoneProperty]-[350]:End
+[Lev2][ 2- 4  9:38:34, 619][KLayerXmlRenderer::LoadZoneProperty]-[319]:Start
+[Lev2][ 2- 4  9:38:34, 619][KLayerXmlRenderer::LoadZoneProperty]-[350]:End

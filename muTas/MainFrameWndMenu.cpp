@@ -361,19 +361,6 @@ void CMainFrameWnd::OnUpdateEXE_FREIGHTOD_DIVISION(CCmdUI* pCmdUI)
 	}
 }
 
-void CMainFrameWnd::OnUpdateEXE_ACCESSTRIPOD_TO_VEHICLEOD(CCmdUI* pCmdUI)
-{
-    if (KmzSystem::GetLanguage() == KEMKorea)
-    {
-        pCmdUI->Enable(TRUE);
-    }
-    else
-    {
-        CXTPControl* pControl = CXTPControl::FromUI(pCmdUI);
-        if (pControl) pControl->SetVisible(False);
-    }
-}
-
 
 //void CMainFrameWnd::OnEXE_TRIPOD_TO_VEHICLEOD()
 //{

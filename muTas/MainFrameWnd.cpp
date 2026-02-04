@@ -109,8 +109,7 @@
 #include "DlgShapeLink.h"
 
 #include "TripODToVehODDlg.h"
-#include "AccessTripODToVehODDlg.h"
-#include "FODDiv.h"
+#include "FODDivDlg.h"
 
 //테스트용
 #include "KTestImportMatchDlg.h"
@@ -410,8 +409,6 @@ IMPLEMENT_DYNAMIC(CMainFrameWnd, CMDIFrameWnd)
         ON_UPDATE_COMMAND_UI(ID_STATION_INTERMODAL, &CMainFrameWnd::OnUpdate_STATION_INTERMODAL)
         ON_UPDATE_COMMAND_UI(ID_URBAN_MULTIMODAL, &CMainFrameWnd::OnUpdate_URBAN_MULTIMODAL)
         ON_UPDATE_COMMAND_UI(ID_URBAN_INTERMODAL, &CMainFrameWnd::OnUpdate_URBAN_INTERMODAL)
-		ON_COMMAND(ID_EXE_ACCESSTRIPOD_TO_VEHICLEOD, &CMainFrameWnd::OnEXE_ACCESSTRIPOD_TO_VEHICLEOD)
-		ON_UPDATE_COMMAND_UI(ID_EXE_ACCESSTRIPOD_TO_VEHICLEOD, &CMainFrameWnd::OnUpdateEXE_ACCESSTRIPOD_TO_VEHICLEOD)
 	END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -3301,21 +3298,17 @@ void CMainFrameWnd::OnUpdateFrameTitle( BOOL bAddToTitle )
 void CMainFrameWnd::OnEXE_TRIPOD_TO_VEHICLEOD()
 {
 	KTripODToVehODDlg dlg2;
-	dlg2.DoModal();
-}
-
-void CMainFrameWnd::OnEXE_FREIGHTOD_DIVISION()
-{
-	KFODDiv dlg2;
 	if (dlg2.DoModal() == IDOK)
 	{
 		int ndata = 0;
 	}
 }
 
-
-void CMainFrameWnd::OnEXE_ACCESSTRIPOD_TO_VEHICLEOD()
+void CMainFrameWnd::OnEXE_FREIGHTOD_DIVISION()
 {
-	KAccessTripODToVehODDlg dlg2;
-	dlg2.DoModal();
+	KFODDivDlg dlg2;
+	if (dlg2.DoModal() == IDOK)
+	{
+		int ndata = 0;
+	}
 }
